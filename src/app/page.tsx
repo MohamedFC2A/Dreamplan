@@ -61,7 +61,7 @@ export default function Home() {
         >
           <div className="relative w-[60%] md:w-[45%] h-[75vh] md:h-[90vh] ltr:mr-[5%] rtl:ml-[5%]" style={{direction: "ltr"}}>
             <Image
-              src="/images/ronaldo-hero.png"
+              src="/images/ronaldo-nassr.png"
               alt="Cristiano Ronaldo"
               fill
               className="object-contain object-bottom"
