@@ -7,27 +7,27 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useLanguage } from "@/lib/LanguageContext";
 import { t } from "@/lib/i18n";
-import { PenLine, Bot, TrendingUp, Droplets, Skull, Zap, Crown, ArrowDown, ChevronDown, ArrowLeft, Sparkles, X, Calendar, Search, BookOpen, ListChecks, FileText, CheckCircle } from "lucide-react";
+import { PenLine, Bot, TrendingUp, Droplets, Skull, Zap, Crown, ArrowDown, ChevronDown, ArrowLeft, Sparkles, X, Calendar, Search, BookOpen, ListChecks, FileText, CheckCircle, Trash2 } from "lucide-react";
 import Navbar from "@/components/Navbar";
 
 const EXAMPLES_AR = [
-  "أريد عروق بارزة في يدي وساعدي خلال 14 يوم",
-  "أريد رقبة قوية مثل كريستيانو رونالدو في 7 أيام",
-  "خطة لخسارة 5 كيلو من الدهون في 30 يوم",
-  "أريد عضلات بطن مقسمة سكس باك خلال 21 يوم",
-  "أريد أكتاف عريضة وشكل V في 14 يوم",
-  "خطة تضخيم الذراعين في 30 يوم",
-  "أريد فك حاد ووجه منحوت خلال 21 يوم",
+  "أريد عروق بارزة في يدي وساعدي",
+  "أريد رقبة قوية مثل كريستيانو رونالدو",
+  "خطة لخسارة 5 كيلو من الدهون",
+  "أريد عضلات بطن مقسمة سكس باك",
+  "أريد أكتاف عريضة وشكل V",
+  "خطة تضخيم الذراعين",
+  "أريد فك حاد ووجه منحوت",
 ];
 
 const EXAMPLES_EN = [
-  "I want visible hand and forearm veins in 14 days",
-  "Build a strong Ronaldo-like neck in 7 days",
-  "Lose 5kg of body fat in 30 days",
-  "Get shredded six pack abs in 21 days",
-  "Wide shoulders and V-taper in 14 days",
-  "Bulk up my arms in 30 days",
-  "Sharp jawline and sculpted face in 21 days",
+  "I want visible hand and forearm veins",
+  "Build a strong Ronaldo-like neck",
+  "Lose 5kg of body fat",
+  "Get shredded six pack abs",
+  "Wide shoulders and V-taper physique",
+  "Bulk up my arms significantly",
+  "Sharp jawline and sculpted face",
 ];
 
 
@@ -113,132 +113,6 @@ function useTypewriter(
     },
     resume: () => setIsActive(true),
   };
-}
-
-function detectDuration(query: string): number | null {
-  const patterns = [
-    { regex: /(\d+)\s*(?:day|days|يوم|أيام|ايام)/i, multiplier: 1 },
-    { regex: /(\d+)\s*(?:week|weeks|اسبوع|أسبوع|أسابيع|اسابيع)/i, multiplier: 7 },
-    { regex: /(\d+)\s*(?:month|months|شهر|أشهر|اشهر)/i, multiplier: 30 },
-  ];
-
-  for (const { regex, multiplier } of patterns) {
-    const match = query.match(regex);
-    if (match) {
-      return parseInt(match[1], 10) * multiplier;
-    }
-  }
-  return null;
-}
-
-function validateDuration(days: number): { valid: boolean; errorKey?: "tooShort" | "tooLong" } {
-  if (days < 7) return { valid: false, errorKey: "tooShort" };
-  if (days > 90) return { valid: false, errorKey: "tooLong" };
-  return { valid: true };
-}
-
-const DURATION_OPTIONS = [
-  { days: 7, noteKey: "quickStart" as const },
-  { days: 14, noteKey: "recommended" as const },
-  { days: 21, noteKey: "visibleResults" as const },
-  { days: 30, noteKey: "fullTransform" as const },
-  { days: 60, noteKey: "deepChange" as const },
-  { days: 90, noteKey: "maxResults" as const },
-];
-
-function DurationModal({
-  isOpen,
-  onSelect,
-  onClose,
-  locale,
-  errorMessage,
-}: {
-  isOpen: boolean;
-  onSelect: (days: number) => void;
-  onClose: () => void;
-  locale: "ar" | "en";
-  errorMessage?: string;
-}) {
-  return (
-    <AnimatePresence>
-      {isOpen && (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          className="fixed inset-0 z-50 flex items-center justify-center p-4"
-        >
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="absolute inset-0 bg-black/80 backdrop-blur-sm"
-            onClick={onClose}
-          />
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9, y: 20 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.9, y: 20 }}
-            transition={{ type: "spring", damping: 25, stiffness: 300 }}
-            className="relative bg-[#0a0a0a] border border-gold-500/30 rounded-2xl p-6 md:p-8 max-w-lg w-full shadow-2xl shadow-gold-500/10"
-          >
-            <button
-              onClick={onClose}
-              className="absolute top-4 right-4 text-gray-500 hover:text-white transition-colors"
-            >
-              <X className="w-5 h-5" />
-            </button>
-
-            <div className="flex items-center gap-3 mb-2">
-              <div className="w-10 h-10 rounded-full bg-gold-500/10 flex items-center justify-center">
-                <Calendar className="w-5 h-5 text-gold-400" />
-              </div>
-              <h3 className="font-heading text-xl font-bold text-white tracking-wide">
-                {t(locale, "durationQuestion")}
-              </h3>
-            </div>
-
-            {errorMessage && (
-              <motion.div
-                initial={{ opacity: 0, y: -5 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="mb-4 p-3 rounded-lg bg-red-500/10 border border-red-500/30 text-red-400 text-sm"
-              >
-                {errorMessage}
-              </motion.div>
-            )}
-
-            <p className="text-gray-500 text-sm mb-6">
-              {t(locale, "durationNote")}
-            </p>
-
-            <div className="grid grid-cols-2 gap-3">
-              {DURATION_OPTIONS.map((opt) => (
-                <motion.button
-                  key={opt.days}
-                  whileHover={{ scale: 1.03 }}
-                  whileTap={{ scale: 0.97 }}
-                  onClick={() => onSelect(opt.days)}
-                  className="group relative bg-black border border-dark-border hover:border-gold-500/50 rounded-xl p-4 text-start transition-all"
-                >
-                  <div className="font-heading text-2xl font-bold text-gold-500 mb-1">
-                    {opt.days}
-                  </div>
-                  <div className="text-gray-300 text-sm font-medium">
-                    {locale === "ar" ? `${opt.days} ${opt.days === 7 ? "أيام" : "يوم"}` : `${opt.days} Days`}
-                  </div>
-                  <div className="text-gray-600 text-xs mt-1">
-                    {t(locale, opt.noteKey)}
-                  </div>
-                  <div className="absolute inset-0 rounded-xl bg-gold-500/5 opacity-0 group-hover:opacity-100 transition-opacity" />
-                </motion.button>
-              ))}
-            </div>
-          </motion.div>
-        </motion.div>
-      )}
-    </AnimatePresence>
-  );
 }
 
 const INLINE_STEPS = [
@@ -389,22 +263,39 @@ export default function Home() {
   const [query, setQuery] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
-  const [showDurationModal, setShowDurationModal] = useState(false);
-  const [durationError, setDurationError] = useState("");
-  const [pendingQuery, setPendingQuery] = useState("");
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   const [showPlanning, setShowPlanning] = useState(false);
+  const [savedProtocols, setSavedProtocols] = useState<any[]>([]);
 
   const examples = locale === "ar" ? EXAMPLES_AR : EXAMPLES_EN;
 
   const typewriter = useTypewriter(examples);
 
+  useEffect(() => {
+    try {
+      const saved = JSON.parse(localStorage.getItem("saved-protocols") || "[]");
+      setSavedProtocols(saved);
+    } catch {
+      setSavedProtocols([]);
+    }
+  }, []);
+
+  const loadSavedProtocol = (entry: any) => {
+    sessionStorage.setItem("ai-protocol", JSON.stringify(entry.protocol));
+    router.push("/protocol/ai-generated");
+  };
+
+  const deleteSavedProtocol = (id: string) => {
+    const updated = savedProtocols.filter(p => p.id !== id);
+    setSavedProtocols(updated);
+    localStorage.setItem("saved-protocols", JSON.stringify(updated));
+  };
+
   const callApi = async (finalQuery: string) => {
     setIsLoading(true);
     setShowPlanning(true);
     setError("");
-    setShowDurationModal(false);
 
     try {
       const res = await fetch("/api/generate", {
@@ -421,6 +312,24 @@ export default function Home() {
       if (protocol.error) throw new Error(protocol.error);
 
       sessionStorage.setItem("ai-protocol", JSON.stringify(protocol));
+
+      const saved = JSON.parse(localStorage.getItem("saved-protocols") || "[]");
+      const newEntry = {
+        id: Date.now().toString(),
+        title: protocol.title,
+        titleAr: protocol.titleAr,
+        subtitle: protocol.subtitle,
+        subtitleAr: protocol.subtitleAr,
+        daysCount: protocol.days?.length || 0,
+        totalDays: protocol.progressData?.length || protocol.days?.length || 0,
+        createdAt: new Date().toISOString(),
+        protocol: protocol,
+      };
+      saved.unshift(newEntry);
+      if (saved.length > 10) saved.pop();
+      localStorage.setItem("saved-protocols", JSON.stringify(saved));
+      setSavedProtocols(saved);
+
       router.push("/protocol/ai-generated");
     } catch (err: any) {
       setShowPlanning(false);
@@ -433,47 +342,7 @@ export default function Home() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!query.trim()) return;
-
-    const duration = detectDuration(query);
-
-    if (duration === null) {
-      setPendingQuery(query.trim());
-      setDurationError("");
-      setShowDurationModal(true);
-      return;
-    }
-
-    const validation = validateDuration(duration);
-    if (!validation.valid) {
-      setPendingQuery(query.trim());
-      setDurationError(validation.errorKey ? t(locale, validation.errorKey) : "");
-      setShowDurationModal(true);
-      return;
-    }
-
     await callApi(query);
-  };
-
-  const handleDurationSelect = async (days: number) => {
-    const durationSuffix = locale === "ar"
-      ? ` خلال ${days} يوم`
-      : ` in ${days} days`;
-
-    const durationDetected = detectDuration(pendingQuery);
-    let finalQuery = pendingQuery;
-
-    if (durationDetected === null) {
-      finalQuery = pendingQuery + durationSuffix;
-    } else {
-      finalQuery = pendingQuery.replace(
-        /\d+\s*(?:day|days|يوم|أيام|ايام|week|weeks|اسبوع|أسبوع|أسابيع|اسابيع|month|months|شهر|أشهر|اشهر)/i,
-        `${days} ${locale === "ar" ? "يوم" : "days"}`
-      );
-    }
-
-    setQuery(finalQuery);
-    setShowDurationModal(false);
-    await callApi(finalQuery);
   };
 
   const handleFocus = () => {
@@ -713,6 +582,63 @@ export default function Home() {
           </div>
         </motion.div>
 
+        {savedProtocols.length > 0 && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="mb-16"
+          >
+            <h2 className="font-heading text-2xl md:text-3xl font-bold text-gray-200 text-center mb-8 tracking-wide">
+              {locale === "ar" ? "بروتوكولاتي" : "My Protocols"}
+            </h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {savedProtocols.map((entry) => (
+                <motion.div
+                  key={entry.id}
+                  initial={{ opacity: 0, y: 10 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  className="bg-dark-card border border-dark-border rounded-xl p-5 hover:border-gold-500/30 transition-all group"
+                >
+                  <div className="flex items-start justify-between gap-3 mb-3">
+                    <div className="flex-1 min-w-0">
+                      <h3 className="font-heading text-sm font-bold text-gray-100 truncate">
+                        {locale === "ar" ? entry.titleAr : entry.title}
+                      </h3>
+                      <p className="text-gray-500 text-xs mt-1 truncate">
+                        {locale === "ar" ? entry.subtitleAr : entry.subtitle}
+                      </p>
+                    </div>
+                    <button
+                      onClick={(e) => { e.stopPropagation(); deleteSavedProtocol(entry.id); }}
+                      className="text-gray-700 hover:text-red-400 transition-colors shrink-0"
+                    >
+                      <Trash2 className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+                  <div className="flex items-center gap-3 mb-4">
+                    <span className="text-[10px] px-2 py-0.5 rounded-full bg-gold-500/10 text-gold-400 border border-gold-500/20">
+                      {entry.totalDays} {locale === "ar" ? "يوم" : "days"}
+                    </span>
+                    <span className="text-[10px] px-2 py-0.5 rounded-full bg-gold-500/5 text-gray-500 border border-dark-border">
+                      {entry.daysCount} {locale === "ar" ? "يوم مفصل" : "detailed days"}
+                    </span>
+                  </div>
+                  <button
+                    onClick={() => loadSavedProtocol(entry)}
+                    className="w-full flex items-center justify-center gap-2 bg-gold-500/10 hover:bg-gold-500/20 text-gold-400 font-heading font-bold tracking-wider px-4 py-2.5 rounded-lg transition-all text-xs uppercase"
+                  >
+                    <ArrowLeft className="w-3 h-3 rtl:rotate-180" />
+                    {locale === "ar" ? "عرض البروتوكول" : "View Protocol"}
+                  </button>
+                </motion.div>
+              ))}
+            </div>
+          </motion.div>
+        )}
+
         <motion.div
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
@@ -839,14 +765,6 @@ export default function Home() {
           </div>
         </div>
       </footer>
-
-      <DurationModal
-        isOpen={showDurationModal}
-        onSelect={handleDurationSelect}
-        onClose={() => setShowDurationModal(false)}
-        locale={locale}
-        errorMessage={durationError}
-      />
 
     </main>
   );
