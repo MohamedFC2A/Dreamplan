@@ -52,6 +52,10 @@ export const translations = {
     scmGrowth: "نمو SCM",
     postureFix: "تصحيح الوضعية",
     jawline: "خط الفك",
+    totalTasks: "اجمالي المهام",
+    totalPossiblePoints: "اجمالي النقاط الممكنة",
+    daysLabel: "الايام",
+    protocolSummary: "ملخص البروتوكول",
   },
   en: {
     siteName: "MASCULINE PEAK",
@@ -104,6 +108,10 @@ export const translations = {
     scmGrowth: "SCM Growth",
     postureFix: "Posture Fix",
     jawline: "Jawline",
+    totalTasks: "Total Tasks",
+    totalPossiblePoints: "Total Possible Points",
+    daysLabel: "Days",
+    protocolSummary: "Protocol Summary",
   },
 } as const;
 

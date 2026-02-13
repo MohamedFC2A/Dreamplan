@@ -1,9 +1,9 @@
 "use client";
 
 import { useLanguage } from "@/lib/LanguageContext";
-import LanguageToggle from "@/components/LanguageToggle";
-import { Crown, Check, X, Zap, Shield, ArrowRight, ArrowLeft, ChevronDown } from "lucide-react";
-import { motion } from "framer-motion";
+import Navbar from "@/components/Navbar";
+import { Crown, Check, X, Zap, Shield, ChevronDown } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import { useState } from "react";
 
@@ -39,6 +39,8 @@ const content = {
       { text: "مدة بروتوكول مخصصة" },
       { text: "دعم ذو أولوية" },
     ],
+    quickComparison: "مقارنة سريعة",
+    guarantee: "ضمان استرداد الأموال خلال 7 أيام",
     faqs: [
       {
         q: "هل يمكنني الترقية في أي وقت؟",
@@ -89,6 +91,8 @@ const content = {
       { text: "Custom protocol duration" },
       { text: "Priority support" },
     ],
+    quickComparison: "Quick Comparison",
+    guarantee: "7-day money-back guarantee",
     faqs: [
       {
         q: "Can I upgrade at any time?",
@@ -114,42 +118,47 @@ function FAQItem({ question, answer }: { question: string; answer: string }) {
   const [open, setOpen] = useState(false);
 
   return (
-    <div className="border border-dark-border rounded-lg overflow-hidden">
+    <div className="border border-dark-border rounded-xl overflow-hidden bg-dark-card/50 hover:border-dark-border/80 transition-colors">
       <button
         onClick={() => setOpen(!open)}
-        className="w-full flex items-center justify-between p-5 text-start hover:bg-dark-card transition-colors"
+        className="w-full flex items-center justify-between p-5 text-start hover:bg-white/[0.02] transition-colors"
       >
         <span className="font-heading text-white text-sm md:text-base">{question}</span>
-        <ChevronDown
-          className={`w-5 h-5 text-gold-400 shrink-0 ms-4 transition-transform duration-300 ${open ? "rotate-180" : ""}`}
-        />
+        <motion.div
+          animate={{ rotate: open ? 180 : 0 }}
+          transition={{ duration: 0.3 }}
+        >
+          <ChevronDown className="w-5 h-5 text-gold-400 shrink-0 ms-4" />
+        </motion.div>
       </button>
-      {open && (
-        <div className="px-5 pb-5 text-neutral-400 text-sm leading-relaxed">
-          {answer}
-        </div>
-      )}
+      <AnimatePresence initial={false}>
+        {open && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.3, ease: "easeInOut" }}
+            className="overflow-hidden"
+          >
+            <div className="px-5 pb-5 text-neutral-400 text-sm leading-relaxed">
+              {answer}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
 
 export default function PlansPage() {
-  const { locale, isRTL } = useLanguage();
+  const { locale } = useLanguage();
   const t = content[locale];
-  const BackArrow = isRTL ? ArrowRight : ArrowLeft;
 
   return (
     <div className="min-h-screen bg-dark-bg">
-      <LanguageToggle />
+      <Navbar />
 
-      <div className="max-w-5xl mx-auto px-4 py-8 md:py-16">
-        <Link
-          href="/"
-          className="inline-flex items-center gap-2 text-gold-400 hover:text-gold-300 transition-colors text-sm mb-10"
-        >
-          <BackArrow className="w-4 h-4" />
-          <span>{t.backToHome}</span>
-        </Link>
+      <div className="max-w-5xl mx-auto px-4 py-8 md:py-16 pt-24">
 
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -170,7 +179,7 @@ export default function PlansPage() {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.1 }}
-            className="bg-dark-card border border-dark-border rounded-2xl p-6 md:p-8 flex flex-col"
+            className="bg-dark-card border border-dark-border rounded-2xl p-6 md:p-8 flex flex-col hover:border-dark-border/80 hover:bg-dark-card/80 transition-all duration-300"
           >
             <div className="flex items-center gap-3 mb-6">
               <div className="w-10 h-10 rounded-lg bg-neutral-800 flex items-center justify-center">
@@ -200,7 +209,7 @@ export default function PlansPage() {
               ))}
             </ul>
 
-            <button className="w-full py-3 rounded-lg border border-gold-500 text-gold-500 font-heading text-sm hover:bg-gold-500/10 transition-colors">
+            <button className="w-full py-3 rounded-lg border border-gold-500 text-gold-500 font-heading text-sm hover:bg-gold-500/10 hover:border-gold-400 active:scale-[0.98] transition-all duration-200">
               {t.startFree}
             </button>
           </motion.div>
@@ -209,7 +218,7 @@ export default function PlansPage() {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.2 }}
-            className="bg-dark-card border-2 border-gold-500 rounded-2xl p-6 md:p-8 flex flex-col relative"
+            className="bg-dark-card border-2 border-gold-500 rounded-2xl p-6 md:p-8 flex flex-col relative hover:shadow-gold-500/10 hover:shadow-2xl transition-all duration-300"
           >
             <div className="absolute -top-3 start-1/2 -translate-x-1/2 rtl:translate-x-1/2 bg-gold-500 text-black text-xs font-heading px-4 py-1 rounded-full">
               {t.mostPopular}
@@ -237,7 +246,7 @@ export default function PlansPage() {
               ))}
             </ul>
 
-            <button className="w-full py-3 rounded-lg bg-gold-500 text-black font-heading text-sm hover:bg-gold-400 transition-colors">
+            <button className="w-full py-3 rounded-lg bg-gold-500 text-black font-heading text-sm hover:bg-gold-400 active:scale-[0.98] transition-all duration-200">
               {t.subscribeNow}
             </button>
           </motion.div>
@@ -246,7 +255,28 @@ export default function PlansPage() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.25 }}
+          className="flex items-center justify-center gap-3 mb-12"
+        >
+          <Shield className="w-5 h-5 text-gold-500" />
+          <span className="text-neutral-400 text-sm">{t.guarantee}</span>
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.3 }}
+          className="flex items-center gap-4 mb-12"
+        >
+          <div className="flex-1 h-px bg-dark-border" />
+          <span className="text-neutral-500 text-xs font-heading uppercase tracking-wider">{t.quickComparison}</span>
+          <div className="flex-1 h-px bg-dark-border" />
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.35 }}
         >
           <h2 className="font-heading text-2xl text-white text-center mb-8">
             {t.faqTitle}

@@ -7,7 +7,9 @@ import { useLanguage } from "@/lib/LanguageContext";
 import { t } from "@/lib/i18n";
 import Popover from "@/components/Popover";
 import ExercisePopover from "@/components/ExercisePopover";
-import { Sunrise, UtensilsCrossed, Pill, Dumbbell, Heart, Droplets, Moon, Target, FlaskConical, Lightbulb } from "lucide-react";
+import { Sunrise, UtensilsCrossed, Pill, Dumbbell, Heart, Droplets, Moon, Target, FlaskConical, Lightbulb, Trophy } from "lucide-react";
+
+const pointsMap: Record<string, number> = { high: 15, medium: 10, low: 5 };
 
 const categoryConfig: Record<string, { color: string; icon: React.ReactNode; labelEn: string; labelAr: string }> = {
   wake: { color: "text-purple-400 bg-purple-500/10 border-purple-500/20", icon: <Sunrise className="w-3.5 h-3.5" />, labelEn: "Wake", labelAr: "استيقاظ" },
@@ -25,6 +27,7 @@ function ImpactBar({ level, locale }: { level: "low" | "medium" | "high"; locale
   const labels = locale === "ar"
     ? { low: "منخفض", medium: "متوسط", high: "عالي" }
     : { low: "Low", medium: "Med", high: "High" };
+  const pts = pointsMap[level];
   return (
     <div className="flex items-center gap-2">
       <div className="w-16 h-1.5 rounded-full bg-dark-border overflow-hidden">
@@ -32,6 +35,9 @@ function ImpactBar({ level, locale }: { level: "low" | "medium" | "high"; locale
       </div>
       <span className={`text-[9px] uppercase font-bold ${level === "high" ? "text-green-400" : level === "medium" ? "text-yellow-400" : "text-gray-500"}`}>
         {labels[level]}
+      </span>
+      <span className="text-[9px] font-bold text-gold-400">
+        +{pts} {locale === "ar" ? "نقطة" : "pts"}
       </span>
     </div>
   );
@@ -46,6 +52,7 @@ export default function DayCard({
 }) {
   const [expanded, setExpanded] = useState(dayIndex === 0);
   const [completedTasks, setCompletedTasks] = useState<Set<string>>(new Set());
+  const [justCompleted, setJustCompleted] = useState<string | null>(null);
   const { locale } = useLanguage();
 
   const toggleTask = (taskId: string) => {
@@ -53,8 +60,11 @@ export default function DayCard({
       const next = new Set(prev);
       if (next.has(taskId)) {
         next.delete(taskId);
+        setJustCompleted(null);
       } else {
         next.add(taskId);
+        setJustCompleted(taskId);
+        setTimeout(() => setJustCompleted(null), 800);
       }
       return next;
     });
@@ -63,13 +73,27 @@ export default function DayCard({
   const totalTasks = day.tasks.length;
   const completedCount = day.tasks.filter((task) => completedTasks.has(task.id)).length;
   const progressPercent = totalTasks > 0 ? (completedCount / totalTasks) * 100 : 0;
+  const isAllComplete = totalTasks > 0 && completedCount === totalTasks;
+
+  const totalPoints = day.tasks.reduce((sum, task) => sum + pointsMap[task.visualImpact], 0);
+  const earnedPoints = day.tasks
+    .filter((task) => completedTasks.has(task.id))
+    .reduce((sum, task) => sum + pointsMap[task.visualImpact], 0);
 
   const dayTitle = locale === "ar" ? day.titleAr : day.title;
   const dayTheme = locale === "ar" ? day.themeAr : day.theme;
   const dailyGoal = locale === "ar" ? day.dailyGoalAr : day.dailyGoal;
 
   return (
-    <div className="bg-dark-card border border-dark-border rounded-xl overflow-hidden">
+    <div
+      className={`bg-dark-card border border-dark-border rounded-xl overflow-hidden transition-all duration-300 ${
+        expanded
+          ? locale === "ar"
+            ? "border-r-2 border-r-gold-500/60"
+            : "border-l-2 border-l-gold-500/60"
+          : ""
+      }`}
+    >
       <button
         type="button"
         onClick={() => setExpanded(!expanded)}
@@ -87,16 +111,29 @@ export default function DayCard({
             {dayTheme}
           </span>
           <div className="mt-2 flex items-center gap-3">
-            <div className="flex-1 h-2 rounded-full bg-dark-border overflow-hidden max-w-[200px]">
+            <div className={`flex-1 h-2 rounded-full bg-dark-border overflow-hidden max-w-[200px] transition-shadow duration-500 ${
+              isAllComplete ? "shadow-[0_0_8px_rgba(212,175,55,0.6)]" : ""
+            }`}>
               <motion.div
-                className="h-full rounded-full bg-gradient-to-r from-gold-500 to-gold-400"
+                className={`h-full rounded-full bg-gradient-to-r from-gold-500 to-gold-400 ${
+                  isAllComplete ? "shadow-[0_0_6px_rgba(212,175,55,0.8)]" : ""
+                }`}
                 initial={{ width: 0 }}
                 animate={{ width: `${progressPercent}%` }}
                 transition={{ duration: 0.5 }}
               />
             </div>
             <span className="text-xs text-gray-500">
+              {Math.round(progressPercent)}%
+            </span>
+            <span className="text-xs text-gray-500">
               {completedCount}/{totalTasks} {t(locale, "tasks")}
+            </span>
+          </div>
+          <div className="mt-1 flex items-center gap-1">
+            <Trophy className="w-3 h-3 text-gold-400" />
+            <span className="text-[10px] font-bold text-gold-400">
+              {earnedPoints}/{totalPoints} {locale === "ar" ? "نقطة" : "pts"}
             </span>
           </div>
         </div>
@@ -107,7 +144,7 @@ export default function DayCard({
           fill="none"
           className="text-gray-500 shrink-0"
           animate={{ rotate: expanded ? 180 : 0 }}
-          transition={{ duration: 0.2 }}
+          transition={{ duration: 0.35, ease: "easeInOut" }}
         >
           <path
             d="M5 7.5L10 12.5L15 7.5"
@@ -129,6 +166,24 @@ export default function DayCard({
             className="overflow-hidden"
           >
             <div className="px-5 pb-5">
+              <AnimatePresence>
+                {isAllComplete && (
+                  <motion.div
+                    initial={{ scale: 0.5, opacity: 0 }}
+                    animate={{ scale: 1, opacity: 1 }}
+                    exit={{ scale: 0.5, opacity: 0 }}
+                    transition={{ type: "spring", stiffness: 300, damping: 20 }}
+                    className="mb-4 p-3 rounded-lg bg-gold-500/10 border border-gold-500/40 flex items-center justify-center gap-2"
+                  >
+                    <Trophy className="w-5 h-5 text-gold-400" />
+                    <span className="text-sm font-bold text-gold-400 tracking-wide">
+                      {locale === "ar" ? "اليوم مكتمل!" : "Day Complete!"}
+                    </span>
+                    <Trophy className="w-5 h-5 text-gold-400" />
+                  </motion.div>
+                )}
+              </AnimatePresence>
+
               {dailyGoal && (
                 <div className="mb-4 p-3 rounded-lg bg-gold-500/5 border border-gold-500/20">
                   <span className="text-[10px] text-gold-400 font-bold uppercase tracking-wider">
@@ -141,6 +196,7 @@ export default function DayCard({
               <div className="space-y-2">
                 {day.tasks.map((task, i) => {
                   const isCompleted = completedTasks.has(task.id);
+                  const isJustCompleted = justCompleted === task.id;
                   const cat = categoryConfig[task.category] || categoryConfig.wake;
                   const taskAction = locale === "ar" ? task.actionAr : task.action;
                   const taskScience = locale === "ar" ? task.scienceWhyAr : task.scienceWhy;
@@ -149,17 +205,28 @@ export default function DayCard({
                     <motion.div
                       key={task.id}
                       initial={{ opacity: 0, x: locale === "ar" ? 10 : -10 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: i * 0.05 }}
+                      animate={{
+                        opacity: 1,
+                        x: 0,
+                        backgroundColor: isJustCompleted
+                          ? ["rgba(212,175,55,0.15)", "rgba(212,175,55,0.05)", "rgba(212,175,55,0.02)"]
+                          : undefined,
+                      }}
+                      transition={{
+                        delay: i * 0.05,
+                        backgroundColor: { duration: 0.8, ease: "easeOut" },
+                      }}
                       className={`flex gap-3 p-3 rounded-lg border transition-all duration-300 ${
                         isCompleted
                           ? "bg-gold-500/5 border-gold-500/30"
                           : "bg-dark-bg/50 border-dark-border/50"
                       }`}
                     >
-                      <button
+                      <motion.button
                         type="button"
                         onClick={() => toggleTask(task.id)}
+                        animate={isJustCompleted ? { scale: [1, 1.2, 1] } : { scale: 1 }}
+                        transition={{ duration: 0.3, ease: "easeOut" }}
                         className={`shrink-0 w-6 h-6 rounded-full border-2 flex items-center justify-center transition-all mt-0.5 ${
                           isCompleted
                             ? "border-gold-500 bg-gold-500 text-black"
@@ -171,7 +238,7 @@ export default function DayCard({
                             <path d="M2.5 6L5 8.5L9.5 3.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                           </svg>
                         )}
-                      </button>
+                      </motion.button>
 
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2 mb-1.5 flex-wrap">
