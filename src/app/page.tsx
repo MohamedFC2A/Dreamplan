@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
+import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import LanguageToggle from "@/components/LanguageToggle";
@@ -49,76 +50,105 @@ export default function Home() {
     <main className="min-h-screen flex flex-col">
       <LanguageToggle />
 
-      <section className="flex-1 flex flex-col items-center justify-center px-4 py-20 relative overflow-hidden">
+      <section className="relative min-h-screen flex items-center overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-b from-black via-black/95 to-black z-0" />
+
+        <motion.div
+          initial={{ opacity: 0, scale: 1.05 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 1.2, ease: "easeOut" }}
+          className="absolute inset-0 flex items-end justify-end z-[1]"
+        >
+          <div className="relative w-[60%] md:w-[45%] h-[75vh] md:h-[90vh] ltr:mr-[5%] rtl:ml-[5%]" style={{direction: "ltr"}}>
+            <Image
+              src="/images/ronaldo-hero.png"
+              alt="Cristiano Ronaldo"
+              fill
+              className="object-contain object-bottom"
+              priority
+              sizes="(max-width: 768px) 60vw, 45vw"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent" />
+          </div>
+        </motion.div>
+
+        <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-black to-transparent z-[2]" />
+
+        <div className="relative z-10 w-full max-w-6xl mx-auto px-6 md:px-8 py-20">
+          <div className="flex items-center min-h-[80vh]">
+            <div className="relative z-20 w-full md:w-1/2">
+              <div className="mb-6 inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gold-500/15 border border-gold-500/30">
+                <span className="w-2 h-2 rounded-full bg-gold-500 animate-pulse" />
+                <span className="text-xs text-gold-400 font-bold tracking-wider uppercase">
+                  {t(locale, "aiPowered")}
+                </span>
+              </div>
+
+              {locale === "ar" ? (
+                <>
+                  <h1 className="font-heading text-5xl md:text-7xl lg:text-8xl font-bold text-white tracking-wider mb-2 leading-tight">
+                    ذروة <span className="text-gold-500">الرجولة</span>
+                  </h1>
+                  <p className="font-heading text-lg md:text-xl text-gray-500 tracking-widest mb-4">
+                    MASCULINE PEAK
+                  </p>
+                </>
+              ) : (
+                <h1 className="font-heading text-5xl md:text-7xl lg:text-8xl font-bold text-white tracking-wider mb-4 leading-tight">
+                  MASCULINE <span className="text-gold-500">PEAK</span>
+                </h1>
+              )}
+
+              <p className="font-heading text-xl md:text-2xl text-gold-400/80 tracking-widest uppercase mb-4">
+                {t(locale, "tagline")}
+              </p>
+
+              <p className="text-gray-400 text-base md:text-lg mb-8 max-w-lg leading-relaxed">
+                {t(locale, "heroDescription")}
+              </p>
+
+              <div className="flex items-center gap-6 mb-6">
+                {[
+                  { value: "7", label: locale === "ar" ? "أيام" : "Days" },
+                  { value: "70+", label: locale === "ar" ? "مهمة" : "Tasks" },
+                  { value: "AI", label: locale === "ar" ? "مدعوم" : "Powered" },
+                ].map((stat, i) => (
+                  <div key={i} className="text-center">
+                    <div className="font-heading text-2xl md:text-3xl font-bold text-gold-500">{stat.value}</div>
+                    <div className="text-[10px] text-gray-500 uppercase tracking-widest">{stat.label}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="relative z-10 px-4 py-16 max-w-5xl mx-auto w-full -mt-20">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7 }}
-          className="text-center max-w-4xl mx-auto relative z-10"
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+          className="bg-dark-card border border-dark-border rounded-2xl p-8 md:p-10 mb-16"
         >
-          <motion.div
-            initial={{ scale: 0.9, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            transition={{ delay: 0.1, duration: 0.5 }}
-            className="mb-6 inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gold-500/10 border border-gold-500/20"
-          >
-            <span className="w-2 h-2 rounded-full bg-gold-500 animate-pulse" />
-            <span className="text-xs text-gold-400 font-bold tracking-wider uppercase">
-              {t(locale, "aiPowered")}
-            </span>
-          </motion.div>
+          <h2 className="font-heading text-2xl md:text-3xl font-bold text-white text-center mb-2 tracking-wide">
+            {locale === "ar" ? "صمم بروتوكولك" : "Design Your Protocol"}
+          </h2>
+          <p className="text-gray-500 text-center mb-8 text-sm">
+            {locale === "ar" ? "صف الجسم الذي تحلم به وسيبني الذكاء الاصطناعي خطتك" : "Describe your dream physique and AI will build your plan"}
+          </p>
 
-          {locale === "ar" ? (
-            <>
-              <h1 className="font-heading text-5xl md:text-7xl lg:text-8xl font-bold text-gold-500 tracking-wider mb-2">
-                ذروة الرجولة
-              </h1>
-              <p className="font-heading text-lg md:text-xl text-gray-500 tracking-wide mb-2">
-                MASCULINE PEAK
-              </p>
-            </>
-          ) : (
-            <h1 className="font-heading text-5xl md:text-7xl lg:text-8xl font-bold text-gold-500 tracking-wider mb-4">
-              MASCULINE PEAK
-            </h1>
-          )}
-
-          <motion.p
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.3, duration: 0.6 }}
-            className="font-heading text-xl md:text-2xl text-gray-400 tracking-widest uppercase mb-6"
-          >
-            {t(locale, "tagline")}
-          </motion.p>
-
-          <motion.p
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.5, duration: 0.6 }}
-            className="text-gray-500 text-base md:text-lg mb-10 max-w-2xl mx-auto leading-relaxed"
-          >
-            {t(locale, "heroDescription")}
-          </motion.p>
-
-          <motion.form
-            onSubmit={handleSubmit}
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.7, duration: 0.5 }}
-            className="mb-8 max-w-2xl mx-auto"
-          >
+          <form onSubmit={handleSubmit} className="max-w-2xl mx-auto">
             <div className="flex flex-col gap-3">
-              <div className="relative">
-                <textarea
-                  value={query}
-                  onChange={(e) => setQuery(e.target.value)}
-                  placeholder={t(locale, "searchPlaceholder")}
-                  rows={3}
-                  className="w-full bg-dark-card border border-dark-border rounded-xl px-5 py-4 text-gray-100 placeholder-gray-600 focus:outline-none focus:border-gold-500 focus:ring-1 focus:ring-gold-500 transition-colors resize-none text-base"
-                  disabled={isLoading}
-                />
-              </div>
+              <textarea
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                placeholder={t(locale, "searchPlaceholder")}
+                rows={3}
+                className="w-full bg-black border border-dark-border rounded-xl px-5 py-4 text-gray-100 placeholder-gray-600 focus:outline-none focus:border-gold-500 focus:ring-1 focus:ring-gold-500 transition-colors resize-none text-base"
+                disabled={isLoading}
+              />
               <button
                 type="submit"
                 disabled={isLoading || !query.trim()}
@@ -147,11 +177,9 @@ export default function Home() {
                 {error}
               </motion.div>
             )}
-          </motion.form>
+          </form>
         </motion.div>
-      </section>
 
-      <section className="px-4 py-16 max-w-5xl mx-auto w-full">
         <motion.div
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
