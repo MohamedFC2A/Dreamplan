@@ -19,10 +19,14 @@ interface ReadyResponse {
   profileFitSummary: string;
 }
 
-const client = new OpenAI({
-  apiKey: process.env.DEEPSEEK_API_KEY,
-  baseURL: "https://api.deepseek.com",
-});
+function createDeepSeekClient(): OpenAI | null {
+  const apiKey = process.env.DEEPSEEK_API_KEY;
+  if (!apiKey) return null;
+  return new OpenAI({
+    apiKey,
+    baseURL: "https://api.deepseek.com",
+  });
+}
 
 const MIN_QUESTIONS = 3;
 const MAX_QUESTIONS = 6;
@@ -258,7 +262,8 @@ async function aiFollowUpQuestion(
   query: string,
   qaHistory: PlannerAnswer[]
 ): Promise<PlannerQuestion | null> {
-  if (!process.env.DEEPSEEK_API_KEY) return null;
+  const client = createDeepSeekClient();
+  if (!client) return null;
   try {
     const completion = await withTimeout(
       client.chat.completions.create({

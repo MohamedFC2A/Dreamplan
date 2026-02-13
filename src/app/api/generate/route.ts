@@ -27,10 +27,14 @@ const VALID_CATEGORIES = new Set<TaskCategory>([
 ]);
 const VALID_IMPACT = new Set<VisualImpact>(["low", "medium", "high"]);
 
-const client = new OpenAI({
-  apiKey: process.env.DEEPSEEK_API_KEY,
-  baseURL: "https://api.deepseek.com",
-});
+function createDeepSeekClient(): OpenAI | null {
+  const apiKey = process.env.DEEPSEEK_API_KEY;
+  if (!apiKey) return null;
+  return new OpenAI({
+    apiKey,
+    baseURL: "https://api.deepseek.com",
+  });
+}
 
 function clamp(value: number, min: number, max: number): number {
   return Math.max(min, Math.min(max, value));
@@ -538,6 +542,10 @@ export async function POST(req: NextRequest) {
   const fallback = buildFallbackProtocol(query, locale, durationDays, mode, profile, qaHistory);
 
   if (!process.env.DEEPSEEK_API_KEY) {
+    return NextResponse.json(fallback);
+  }
+  const client = createDeepSeekClient();
+  if (!client) {
     return NextResponse.json(fallback);
   }
 

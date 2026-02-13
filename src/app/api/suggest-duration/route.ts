@@ -14,10 +14,14 @@ interface DurationSuggestion {
   goalType: GoalType;
 }
 
-const client = new OpenAI({
-  apiKey: process.env.DEEPSEEK_API_KEY,
-  baseURL: "https://api.deepseek.com",
-});
+function createDeepSeekClient(): OpenAI | null {
+  const apiKey = process.env.DEEPSEEK_API_KEY;
+  if (!apiKey) return null;
+  return new OpenAI({
+    apiKey,
+    baseURL: "https://api.deepseek.com",
+  });
+}
 
 const GOAL_WINDOWS: Record<GoalType, { min: number; max: number; fallback: number }> = {
   quick_visual: { min: 7, max: 21, fallback: 14 },
@@ -289,7 +293,8 @@ export async function POST(req: NextRequest) {
   }
 
   const deterministic = buildDeterministicSuggestion(query, locale);
-  if (!process.env.DEEPSEEK_API_KEY) {
+  const client = createDeepSeekClient();
+  if (!client) {
     return NextResponse.json(deterministic);
   }
 
