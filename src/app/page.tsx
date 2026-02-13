@@ -7,7 +7,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useLanguage } from "@/lib/LanguageContext";
 import { t } from "@/lib/i18n";
-import { PenLine, Bot, TrendingUp, Droplets, Skull, Zap, Crown, ArrowDown, ChevronDown, ArrowLeft, Sparkles, Clock, X, Calendar, Search, BookOpen, ListChecks, FileText, CheckCircle } from "lucide-react";
+import { PenLine, Bot, TrendingUp, Droplets, Skull, Zap, Crown, ArrowDown, ChevronDown, ArrowLeft, Sparkles, X, Calendar, Search, BookOpen, ListChecks, FileText, CheckCircle } from "lucide-react";
 import Navbar from "@/components/Navbar";
 
 const EXAMPLES_AR = [
@@ -241,168 +241,145 @@ function DurationModal({
   );
 }
 
-interface AiPlanningOverlayProps {
-  isVisible: boolean;
-  locale: "ar" | "en";
-  userGoal: string;
-}
-
-const PLAN_STEPS = [
-  { key: "planStep1" as const, icon: Search, duration: 1500 },
-  { key: "planStep2" as const, icon: BookOpen, duration: 2000 },
-  { key: "planStep3" as const, icon: ListChecks, duration: 2000 },
-  { key: "planStep4" as const, icon: FileText, duration: 1500 },
-  { key: "planStep5" as const, icon: CheckCircle, duration: 1000 },
+const INLINE_STEPS = [
+  { key: "planStep1" as const, icon: Search },
+  { key: "planStep2" as const, icon: BookOpen },
+  { key: "planStep3" as const, icon: ListChecks },
+  { key: "planStep4" as const, icon: FileText },
+  { key: "planStep5" as const, icon: CheckCircle },
 ];
 
-function AiPlanningOverlay({ isVisible, locale, userGoal }: AiPlanningOverlayProps) {
-  const [currentStep, setCurrentStep] = useState(-1);
+function InlinePlanningProgress({ locale, userGoal }: { locale: "ar" | "en"; userGoal: string }) {
+  const [activeStep, setActiveStep] = useState(0);
   const [progress, setProgress] = useState(0);
+  const progressRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
-    if (!isVisible) {
-      setCurrentStep(-1);
-      setProgress(0);
-      return;
-    }
+    let step = 0;
+    const stepDurations = [2000, 3000, 4000, 3000, 0];
+    const totalStepTime = stepDurations.reduce((a, b) => a + b, 0);
+    let startTime = Date.now();
 
-    let stepIndex = 0;
-    let cancelled = false;
-    const totalDuration = PLAN_STEPS.reduce((sum, s) => sum + s.duration, 0);
-    let elapsed = 0;
-    const timers: NodeJS.Timeout[] = [];
+    const tick = () => {
+      const elapsed = Date.now() - startTime;
+      const baseProgress = Math.min((elapsed / totalStepTime) * 85, 85);
+      setProgress(baseProgress);
 
-    const advanceStep = () => {
-      if (cancelled || stepIndex >= PLAN_STEPS.length) return;
-      setCurrentStep(stepIndex);
-      const stepDuration = PLAN_STEPS[stepIndex].duration;
-      elapsed += stepDuration;
-      setProgress(Math.min((elapsed / totalDuration) * 100, 100));
-      stepIndex++;
-      if (stepIndex < PLAN_STEPS.length) {
-        timers.push(setTimeout(advanceStep, stepDuration));
+      let accumulated = 0;
+      for (let i = 0; i < stepDurations.length; i++) {
+        accumulated += stepDurations[i];
+        if (elapsed < accumulated) {
+          setActiveStep(i);
+          break;
+        }
+        if (i === stepDurations.length - 1) {
+          setActiveStep(i);
+        }
+      }
+
+      if (baseProgress < 85) {
+        progressRef.current = setTimeout(tick, 100);
+      } else {
+        const crawl = () => {
+          setProgress((prev) => {
+            if (prev >= 95) return prev;
+            return prev + 0.1;
+          });
+          progressRef.current = setTimeout(crawl, 500);
+        };
+        crawl();
       }
     };
 
-    timers.push(setTimeout(advanceStep, 300));
+    progressRef.current = setTimeout(tick, 100);
     return () => {
-      cancelled = true;
-      timers.forEach(clearTimeout);
+      if (progressRef.current) clearTimeout(progressRef.current);
     };
-  }, [isVisible]);
+  }, []);
 
   return (
-    <AnimatePresence>
-      {isVisible && (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          className="fixed inset-0 z-[100] flex items-center justify-center p-4"
-        >
-          <div className="absolute inset-0 bg-black/90 backdrop-blur-md" />
+    <div className="max-w-2xl mx-auto">
+      <div className="flex items-center justify-center gap-3 mb-4">
+        <Bot className="w-5 h-5 text-gold-400 animate-pulse" />
+        <h3 className="font-heading text-lg md:text-xl font-bold text-white tracking-wide">
+          {t(locale, "planningTitle")}
+        </h3>
+      </div>
 
+      <div className="mb-5 px-4 py-3 rounded-xl bg-gold-500/5 border border-gold-500/15">
+        <span className="text-[10px] text-gold-400 font-bold uppercase tracking-widest">{t(locale, "planningYourGoal")}</span>
+        <p className="text-gray-300 text-sm mt-0.5 leading-relaxed truncate">{userGoal}</p>
+      </div>
+
+      <div className="mb-5">
+        <div className="flex items-center justify-between mb-1.5">
+          <span className="text-[10px] text-gray-500 uppercase tracking-widest font-bold">{t(locale, "planningProgress")}</span>
+          <span className="text-[10px] text-gold-400 font-bold">{Math.round(progress)}%</span>
+        </div>
+        <div className="w-full h-2 bg-[#111] rounded-full overflow-hidden border border-dark-border">
           <motion.div
-            initial={{ opacity: 0, scale: 0.9, y: 30 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.9, y: 30 }}
-            transition={{ type: "spring", damping: 25, stiffness: 300 }}
-            className="relative bg-[#0a0a0a] border border-gold-500/30 rounded-2xl p-8 md:p-10 max-w-lg w-full"
-          >
-            <div className="flex items-center justify-center gap-3 mb-6">
-              <Bot className="w-6 h-6 text-gold-400" />
-              <h3 className="font-heading text-xl md:text-2xl font-bold text-white tracking-wide">
-                {t(locale, "planningTitle")}
-              </h3>
-            </div>
+            className="h-full rounded-full"
+            style={{ background: "linear-gradient(90deg, #D4AF37, #f5d76e, #D4AF37)" }}
+            initial={{ width: "0%" }}
+            animate={{ width: `${progress}%` }}
+            transition={{ duration: 0.3, ease: "easeOut" }}
+          />
+        </div>
+      </div>
 
-            <div className="mb-6 p-4 rounded-xl bg-gold-500/5 border border-gold-500/20">
-              <div className="text-xs text-gold-400 font-bold uppercase tracking-wider mb-1">
-                {t(locale, "planningYourGoal")}
-              </div>
-              <p className="text-gray-300 text-sm leading-relaxed">{userGoal}</p>
-            </div>
+      <div className="flex items-center gap-1 md:gap-2">
+        {INLINE_STEPS.map((step, index) => {
+          const Icon = step.icon;
+          const isActive = activeStep === index;
+          const isCompleted = activeStep > index;
 
-            <div className="mb-6">
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-xs text-gray-500 uppercase tracking-wider font-bold">
-                  {t(locale, "planningProgress")}
+          return (
+            <motion.div
+              key={step.key}
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.05 * index }}
+              className="flex-1 relative"
+            >
+              <div className={`flex flex-col items-center gap-1.5 p-2 md:p-3 rounded-lg transition-all duration-500 ${
+                isActive ? "bg-gold-500/10" : ""
+              }`}>
+                <div className={`w-8 h-8 md:w-9 md:h-9 rounded-full flex items-center justify-center transition-all duration-500 ${
+                  isCompleted
+                    ? "bg-gold-500/20"
+                    : isActive
+                    ? "bg-gold-500/15 ring-2 ring-gold-500/30"
+                    : "bg-[#111]"
+                }`}>
+                  {isCompleted ? (
+                    <CheckCircle className="w-4 h-4 text-gold-400" />
+                  ) : (
+                    <Icon className={`w-4 h-4 transition-colors duration-500 ${isActive ? "text-gold-400" : "text-gray-700"}`} />
+                  )}
+                </div>
+                <span className={`text-[9px] md:text-[10px] font-bold text-center leading-tight transition-colors duration-500 ${
+                  isCompleted ? "text-gold-400/70" : isActive ? "text-gold-400" : "text-gray-700"
+                }`}>
+                  {t(locale, step.key)}
                 </span>
-                <span className="text-xs text-gold-400 font-bold">{Math.round(progress)}%</span>
-              </div>
-              <div className="w-full h-1.5 bg-dark-border rounded-full overflow-hidden">
-                <motion.div
-                  className="h-full bg-gold-500 rounded-full"
-                  initial={{ width: "0%" }}
-                  animate={{ width: `${progress}%` }}
-                  transition={{ duration: 0.5, ease: "easeOut" }}
-                />
-              </div>
-            </div>
-
-            <div className="space-y-3">
-              {PLAN_STEPS.map((step, index) => {
-                const Icon = step.icon;
-                const isCompleted = currentStep > index;
-                const isActive = currentStep === index;
-                const isPending = currentStep < index;
-
-                return (
+                {isActive && (
                   <motion.div
-                    key={step.key}
-                    initial={{ opacity: 0, x: locale === "ar" ? 20 : -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: 0.1 * index }}
-                    className={`flex items-center gap-4 p-3 rounded-xl transition-all duration-300 ${
-                      isActive
-                        ? "bg-gold-500/10 border border-gold-500/30"
-                        : isCompleted
-                        ? "bg-gold-500/5 border border-transparent"
-                        : "border border-transparent"
-                    }`}
-                  >
-                    <div className={`w-10 h-10 rounded-full flex items-center justify-center shrink-0 transition-all duration-300 ${
-                      isCompleted
-                        ? "bg-gold-500/20"
-                        : isActive
-                        ? "bg-gold-500/15"
-                        : "bg-dark-border/50"
-                    }`}>
-                      {isCompleted ? (
-                        <CheckCircle className="w-5 h-5 text-gold-400" />
-                      ) : (
-                        <Icon className={`w-5 h-5 transition-colors duration-300 ${
-                          isActive ? "text-gold-400" : "text-gray-600"
-                        }`} />
-                      )}
-                    </div>
-
-                    <div className="flex-1">
-                      <div className="flex items-center gap-2">
-                        <span className={`text-xs font-bold transition-colors duration-300 ${
-                          isCompleted || isActive ? "text-gold-400" : "text-gray-600"
-                        }`}>
-                          {String(index + 1).padStart(2, "0")}
-                        </span>
-                        <span className={`text-sm font-medium transition-colors duration-300 ${
-                          isCompleted ? "text-gray-300" : isActive ? "text-white" : "text-gray-600"
-                        }`}>
-                          {t(locale, step.key)}
-                        </span>
-                      </div>
-                    </div>
-
-                    {isActive && (
-                      <span className="w-2 h-2 rounded-full bg-gold-500 animate-pulse shrink-0" />
-                    )}
-                  </motion.div>
-                );
-              })}
-            </div>
-          </motion.div>
-        </motion.div>
-      )}
-    </AnimatePresence>
+                    className="absolute -bottom-0.5 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-gold-500"
+                    animate={{ opacity: [1, 0.3, 1] }}
+                    transition={{ duration: 1, repeat: Infinity }}
+                  />
+                )}
+              </div>
+              {index < INLINE_STEPS.length - 1 && (
+                <div className={`absolute top-[18px] md:top-[20px] -right-1 md:-right-1.5 w-2 md:w-3 h-px transition-colors duration-500 ${
+                  isCompleted ? "bg-gold-500/40" : "bg-[#1a1a1a]"
+                }`} />
+              )}
+            </motion.div>
+          );
+        })}
+      </div>
+    </div>
   );
 }
 
@@ -624,76 +601,82 @@ export default function Home() {
           className="animated-border-wrapper mb-16"
         >
           <div className="animated-border-inner p-8 md:p-10">
-            <div className="flex items-center justify-center gap-3 mb-2">
-              <div className="w-8 h-8 rounded-full bg-gold-500/10 flex items-center justify-center">
-                <Bot className="w-4 h-4 text-gold-400" />
-              </div>
-              <h2 className="font-heading text-2xl md:text-3xl font-bold text-white text-center tracking-wide">
-                {t(locale, "designProtocol")}
-              </h2>
-            </div>
-            <p className="text-gray-500 text-center mb-8 text-sm">
-              {t(locale, "designProtocolDesc")}
-            </p>
-
-            <form onSubmit={handleSubmit} className="max-w-2xl mx-auto">
-              <div className="flex flex-col gap-3">
-                <div className="relative">
-                  <textarea
-                    ref={textareaRef}
-                    value={query}
-                    onChange={(e) => setQuery(e.target.value)}
-                    onFocus={handleFocus}
-                    onBlur={handleBlur}
-                    rows={3}
-                    className="w-full bg-black border border-dark-border rounded-xl px-5 py-4 text-gray-100 focus:outline-none focus:border-gold-500 focus:ring-1 focus:ring-gold-500 transition-colors resize-none text-base placeholder-transparent"
-                    disabled={isLoading}
-                  />
-                  {!query && typewriter.isActive && (
-                    <div className="absolute top-0 left-0 right-0 px-5 py-4 pointer-events-none text-gray-600 text-base">
-                      {typewriter.text}
-                      <span className="inline-block w-[2px] h-[1.1em] bg-gold-500/60 align-middle animate-pulse ml-[1px]" />
-                    </div>
-                  )}
-                  {!query && !typewriter.isActive && (
-                    <div className="absolute top-0 left-0 right-0 px-5 py-4 pointer-events-none text-gray-600 text-base">
-                      {t(locale, "searchPlaceholder")}
-                    </div>
-                  )}
+            {showPlanning ? (
+              <InlinePlanningProgress locale={locale} userGoal={query} />
+            ) : (
+              <>
+                <div className="flex items-center justify-center gap-3 mb-2">
+                  <div className="w-8 h-8 rounded-full bg-gold-500/10 flex items-center justify-center">
+                    <Bot className="w-4 h-4 text-gold-400" />
+                  </div>
+                  <h2 className="font-heading text-2xl md:text-3xl font-bold text-white text-center tracking-wide">
+                    {t(locale, "designProtocol")}
+                  </h2>
                 </div>
+                <p className="text-gray-500 text-center mb-8 text-sm">
+                  {t(locale, "designProtocolDesc")}
+                </p>
 
-                <button
-                  type="submit"
-                  disabled={isLoading || !query.trim()}
-                  className="inline-flex items-center justify-center gap-2 bg-gold-500 hover:bg-gold-600 disabled:opacity-50 disabled:cursor-not-allowed text-black font-heading font-bold tracking-wider px-8 py-4 rounded-xl transition-all uppercase text-sm"
-                >
-                  {isLoading ? (
-                    <span className="flex items-center justify-center gap-2">
-                      <svg className="animate-spin w-5 h-5" viewBox="0 0 24 24" fill="none">
-                        <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="3" className="opacity-25" />
-                        <path d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" fill="currentColor" className="opacity-75" />
-                      </svg>
-                      {t(locale, "loading")}
-                    </span>
-                  ) : (
-                    <>
-                      <Sparkles className="w-4 h-4" />
-                      {t(locale, "generateBtn")}
-                    </>
+                <form onSubmit={handleSubmit} className="max-w-2xl mx-auto">
+                  <div className="flex flex-col gap-3">
+                    <div className="relative">
+                      <textarea
+                        ref={textareaRef}
+                        value={query}
+                        onChange={(e) => setQuery(e.target.value)}
+                        onFocus={handleFocus}
+                        onBlur={handleBlur}
+                        rows={3}
+                        className="w-full bg-black border border-dark-border rounded-xl px-5 py-4 text-gray-100 focus:outline-none focus:border-gold-500 focus:ring-1 focus:ring-gold-500 transition-colors resize-none text-base placeholder-transparent"
+                        disabled={isLoading}
+                      />
+                      {!query && typewriter.isActive && (
+                        <div className="absolute top-0 left-0 right-0 px-5 py-4 pointer-events-none text-gray-600 text-base">
+                          {typewriter.text}
+                          <span className="inline-block w-[2px] h-[1.1em] bg-gold-500/60 align-middle animate-pulse ml-[1px]" />
+                        </div>
+                      )}
+                      {!query && !typewriter.isActive && (
+                        <div className="absolute top-0 left-0 right-0 px-5 py-4 pointer-events-none text-gray-600 text-base">
+                          {t(locale, "searchPlaceholder")}
+                        </div>
+                      )}
+                    </div>
+
+                    <button
+                      type="submit"
+                      disabled={isLoading || !query.trim()}
+                      className="inline-flex items-center justify-center gap-2 bg-gold-500 hover:bg-gold-600 disabled:opacity-50 disabled:cursor-not-allowed text-black font-heading font-bold tracking-wider px-8 py-4 rounded-xl transition-all uppercase text-sm"
+                    >
+                      {isLoading ? (
+                        <span className="flex items-center justify-center gap-2">
+                          <svg className="animate-spin w-5 h-5" viewBox="0 0 24 24" fill="none">
+                            <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="3" className="opacity-25" />
+                            <path d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" fill="currentColor" className="opacity-75" />
+                          </svg>
+                          {t(locale, "loading")}
+                        </span>
+                      ) : (
+                        <>
+                          <Sparkles className="w-4 h-4" />
+                          {t(locale, "generateBtn")}
+                        </>
+                      )}
+                    </button>
+                  </div>
+
+                  {error && (
+                    <motion.div
+                      initial={{ opacity: 0, y: -10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      className="mt-4 p-3 rounded-lg bg-red-500/10 border border-red-500/30 text-red-400 text-sm"
+                    >
+                      {error}
+                    </motion.div>
                   )}
-                </button>
-              </div>
-
-              {error && (
-                <motion.div
-                  initial={{ opacity: 0, y: -10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className="mt-4 p-3 rounded-lg bg-red-500/10 border border-red-500/30 text-red-400 text-sm"
-                >
-                  {error}
-                </motion.div>
-              )}
-            </form>
+                </form>
+              </>
+            )}
           </div>
         </motion.div>
 
@@ -865,11 +848,6 @@ export default function Home() {
         errorMessage={durationError}
       />
 
-      <AiPlanningOverlay
-        isVisible={showPlanning}
-        locale={locale}
-        userGoal={query}
-      />
     </main>
   );
 }

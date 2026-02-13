@@ -26,6 +26,24 @@ function extractDuration(query: string): number {
   return 7;
 }
 
+function getSampleDays(totalDays: number): number[] {
+  if (totalDays <= 7) return Array.from({ length: totalDays }, (_, i) => i + 1);
+  if (totalDays <= 14) {
+    const days = [1, 2, 3];
+    for (let d = 5; d <= totalDays; d += 2) days.push(d);
+    if (!days.includes(totalDays)) days.push(totalDays);
+    return days.slice(0, 7);
+  }
+  const days = [1, 2, 3];
+  const step = Math.floor((totalDays - 3) / 4);
+  for (let i = 1; i <= 4; i++) {
+    const d = 3 + step * i;
+    if (d <= totalDays && !days.includes(d)) days.push(d);
+  }
+  if (!days.includes(totalDays)) days.push(totalDays);
+  return days.slice(0, 7);
+}
+
 export async function POST(req: NextRequest) {
   let body: any;
   try {
@@ -46,68 +64,71 @@ export async function POST(req: NextRequest) {
 
   const durationDays = extractDuration(query);
   const clampedDays = Math.max(7, Math.min(90, durationDays));
+  const sampleDays = getSampleDays(clampedDays);
 
   const progressData = Array.from({ length: clampedDays }, (_, i) => ({
     day: i + 1,
     impact: Math.round(((i + 1) / clampedDays) * 30),
   }));
 
-  const systemPrompt = `You are an expert bio-hacking research scientist. Generate a scientifically-grounded ${clampedDays}-day transformation protocol.
+  const sampleDaysStr = sampleDays.join(", ");
+
+  const systemPrompt = `You are a bio-hacking scientist. Generate a ${clampedDays}-day protocol.
 
 RULES:
-1. Scientific Realism: Use real physiological mechanisms only. No hallucination.
-2. If the goal is biologically impossible in ${clampedDays} days, pivot to the closest scientific visual alternative that IS achievable.
-3. Focus on fast visual changes: water manipulation, inflammation reduction, glycogen loading, pump-inducing nutrition.
-4. Every claim must reference a mechanism with [Source: PMID XXXXX] placeholder.
+1. Use real physiological mechanisms only.
+2. If goal is impossible in ${clampedDays} days, pivot to closest achievable alternative.
+3. Focus on fast visual changes: water manipulation, inflammation reduction, glycogen loading, pump nutrition.
+4. Reference mechanisms with [Source: PMID XXXXX].
 
-OUTPUT FORMAT: Return ONLY valid JSON (no markdown, no code blocks) matching this exact structure:
+OUTPUT: Return ONLY valid JSON (no markdown, no code blocks):
 {
   "id": "generated-protocol",
   "title": "English title",
   "titleAr": "Arabic title",
-  "subtitle": "English subtitle",
-  "subtitleAr": "Arabic subtitle",
-  "focus": ["English focus 1", "English focus 2", "English focus 3"],
-  "focusAr": ["Arabic focus 1", "Arabic focus 2", "Arabic focus 3"],
-  "scienceOverview": "English science overview paragraph",
-  "scienceOverviewAr": "Arabic science overview paragraph",
+  "subtitle": "English subtitle (include ${clampedDays}-day mention)",
+  "subtitleAr": "Arabic subtitle (include ${clampedDays} يوم)",
+  "focus": ["focus1", "focus2", "focus3"],
+  "focusAr": ["تركيز1", "تركيز2", "تركيز3"],
+  "scienceOverview": "English overview paragraph",
+  "scienceOverviewAr": "Arabic overview paragraph",
   "progressData": ${JSON.stringify(progressData)},
   "days": [
     {
-      "day": 1,
+      "day": NUMBER,
       "title": "English day title",
       "titleAr": "Arabic day title",
       "theme": "English theme",
       "themeAr": "Arabic theme",
-      "dailyGoal": "English daily goal description",
-      "dailyGoalAr": "Arabic daily goal description",
+      "dailyGoal": "English goal",
+      "dailyGoalAr": "Arabic goal",
       "tasks": [
         {
           "id": "d1t1",
-          "action": "English task description",
-          "actionAr": "Arabic task description",
-          "category": "one of: wake|meal|supplement|training|recovery|hydration|sleep",
-          "scienceWhy": "English science explanation [Source: PMID XXXXX]",
-          "scienceWhyAr": "Arabic science explanation [Source: PMID XXXXX]",
+          "action": "English task",
+          "actionAr": "Arabic task",
+          "category": "wake|meal|supplement|training|recovery|hydration|sleep",
+          "scienceWhy": "English explanation [Source: PMID XXXXX]",
+          "scienceWhyAr": "Arabic explanation",
           "visualImpact": "low|medium|high",
-          "tips": "Optional English tips",
-          "tipsAr": "Optional Arabic tips"
+          "tips": "English tips",
+          "tipsAr": "Arabic tips"
         }
       ]
     }
   ]
 }
 
-Generate ${clampedDays} days with 8-10 tasks each. Make Arabic text natural and proper.`;
+Generate ONLY days: ${sampleDaysStr}. Each day should have 8 tasks. Keep Arabic natural.`;
 
   try {
     const completion = await client.chat.completions.create({
       model: "deepseek-chat",
       messages: [
         { role: "system", content: systemPrompt },
-        { role: "user", content: `Generate a ${clampedDays}-day transformation protocol for: "${query}"` },
+        { role: "user", content: `${clampedDays}-day protocol for: "${query}"` },
       ],
-      max_tokens: 8192,
+      max_tokens: 4096,
       temperature: 0.7,
     });
 

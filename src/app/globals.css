@@ -77,9 +77,28 @@ a {
   transition: color 0.2s ease;
 }
 
-@keyframes rotate-border {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+@property --border-angle {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
+
+@property --worm-size {
+  syntax: "<percentage>";
+  initial-value: 8%;
+  inherits: false;
+}
+
+@keyframes worm-travel {
+  0% { --border-angle: 0deg; }
+  100% { --border-angle: 360deg; }
+}
+
+@keyframes worm-breathe {
+  0%, 100% { --worm-size: 6%; }
+  25% { --worm-size: 12%; }
+  50% { --worm-size: 4%; }
+  75% { --worm-size: 10%; }
 }
 
 .animated-border-wrapper {
@@ -87,6 +106,7 @@ a {
   border-radius: 1rem;
   padding: 2px;
   overflow: hidden;
+  animation: worm-travel 6s linear infinite, worm-breathe 4s ease-in-out infinite;
 }
 
 .animated-border-wrapper::before {
@@ -97,16 +117,40 @@ a {
   width: 200%;
   height: 200%;
   background: conic-gradient(
-    from 0deg,
-    transparent 0deg,
-    transparent 60deg,
-    #D4AF37 120deg,
-    rgba(212, 175, 55, 0.6) 180deg,
-    transparent 240deg,
-    transparent 300deg,
-    rgba(212, 175, 55, 0.3) 360deg
+    from var(--border-angle),
+    transparent 0%,
+    transparent calc(50% - var(--worm-size)),
+    rgba(212, 175, 55, 0.15) calc(50% - var(--worm-size) * 0.7),
+    rgba(212, 175, 55, 0.5) calc(50% - var(--worm-size) * 0.3),
+    #D4AF37 50%,
+    rgba(212, 175, 55, 0.5) calc(50% + var(--worm-size) * 0.3),
+    rgba(212, 175, 55, 0.15) calc(50% + var(--worm-size) * 0.7),
+    transparent calc(50% + var(--worm-size)),
+    transparent 100%
   );
-  animation: rotate-border 8s linear infinite;
+  animation: worm-travel 6s linear infinite;
+}
+
+.animated-border-wrapper::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: conic-gradient(
+    from var(--border-angle),
+    transparent 0%,
+    transparent 45%,
+    rgba(212, 175, 55, 0.08) 48%,
+    rgba(212, 175, 55, 0.15) 50%,
+    rgba(212, 175, 55, 0.08) 52%,
+    transparent 55%,
+    transparent 100%
+  );
+  animation: worm-travel 6s linear infinite;
+  filter: blur(15px);
+  z-index: 0;
 }
 
 .animated-border-inner {
