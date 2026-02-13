@@ -1,101 +1,113 @@
-import Image from "next/image";
+"use client";
+
+import { motion } from "framer-motion";
+import Link from "next/link";
+import { searchProtocol } from "@/app/actions";
 
 export default function Home() {
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="https://nextjs.org/icons/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+    <main className="min-h-screen flex flex-col items-center justify-center px-4 py-16">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6 }}
+        className="text-center max-w-3xl mx-auto"
+      >
+        <h1 className="font-heading text-6xl md:text-8xl font-bold text-glow text-cyber-500 tracking-wider mb-4">
+          MASCULINE PEAK
+        </h1>
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+        <motion.p
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.3, duration: 0.6 }}
+          className="font-heading text-xl md:text-2xl text-gray-400 tracking-widest uppercase mb-6"
+        >
+          The 7-Day Transformation Protocol
+        </motion.p>
+
+        <motion.p
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.5, duration: 0.6 }}
+          className="text-gray-500 text-lg mb-10 max-w-xl mx-auto leading-relaxed"
+        >
+          Science-backed bio-hacking protocols engineered for peak masculine physique.
+          Describe your goal and unlock your personalized transformation blueprint.
+        </motion.p>
+
+        <motion.form
+          action={searchProtocol}
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.7, duration: 0.5 }}
+          className="flex flex-col sm:flex-row gap-3 mb-16 max-w-xl mx-auto"
+        >
+          <input
+            type="text"
+            name="query"
+            placeholder="Describe your dream physique..."
+            className="flex-1 bg-dark-card border border-dark-border rounded-lg px-5 py-3.5 text-gray-100 placeholder-gray-600 focus:outline-none focus:border-cyber-500 focus:ring-1 focus:ring-cyber-500 transition-colors"
+          />
+          <button
+            type="submit"
+            className="bg-cyber-500 hover:bg-cyber-600 text-dark-bg font-heading font-bold tracking-wider px-6 py-3.5 rounded-lg transition-colors uppercase text-sm"
           >
-            <Image
-              className="dark:invert"
-              src="https://nextjs.org/icons/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
+            Generate Protocol
+          </button>
+        </motion.form>
+      </motion.div>
+
+      <motion.div
+        initial={{ opacity: 0, y: 30 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.9, duration: 0.6 }}
+        className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-3xl w-full px-4"
+      >
+        <Link href="/protocol/hand-veins" className="group">
+          <div className="bg-dark-card border border-dark-border rounded-xl p-6 hover:border-cyber-500 transition-all duration-300 group-hover:box-glow">
+            <div className="text-4xl mb-4">🩸</div>
+            <h3 className="font-heading text-xl font-bold text-gray-100 mb-2 tracking-wide">
+              Ultimate Vascularity
+            </h3>
+            <p className="text-gray-500 text-sm leading-relaxed">
+              Maximize dorsal venous network visibility through vasodilation, subcutaneous water manipulation & targeted forearm training.
+            </p>
+            <div className="mt-4 flex flex-wrap gap-2">
+              {["Vasodilation", "NO Boost", "Forearm Pump"].map((tag) => (
+                <span
+                  key={tag}
+                  className="text-xs px-2.5 py-1 rounded-full bg-cyber-500/10 text-cyber-400 border border-cyber-500/20"
+                >
+                  {tag}
+                </span>
+              ))}
+            </div>
+          </div>
+        </Link>
+
+        <Link href="/protocol/ronaldo-neck" className="group">
+          <div className="bg-dark-card border border-dark-border rounded-xl p-6 hover:border-cyber-500 transition-all duration-300 group-hover:box-glow">
+            <div className="text-4xl mb-4">🗿</div>
+            <h3 className="font-heading text-xl font-bold text-gray-100 mb-2 tracking-wide">
+              The Ronaldo Neck
+            </h3>
+            <p className="text-gray-500 text-sm leading-relaxed">
+              Maximize thyroid cartilage visibility through neck leanness, SCM hypertrophy & postural optimization for a dominant profile.
+            </p>
+            <div className="mt-4 flex flex-wrap gap-2">
+              {["SCM Growth", "Posture Fix", "Jawline"].map((tag) => (
+                <span
+                  key={tag}
+                  className="text-xs px-2.5 py-1 rounded-full bg-cyber-500/10 text-cyber-400 border border-cyber-500/20"
+                >
+                  {tag}
+                </span>
+              ))}
+            </div>
+          </div>
+        </Link>
+      </motion.div>
+    </main>
   );
 }

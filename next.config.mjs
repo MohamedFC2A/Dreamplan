@@ -1,6 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  allowedDevOrigins: ['*'],
+  allowedDevOrigins: ['https://*.replit.dev', 'https://*.replit.app', 'https://*.worf.replit.dev'],
   async headers() {
     return [
       {
