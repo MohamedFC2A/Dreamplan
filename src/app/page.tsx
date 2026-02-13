@@ -1,14 +1,262 @@
 "use client";
 
-import { useState } from "react";
-import { motion } from "framer-motion";
+import { useState, useEffect, useRef, useCallback } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useLanguage } from "@/lib/LanguageContext";
 import { t } from "@/lib/i18n";
-import { PenLine, Bot, TrendingUp, Droplets, Skull, Zap, Crown, ArrowDown, ChevronDown, ArrowLeft } from "lucide-react";
+import { PenLine, Bot, TrendingUp, Droplets, Skull, Zap, Crown, ArrowDown, ChevronDown, ArrowLeft, Sparkles, Clock, X, Calendar } from "lucide-react";
 import Navbar from "@/components/Navbar";
+
+const EXAMPLES_AR = [
+  "أريد عروق بارزة في يدي وساعدي خلال 14 يوم",
+  "أريد رقبة قوية مثل كريستيانو رونالدو في 7 أيام",
+  "خطة لخسارة 5 كيلو من الدهون في 30 يوم",
+  "أريد عضلات بطن مقسمة سكس باك خلال 21 يوم",
+  "أريد أكتاف عريضة وشكل V في 14 يوم",
+  "خطة تضخيم الذراعين في 30 يوم",
+  "أريد فك حاد ووجه منحوت خلال 21 يوم",
+];
+
+const EXAMPLES_EN = [
+  "I want visible hand and forearm veins in 14 days",
+  "Build a strong Ronaldo-like neck in 7 days",
+  "Lose 5kg of body fat in 30 days",
+  "Get shredded six pack abs in 21 days",
+  "Wide shoulders and V-taper in 14 days",
+  "Bulk up my arms in 30 days",
+  "Sharp jawline and sculpted face in 21 days",
+];
+
+const CHIPS_AR = [
+  { label: "عروق بارزة", prompt: "أريد عروق بارزة في يدي وساعدي خلال 14 يوم" },
+  { label: "رقبة رونالدو", prompt: "أريد رقبة قوية مثل كريستيانو رونالدو في 7 أيام" },
+  { label: "سكس باك", prompt: "أريد عضلات بطن مقسمة سكس باك خلال 21 يوم" },
+  { label: "شكل V", prompt: "أريد أكتاف عريضة وشكل V في 14 يوم" },
+  { label: "فك حاد", prompt: "أريد فك حاد ووجه منحوت خلال 21 يوم" },
+  { label: "تضخيم الذراعين", prompt: "خطة تضخيم الذراعين في 30 يوم" },
+];
+
+const CHIPS_EN = [
+  { label: "Hand veins", prompt: "I want visible hand and forearm veins in 14 days" },
+  { label: "Ronaldo neck", prompt: "Build a strong Ronaldo-like neck in 7 days" },
+  { label: "Six pack", prompt: "Get shredded six pack abs in 21 days" },
+  { label: "V-taper", prompt: "Wide shoulders and V-taper in 14 days" },
+  { label: "Jawline", prompt: "Sharp jawline and sculpted face in 21 days" },
+  { label: "Arm bulk", prompt: "Bulk up my arms in 30 days" },
+];
+
+function useTypewriter(
+  examples: string[],
+  options?: { typeSpeed?: number; deleteSpeed?: number; pauseTime?: number; deletePause?: number }
+) {
+  const [text, setText] = useState("");
+  const [isActive, setIsActive] = useState(true);
+  const indexRef = useRef(0);
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const isActiveRef = useRef(true);
+
+  const typeSpeed = options?.typeSpeed ?? 60;
+  const deleteSpeed = options?.deleteSpeed ?? 30;
+  const pauseTime = options?.pauseTime ?? 2000;
+  const deletePause = options?.deletePause ?? 500;
+
+  const clear = useCallback(() => {
+    if (timeoutRef.current) clearTimeout(timeoutRef.current);
+  }, []);
+
+  useEffect(() => {
+    isActiveRef.current = isActive;
+  }, [isActive]);
+
+  useEffect(() => {
+    if (!isActive || examples.length === 0) {
+      clear();
+      return;
+    }
+
+    let cancelled = false;
+
+    async function run() {
+      while (!cancelled && isActiveRef.current) {
+        const currentExample = examples[indexRef.current % examples.length];
+
+        for (let i = 0; i <= currentExample.length; i++) {
+          if (cancelled || !isActiveRef.current) return;
+          setText(currentExample.slice(0, i));
+          await new Promise((r) => {
+            timeoutRef.current = setTimeout(r, typeSpeed + Math.random() * 30);
+          });
+        }
+
+        if (cancelled || !isActiveRef.current) return;
+        await new Promise((r) => {
+          timeoutRef.current = setTimeout(r, pauseTime);
+        });
+
+        for (let i = currentExample.length; i >= 0; i--) {
+          if (cancelled || !isActiveRef.current) return;
+          setText(currentExample.slice(0, i));
+          await new Promise((r) => {
+            timeoutRef.current = setTimeout(r, deleteSpeed);
+          });
+        }
+
+        if (cancelled || !isActiveRef.current) return;
+        await new Promise((r) => {
+          timeoutRef.current = setTimeout(r, deletePause);
+        });
+
+        indexRef.current = (indexRef.current + 1) % examples.length;
+      }
+    }
+
+    run();
+
+    return () => {
+      cancelled = true;
+      clear();
+    };
+  }, [isActive, examples, typeSpeed, deleteSpeed, pauseTime, deletePause, clear]);
+
+  return {
+    text,
+    isActive,
+    pause: () => {
+      setIsActive(false);
+      setText("");
+    },
+    resume: () => setIsActive(true),
+  };
+}
+
+function detectDuration(query: string): number | null {
+  const patterns = [
+    { regex: /(\d+)\s*(?:day|days|يوم|أيام|ايام)/i, multiplier: 1 },
+    { regex: /(\d+)\s*(?:week|weeks|اسبوع|أسبوع|أسابيع|اسابيع)/i, multiplier: 7 },
+    { regex: /(\d+)\s*(?:month|months|شهر|أشهر|اشهر)/i, multiplier: 30 },
+  ];
+
+  for (const { regex, multiplier } of patterns) {
+    const match = query.match(regex);
+    if (match) {
+      return parseInt(match[1], 10) * multiplier;
+    }
+  }
+  return null;
+}
+
+function validateDuration(days: number): { valid: boolean; errorKey?: "tooShort" | "tooLong" } {
+  if (days < 7) return { valid: false, errorKey: "tooShort" };
+  if (days > 90) return { valid: false, errorKey: "tooLong" };
+  return { valid: true };
+}
+
+const DURATION_OPTIONS = [
+  { days: 7, noteKey: "quickStart" as const },
+  { days: 14, noteKey: "recommended" as const },
+  { days: 21, noteKey: "visibleResults" as const },
+  { days: 30, noteKey: "fullTransform" as const },
+  { days: 60, noteKey: "deepChange" as const },
+  { days: 90, noteKey: "maxResults" as const },
+];
+
+function DurationModal({
+  isOpen,
+  onSelect,
+  onClose,
+  locale,
+  errorMessage,
+}: {
+  isOpen: boolean;
+  onSelect: (days: number) => void;
+  onClose: () => void;
+  locale: "ar" | "en";
+  errorMessage?: string;
+}) {
+  return (
+    <AnimatePresence>
+      {isOpen && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className="fixed inset-0 z-50 flex items-center justify-center p-4"
+        >
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="absolute inset-0 bg-black/80 backdrop-blur-sm"
+            onClick={onClose}
+          />
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9, y: 20 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.9, y: 20 }}
+            transition={{ type: "spring", damping: 25, stiffness: 300 }}
+            className="relative bg-[#0a0a0a] border border-gold-500/30 rounded-2xl p-6 md:p-8 max-w-lg w-full shadow-2xl shadow-gold-500/10"
+          >
+            <button
+              onClick={onClose}
+              className="absolute top-4 right-4 text-gray-500 hover:text-white transition-colors"
+            >
+              <X className="w-5 h-5" />
+            </button>
+
+            <div className="flex items-center gap-3 mb-2">
+              <div className="w-10 h-10 rounded-full bg-gold-500/10 flex items-center justify-center">
+                <Calendar className="w-5 h-5 text-gold-400" />
+              </div>
+              <h3 className="font-heading text-xl font-bold text-white tracking-wide">
+                {t(locale, "durationQuestion")}
+              </h3>
+            </div>
+
+            {errorMessage && (
+              <motion.div
+                initial={{ opacity: 0, y: -5 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="mb-4 p-3 rounded-lg bg-red-500/10 border border-red-500/30 text-red-400 text-sm"
+              >
+                {errorMessage}
+              </motion.div>
+            )}
+
+            <p className="text-gray-500 text-sm mb-6">
+              {t(locale, "durationNote")}
+            </p>
+
+            <div className="grid grid-cols-2 gap-3">
+              {DURATION_OPTIONS.map((opt) => (
+                <motion.button
+                  key={opt.days}
+                  whileHover={{ scale: 1.03 }}
+                  whileTap={{ scale: 0.97 }}
+                  onClick={() => onSelect(opt.days)}
+                  className="group relative bg-black border border-dark-border hover:border-gold-500/50 rounded-xl p-4 text-start transition-all"
+                >
+                  <div className="font-heading text-2xl font-bold text-gold-500 mb-1">
+                    {opt.days}
+                  </div>
+                  <div className="text-gray-300 text-sm font-medium">
+                    {locale === "ar" ? `${opt.days} ${opt.days === 7 ? "أيام" : "يوم"}` : `${opt.days} Days`}
+                  </div>
+                  <div className="text-gray-600 text-xs mt-1">
+                    {t(locale, opt.noteKey)}
+                  </div>
+                  <div className="absolute inset-0 rounded-xl bg-gold-500/5 opacity-0 group-hover:opacity-100 transition-opacity" />
+                </motion.button>
+              ))}
+            </div>
+          </motion.div>
+        </motion.div>
+      )}
+    </AnimatePresence>
+  );
+}
 
 export default function Home() {
   const { locale } = useLanguage();
@@ -16,19 +264,26 @@ export default function Home() {
   const [query, setQuery] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
+  const [showDurationModal, setShowDurationModal] = useState(false);
+  const [durationError, setDurationError] = useState("");
+  const [pendingQuery, setPendingQuery] = useState("");
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!query.trim()) return;
+  const examples = locale === "ar" ? EXAMPLES_AR : EXAMPLES_EN;
+  const chips = locale === "ar" ? CHIPS_AR : CHIPS_EN;
 
+  const typewriter = useTypewriter(examples);
+
+  const callApi = async (finalQuery: string) => {
     setIsLoading(true);
     setError("");
+    setShowDurationModal(false);
 
     try {
       const res = await fetch("/api/generate", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ query: query.trim(), locale }),
+        body: JSON.stringify({ query: finalQuery.trim(), locale }),
       });
 
       if (!res.ok) {
@@ -44,6 +299,68 @@ export default function Home() {
       setError(err.message || t(locale, "errorDesc"));
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!query.trim()) return;
+
+    const duration = detectDuration(query);
+
+    if (duration === null) {
+      setPendingQuery(query.trim());
+      setDurationError("");
+      setShowDurationModal(true);
+      return;
+    }
+
+    const validation = validateDuration(duration);
+    if (!validation.valid) {
+      setPendingQuery(query.trim());
+      setDurationError(validation.errorKey ? t(locale, validation.errorKey) : "");
+      setShowDurationModal(true);
+      return;
+    }
+
+    await callApi(query);
+  };
+
+  const handleDurationSelect = async (days: number) => {
+    const durationSuffix = locale === "ar"
+      ? ` خلال ${days} يوم`
+      : ` in ${days} days`;
+
+    const durationDetected = detectDuration(pendingQuery);
+    let finalQuery = pendingQuery;
+
+    if (durationDetected === null) {
+      finalQuery = pendingQuery + durationSuffix;
+    } else {
+      finalQuery = pendingQuery.replace(
+        /\d+\s*(?:day|days|يوم|أيام|ايام|week|weeks|اسبوع|أسبوع|أسابيع|اسابيع|month|months|شهر|أشهر|اشهر)/i,
+        `${days} ${locale === "ar" ? "يوم" : "days"}`
+      );
+    }
+
+    setQuery(finalQuery);
+    setShowDurationModal(false);
+    await callApi(finalQuery);
+  };
+
+  const handleChipClick = (prompt: string) => {
+    setQuery(prompt);
+    typewriter.pause();
+    textareaRef.current?.focus();
+  };
+
+  const handleFocus = () => {
+    typewriter.pause();
+  };
+
+  const handleBlur = () => {
+    if (!query.trim()) {
+      typewriter.resume();
     }
   };
 
@@ -110,7 +427,7 @@ export default function Home() {
 
               <div className="flex items-center gap-6 mb-8">
                 {[
-                  { value: "7", label: locale === "ar" ? "أيام" : "Days" },
+                  { value: "7-90", label: locale === "ar" ? "يوم" : "Days" },
                   { value: "70+", label: locale === "ar" ? "مهمة" : "Tasks" },
                   { value: "AI", label: locale === "ar" ? "مدعوم" : "Powered" },
                 ].map((stat, i) => (
@@ -159,29 +476,82 @@ export default function Home() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="bg-dark-card border border-dark-border rounded-2xl p-8 md:p-10 mb-16"
+          className="relative bg-dark-card rounded-2xl p-8 md:p-10 mb-16 overflow-hidden"
+          style={{
+            border: "1px solid transparent",
+            backgroundClip: "padding-box",
+          }}
         >
-          <h2 className="font-heading text-2xl md:text-3xl font-bold text-white text-center mb-2 tracking-wide">
-            {locale === "ar" ? "صمم بروتوكولك" : "Design Your Protocol"}
-          </h2>
+          <div className="absolute inset-0 rounded-2xl" style={{
+            background: "linear-gradient(135deg, rgba(212,175,55,0.3), rgba(212,175,55,0.05) 50%, rgba(212,175,55,0.3))",
+            mask: "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
+            maskComposite: "xor",
+            WebkitMaskComposite: "xor",
+            padding: "1px",
+            borderRadius: "1rem",
+            pointerEvents: "none",
+          }} />
+
+          <div className="absolute -top-20 -right-20 w-60 h-60 bg-gold-500/5 rounded-full blur-3xl pointer-events-none" />
+          <div className="absolute -bottom-20 -left-20 w-60 h-60 bg-gold-500/5 rounded-full blur-3xl pointer-events-none" />
+
+          <div className="flex items-center justify-center gap-3 mb-2">
+            <div className="w-8 h-8 rounded-full bg-gold-500/10 flex items-center justify-center">
+              <Bot className="w-4 h-4 text-gold-400" />
+            </div>
+            <h2 className="font-heading text-2xl md:text-3xl font-bold text-white text-center tracking-wide">
+              {t(locale, "designProtocol")}
+            </h2>
+          </div>
           <p className="text-gray-500 text-center mb-8 text-sm">
-            {locale === "ar" ? "صف الجسم الذي تحلم به وسيبني الذكاء الاصطناعي خطتك" : "Describe your dream physique and AI will build your plan"}
+            {t(locale, "designProtocolDesc")}
           </p>
 
           <form onSubmit={handleSubmit} className="max-w-2xl mx-auto">
             <div className="flex flex-col gap-3">
-              <textarea
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-                placeholder={t(locale, "searchPlaceholder")}
-                rows={3}
-                className="w-full bg-black border border-dark-border rounded-xl px-5 py-4 text-gray-100 placeholder-gray-600 focus:outline-none focus:border-gold-500 focus:ring-1 focus:ring-gold-500 transition-colors resize-none text-base"
-                disabled={isLoading}
-              />
+              <div className="relative">
+                <textarea
+                  ref={textareaRef}
+                  value={query}
+                  onChange={(e) => setQuery(e.target.value)}
+                  onFocus={handleFocus}
+                  onBlur={handleBlur}
+                  rows={3}
+                  className="w-full bg-black border border-dark-border rounded-xl px-5 py-4 text-gray-100 focus:outline-none focus:border-gold-500 focus:ring-1 focus:ring-gold-500 transition-colors resize-none text-base placeholder-transparent"
+                  disabled={isLoading}
+                />
+                {!query && typewriter.isActive && (
+                  <div className="absolute top-0 left-0 right-0 px-5 py-4 pointer-events-none text-gray-600 text-base">
+                    {typewriter.text}
+                    <span className="inline-block w-[2px] h-[1.1em] bg-gold-500/60 align-middle animate-pulse ml-[1px]" />
+                  </div>
+                )}
+                {!query && !typewriter.isActive && (
+                  <div className="absolute top-0 left-0 right-0 px-5 py-4 pointer-events-none text-gray-600 text-base">
+                    {t(locale, "searchPlaceholder")}
+                  </div>
+                )}
+              </div>
+
+              <div className="flex flex-wrap gap-2">
+                {chips.map((chip) => (
+                  <motion.button
+                    key={chip.label}
+                    type="button"
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    onClick={() => handleChipClick(chip.prompt)}
+                    className="text-xs px-3 py-1.5 rounded-full bg-gold-500/10 text-gold-400 border border-gold-500/20 hover:bg-gold-500/20 hover:border-gold-500/40 transition-all cursor-pointer"
+                  >
+                    {chip.label}
+                  </motion.button>
+                ))}
+              </div>
+
               <button
                 type="submit"
                 disabled={isLoading || !query.trim()}
-                className="bg-gold-500 hover:bg-gold-600 disabled:opacity-50 disabled:cursor-not-allowed text-black font-heading font-bold tracking-wider px-8 py-4 rounded-xl transition-all uppercase text-sm"
+                className="inline-flex items-center justify-center gap-2 bg-gold-500 hover:bg-gold-600 disabled:opacity-50 disabled:cursor-not-allowed text-black font-heading font-bold tracking-wider px-8 py-4 rounded-xl transition-all uppercase text-sm"
               >
                 {isLoading ? (
                   <span className="flex items-center justify-center gap-2">
@@ -192,7 +562,10 @@ export default function Home() {
                     {t(locale, "loading")}
                   </span>
                 ) : (
-                  t(locale, "generateBtn")
+                  <>
+                    <Sparkles className="w-4 h-4" />
+                    {t(locale, "generateBtn")}
+                  </>
                 )}
               </button>
             </div>
@@ -368,6 +741,14 @@ export default function Home() {
           </div>
         </div>
       </footer>
+
+      <DurationModal
+        isOpen={showDurationModal}
+        onSelect={handleDurationSelect}
+        onClose={() => setShowDurationModal(false)}
+        locale={locale}
+        errorMessage={durationError}
+      />
     </main>
   );
 }

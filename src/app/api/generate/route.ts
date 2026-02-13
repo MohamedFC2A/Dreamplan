@@ -6,6 +6,26 @@ const client = new OpenAI({
   baseURL: "https://api.deepseek.com",
 });
 
+function extractDuration(query: string): number {
+  const patterns = [
+    /(\d+)\s*(?:day|days|يوم|أيام|ايام)/i,
+    /(\d+)\s*(?:week|weeks|اسبوع|أسبوع|أسابيع|اسابيع)/i,
+    /(\d+)\s*(?:month|months|شهر|أشهر|اشهر)/i,
+  ];
+
+  for (let i = 0; i < patterns.length; i++) {
+    const match = query.match(patterns[i]);
+    if (match) {
+      const num = parseInt(match[1], 10);
+      if (i === 0) return num;
+      if (i === 1) return num * 7;
+      if (i === 2) return num * 30;
+    }
+  }
+
+  return 7;
+}
+
 export async function POST(req: NextRequest) {
   let body: any;
   try {
@@ -24,11 +44,19 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Invalid locale" }, { status: 400 });
   }
 
-  const systemPrompt = `You are an expert bio-hacking research scientist. Generate a scientifically-grounded 7-day transformation protocol.
+  const durationDays = extractDuration(query);
+  const clampedDays = Math.max(7, Math.min(90, durationDays));
+
+  const progressData = Array.from({ length: clampedDays }, (_, i) => ({
+    day: i + 1,
+    impact: Math.round(((i + 1) / clampedDays) * 30),
+  }));
+
+  const systemPrompt = `You are an expert bio-hacking research scientist. Generate a scientifically-grounded ${clampedDays}-day transformation protocol.
 
 RULES:
 1. Scientific Realism: Use real physiological mechanisms only. No hallucination.
-2. If the goal is biologically impossible in 7 days, pivot to the closest scientific visual alternative that IS achievable.
+2. If the goal is biologically impossible in ${clampedDays} days, pivot to the closest scientific visual alternative that IS achievable.
 3. Focus on fast visual changes: water manipulation, inflammation reduction, glycogen loading, pump-inducing nutrition.
 4. Every claim must reference a mechanism with [Source: PMID XXXXX] placeholder.
 
@@ -43,7 +71,7 @@ OUTPUT FORMAT: Return ONLY valid JSON (no markdown, no code blocks) matching thi
   "focusAr": ["Arabic focus 1", "Arabic focus 2", "Arabic focus 3"],
   "scienceOverview": "English science overview paragraph",
   "scienceOverviewAr": "Arabic science overview paragraph",
-  "progressData": [{"day":1,"impact":5},{"day":2,"impact":8},{"day":3,"impact":12},{"day":4,"impact":17},{"day":5,"impact":21},{"day":6,"impact":26},{"day":7,"impact":30}],
+  "progressData": ${JSON.stringify(progressData)},
   "days": [
     {
       "day": 1,
@@ -70,14 +98,14 @@ OUTPUT FORMAT: Return ONLY valid JSON (no markdown, no code blocks) matching thi
   ]
 }
 
-Generate 7 days with 8-10 tasks each. Make Arabic text natural and proper.`;
+Generate ${clampedDays} days with 8-10 tasks each. Make Arabic text natural and proper.`;
 
   try {
     const completion = await client.chat.completions.create({
       model: "deepseek-chat",
       messages: [
         { role: "system", content: systemPrompt },
-        { role: "user", content: `Generate a 7-day transformation protocol for: "${query}"` },
+        { role: "user", content: `Generate a ${clampedDays}-day transformation protocol for: "${query}"` },
       ],
       max_tokens: 8192,
       temperature: 0.7,
