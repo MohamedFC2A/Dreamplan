@@ -1,19 +1,25 @@
-import handVeinsData from "@/data/hand-veins.json";
-import ronaldoNeckData from "@/data/ronaldo-neck.json";
-
-export interface ScheduleEntry {
-  time: string;
-  category: "wake" | "meal" | "supplement" | "training" | "recovery" | "hydration" | "sleep";
+export interface TaskPoint {
+  id: string;
   action: string;
+  actionAr: string;
+  category: "wake" | "meal" | "supplement" | "training" | "recovery" | "hydration" | "sleep";
   scienceWhy: string;
+  scienceWhyAr: string;
   visualImpact: "low" | "medium" | "high";
+  tips?: string;
+  tipsAr?: string;
+  exerciseImage?: string;
 }
 
 export interface DayPlan {
   day: number;
   title: string;
+  titleAr: string;
   theme: string;
-  schedule: ScheduleEntry[];
+  themeAr: string;
+  dailyGoal: string;
+  dailyGoalAr: string;
+  tasks: TaskPoint[];
 }
 
 export interface ProgressPoint {
@@ -24,21 +30,28 @@ export interface ProgressPoint {
 export interface Protocol {
   id: string;
   title: string;
+  titleAr: string;
   subtitle: string;
+  subtitleAr: string;
   focus: string[];
+  focusAr: string[];
   scienceOverview: string;
+  scienceOverviewAr: string;
   progressData: ProgressPoint[];
   days: DayPlan[];
 }
 
+import handVeinsData from "@/data/hand-veins.json";
+import ronaldoNeckData from "@/data/ronaldo-neck.json";
+
 export const protocols: Record<string, Protocol> = {
-  "hand-veins": handVeinsData as Protocol,
-  "ronaldo-neck": ronaldoNeckData as Protocol,
+  "hand-veins": handVeinsData as unknown as Protocol,
+  "ronaldo-neck": ronaldoNeckData as unknown as Protocol,
 };
 
 const keywordMap: Record<string, string[]> = {
-  "hand-veins": ["vein", "vascularity", "vascular", "hand", "forearm"],
-  "ronaldo-neck": ["neck", "adam", "apple", "ronaldo", "jawline", "jaw", "throat"],
+  "hand-veins": ["vein", "vascularity", "vascular", "hand", "forearm", "عروق", "وريد", "أوعية", "يد", "ساعد"],
+  "ronaldo-neck": ["neck", "adam", "apple", "ronaldo", "jawline", "jaw", "throat", "رقبة", "رونالدو", "فك", "حنجرة", "تفاحة"],
 };
 
 export function findProtocol(query: string): Protocol | null {

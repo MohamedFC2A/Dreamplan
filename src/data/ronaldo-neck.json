@@ -1,9 +1,13 @@
 {
   "id": "ronaldo-neck",
   "title": "The Ronaldo Neck: Prominent Adam's Apple Protocol",
+  "titleAr": "رقبة رونالدو: بروتوكول بروز تفاحة آدم",
   "subtitle": "Maximize thyroid cartilage visibility through neck leanness, SCM hypertrophy & postural optimization",
+  "subtitleAr": "تعزيز ظهور الغضروف الدرقي عبر نحافة الرقبة وتضخم العضلة القصية الترقوية الخشائية وتحسين وضعية الجسم",
   "focus": ["Submental Fat Reduction", "SCM Hypertrophy", "Posture Correction", "Anti-Inflammatory Diet"],
+  "focusAr": ["تقليل دهون أسفل الذقن", "تضخم العضلة القصية الترقوية الخشائية", "تصحيح وضعية الجسم", "نظام غذائي مضاد للالتهاب"],
   "scienceOverview": "The thyroid cartilage (Adam's apple) is a fixed anatomical structure that does not significantly grow or change shape in adults. However, its visual prominence can be dramatically enhanced through three synergistic strategies: (1) reducing submental and anterior cervical fat through an anti-inflammatory, calorie-controlled diet that targets facial and neck bloat via sodium restriction and inflammation reduction; (2) hypertrophying the sternocleidomastoid (SCM) muscles, which frame the thyroid cartilage laterally and create contrast that makes the cartilage appear larger and more angular; and (3) correcting forward head posture (FHP) through targeted postural exercises that extend the cervical spine, pulling the skin taut over the thyroid cartilage and increasing its anterior projection. This protocol combines all three mechanisms over seven days using evidence-based techniques from sports medicine, postural rehabilitation, and nutritional science.",
+  "scienceOverviewAr": "الغضروف الدرقي (تفاحة آدم) هو بنية تشريحية ثابتة لا تنمو أو تتغير شكلياً بشكل ملحوظ عند البالغين. ومع ذلك، يمكن تعزيز بروزها البصري بشكل كبير من خلال ثلاث استراتيجيات تآزرية: (1) تقليل الدهون تحت الذقن وأمام الرقبة عبر نظام غذائي مضاد للالتهاب ومحكوم السعرات يستهدف انتفاخ الوجه والرقبة بتقييد الصوديوم وتقليل الالتهاب؛ (2) تضخيم العضلة القصية الترقوية الخشائية (SCM) التي تؤطر الغضروف الدرقي جانبياً وتخلق تبايناً يجعل الغضروف يبدو أكبر وأكثر زاوية؛ (3) تصحيح وضعية الرأس الأمامية عبر تمارين وضعية مستهدفة تمد العمود الفقري العنقي، وتشد الجلد فوق الغضروف الدرقي وتزيد بروزه الأمامي. يجمع هذا البروتوكول الآليات الثلاث خلال سبعة أيام باستخدام تقنيات مبنية على الأدلة من الطب الرياضي والتأهيل الوضعي وعلم التغذية.",
   "progressData": [
     { "day": 1, "impact": 4 },
     { "day": 2, "impact": 8 },
@@ -17,90 +21,104 @@
     {
       "day": 1,
       "title": "Anti-Inflammatory Reset & Postural Baseline",
+      "titleAr": "إعادة ضبط مضادة للالتهاب وخط أساس وضعي",
       "theme": "Foundation Phase",
-      "schedule": [
+      "themeAr": "مرحلة التأسيس",
+      "dailyGoal": "Establish anti-inflammatory nutrition, begin posture correction, and start SCM activation",
+      "dailyGoalAr": "تأسيس التغذية المضادة للالتهاب وبدء تصحيح الوضعية وتنشيط العضلة القصية الترقوية الخشائية",
+      "tasks": [
         {
-          "time": "6:00 AM",
-          "category": "wake",
+          "id": "d1t1",
           "action": "Wake up. Take baseline photos of neck from front, side (45°), and profile. Assess forward head posture by standing against a wall — note gap between occiput and wall.",
-          "scienceWhy": "Baseline documentation using standardized angles allows objective tracking of thyroid cartilage prominence over the 7 days. The wall test quantifies forward head posture (FHP): a gap greater than 2 cm indicates FHP that is compressing the anterior neck and obscuring the Adam's apple [Source: PMID 29306562].",
-          "visualImpact": "low"
+          "actionAr": "استيقظ. التقط صور أساسية للرقبة من الأمام والجانب (45°) والجانبي. قيّم وضعية الرأس الأمامية بالوقوف مقابل الجدار — لاحظ الفجوة بين مؤخرة الرأس والجدار.",
+          "category": "wake",
+          "scienceWhy": "Baseline documentation using standardized angles allows objective tracking of thyroid cartilage prominence over 7 days. The wall test quantifies forward head posture (FHP): a gap greater than 2 cm indicates FHP that is compressing the anterior neck and obscuring the Adam's apple [PMID 29306562].",
+          "scienceWhyAr": "التوثيق الأساسي بزوايا موحدة يسمح بتتبع موضوعي لبروز الغضروف الدرقي خلال 7 أيام. اختبار الجدار يقيّم وضعية الرأس الأمامية: فجوة أكبر من 2 سم تشير لوضعية أمامية تضغط مقدمة الرقبة وتحجب تفاحة آدم [PMID 29306562].",
+          "visualImpact": "low",
+          "tips": "Take photos in the same lighting and position each day for accurate comparison",
+          "tipsAr": "التقط الصور بنفس الإضاءة والوضعية كل يوم للمقارنة الدقيقة"
         },
         {
-          "time": "6:15 AM",
-          "category": "supplement",
+          "id": "d1t2",
           "action": "Drink 500 mL warm water with 1 tsp turmeric, pinch of black pepper, and juice of half a lemon. Take 2 g omega-3 fish oil capsule.",
-          "scienceWhy": "Turmeric curcumin is a potent inhibitor of NF-κB, the master transcription factor for inflammatory cytokines (TNF-α, IL-1β, IL-6). Black pepper piperine increases curcumin bioavailability by 2000% through inhibition of hepatic and intestinal glucuronidation. Omega-3 EPA competes with arachidonic acid for COX-2, reducing pro-inflammatory prostaglandin E2 production [Source: PMID 17569207] [Source: PMID 17569218].",
+          "actionAr": "اشرب 500 مل ماء دافئ مع 1 ملعقة كركم، رشة فلفل أسود، وعصير نصف ليمونة. تناول كبسولة 2 غ زيت سمك أوميغا-3.",
+          "category": "supplement",
+          "scienceWhy": "Turmeric curcumin is a potent inhibitor of NF-κB, the master transcription factor for inflammatory cytokines (TNF-α, IL-1β, IL-6). Black pepper piperine increases curcumin bioavailability by 2000%. Omega-3 EPA competes with arachidonic acid for COX-2, reducing pro-inflammatory prostaglandin E2 [PMID 17569207] [PMID 17569218].",
+          "scienceWhyAr": "كركمين الكركم مثبط قوي لـ NF-κB، عامل النسخ الرئيسي للسيتوكينات الالتهابية (TNF-α، IL-1β، IL-6). بيبرين الفلفل الأسود يزيد التوافر الحيوي للكركمين بنسبة 2000%. EPA أوميغا-3 يتنافس مع حمض الأراكيدونيك على COX-2، مقللاً البروستاغلاندين E2 الالتهابي [PMID 17569207] [PMID 17569218].",
           "visualImpact": "low"
         },
         {
-          "time": "7:00 AM",
-          "category": "meal",
+          "id": "d1t3",
           "action": "Anti-Inflammatory Breakfast: Scrambled eggs with turmeric and spinach, side of blueberries (100 g), green tea. Zero added sodium.",
-          "scienceWhy": "Blueberries contain anthocyanins that inhibit NF-κB and reduce C-reactive protein (CRP) levels. Facial and submental edema is often inflammation-driven — systemic inflammatory markers correlate with subcutaneous water retention in the face and neck. Green tea EGCG further suppresses inflammatory signaling via JAK/STAT pathway inhibition [Source: PMID 22129334].",
+          "actionAr": "فطور مضاد للالتهاب: بيض مخفوق بالكركم والسبانخ، توت أزرق (100 غ)، شاي أخضر. بدون صوديوم مضاف.",
+          "category": "meal",
+          "scienceWhy": "Blueberries contain anthocyanins that inhibit NF-κB and reduce CRP levels. Facial and submental edema is often inflammation-driven — systemic inflammatory markers correlate with subcutaneous water retention in the face and neck. Green tea EGCG further suppresses inflammatory signaling via JAK/STAT pathway [PMID 22129334].",
+          "scienceWhyAr": "التوت الأزرق يحتوي أنثوسيانينات تثبط NF-κB وتقلل مستويات CRP. وذمة الوجه وأسفل الذقن غالباً ناتجة عن الالتهاب — علامات الالتهاب الجهازية ترتبط باحتباس الماء تحت الجلد في الوجه والرقبة. EGCG من الشاي الأخضر يثبط إشارات الالتهاب عبر مسار JAK/STAT [PMID 22129334].",
           "visualImpact": "low"
         },
         {
-          "time": "9:00 AM",
-          "category": "hydration",
-          "action": "Drink 500 mL water. Target 3.5 L today to begin flushing sodium and reducing facial bloat.",
-          "scienceWhy": "High water intake suppresses aldosterone via volume-mediated stretch of atrial cardiomyocytes, which release atrial natriuretic peptide (ANP). ANP directly antagonizes aldosterone, promoting sodium and water excretion. The face and neck are among the first areas to show visible de-bloating from sodium restriction [Source: PMID 15084272].",
-          "visualImpact": "low"
-        },
-        {
-          "time": "10:00 AM",
-          "category": "training",
+          "id": "d1t4",
           "action": "Posture Correction Session 1: 3 × 15 chin tucks (hold 5 sec each), 3 × 10 wall angels, 3 × 30-sec doorway pec stretches, 2 × 60-sec deep neck flexor activation (nod and hold).",
-          "scienceWhy": "Chin tucks activate the deep cervical flexors (longus colli, longus capitis) which are inhibited in FHP. Strengthening these muscles retracts the head posteriorly, extending the cervical spine and increasing the distance between the chin and sternum. This pulls the anterior neck skin taut over the thyroid cartilage, dramatically increasing its visual projection [Source: PMID 29306562].",
-          "visualImpact": "medium"
-        },
-        {
-          "time": "11:00 AM",
+          "actionAr": "جلسة تصحيح الوضعية 1: 3 × 15 سحب ذقن (ثبات 5 ثوانٍ لكل منها)، 3 × 10 ملائكة الجدار، 3 × 30 ثانية تمدد صدري بالمدخل، 2 × 60 ثانية تنشيط ثانيات الرقبة العميقة (إيماء وثبات).",
           "category": "training",
-          "action": "Mewing Practice Session 1: Proper tongue posture — entire tongue pressed flat against hard palate, including posterior third. Hold for 10 minutes. Practice nasal breathing throughout.",
-          "scienceWhy": "Mewing (orthotropic tongue posture) activates the suprahyoid and infrahyoid muscles that connect the hyoid bone to the mandible and thyroid cartilage. Sustained proper tongue posture elevates the hyoid bone, which in turn lifts and tenses the thyrohyoid membrane, making the thyroid cartilage more prominent in the anterior neck [Source: PMID 25611342].",
+          "scienceWhy": "Chin tucks activate the deep cervical flexors (longus colli, longus capitis) which are inhibited in FHP. Strengthening these muscles retracts the head posteriorly, extending the cervical spine and increasing the distance between chin and sternum. This pulls anterior neck skin taut over the thyroid cartilage, dramatically increasing its visual projection [PMID 29306562].",
+          "scienceWhyAr": "سحب الذقن ينشط ثانيات العنق العميقة (العضلة الطويلة للعنق والرأس) المثبطة في وضعية الرأس الأمامية. تقوية هذه العضلات تسحب الرأس للخلف، مادّةً العمود الفقري العنقي وزائدةً المسافة بين الذقن وعظم القص. هذا يشد جلد مقدمة الرقبة فوق الغضروف الدرقي، مما يزيد بروزه البصري بشكل كبير [PMID 29306562].",
+          "visualImpact": "medium",
+          "exerciseImage": "/exercises/chin-tuck.svg"
+        },
+        {
+          "id": "d1t5",
+          "action": "Mewing Practice Session 1: Proper tongue posture — entire tongue pressed flat against hard palate, including posterior third. Hold for 10 minutes. Practice nasal breathing.",
+          "actionAr": "جلسة تمرين الميوينغ 1: وضعية اللسان الصحيحة — اللسان بالكامل مضغوط بشكل مسطح على الحنك الصلب، بما في ذلك الثلث الخلفي. ثبات لمدة 10 دقائق. تمرين التنفس من الأنف.",
+          "category": "training",
+          "scienceWhy": "Mewing (orthotropic tongue posture) activates the suprahyoid and infrahyoid muscles connecting the hyoid bone to the mandible and thyroid cartilage. Sustained proper tongue posture elevates the hyoid bone, which lifts and tenses the thyrohyoid membrane, making the thyroid cartilage more prominent in the anterior neck [PMID 25611342].",
+          "scienceWhyAr": "الميوينغ (وضعية اللسان التقويمية) ينشط العضلات فوق وتحت اللامية التي تربط العظم اللامي بالفك السفلي والغضروف الدرقي. وضعية اللسان الصحيحة المستدامة ترفع العظم اللامي، مما يرفع ويشد الغشاء الدرقي اللامي، جاعلاً الغضروف الدرقي أكثر بروزاً في مقدمة الرقبة [PMID 25611342].",
           "visualImpact": "medium"
         },
         {
-          "time": "12:30 PM",
+          "id": "d1t6",
+          "action": "Lunch: Grilled wild salmon (200 g) with large green salad (kale, spinach, cucumber), avocado, walnuts, and ginger-turmeric dressing. No bread or processed carbs. Drink 500 mL water.",
+          "actionAr": "الغداء: سلمون بري مشوي (200 غ) مع سلطة خضراء كبيرة (كرنب، سبانخ، خيار)، أفوكادو، جوز، وصلصة زنجبيل وكركم. بدون خبز أو كربوهيدرات معالجة. اشرب 500 مل ماء.",
           "category": "meal",
-          "action": "Lunch: Grilled wild salmon (200 g) with large green salad (kale, spinach, cucumber), avocado, walnuts, and ginger-turmeric dressing. No bread or processed carbs.",
-          "scienceWhy": "Salmon provides 2–3 g of EPA/DHA per serving, which are incorporated into cell membrane phospholipids of facial/neck tissue. This shifts the lipid mediator profile from pro-inflammatory (omega-6 derived) to pro-resolving (omega-3 derived resolvins, protectins), actively resolving existing neck and facial inflammation [Source: PMID 17569218].",
+          "scienceWhy": "Salmon provides 2–3 g of EPA/DHA per serving, incorporated into cell membrane phospholipids of facial/neck tissue. This shifts the lipid mediator profile from pro-inflammatory to pro-resolving (resolvins, protectins), actively resolving existing neck and facial inflammation [PMID 17569218].",
+          "scienceWhyAr": "السلمون يوفر 2-3 غ من EPA/DHA لكل حصة، تُدمج في فوسفوليبيدات أغشية خلايا أنسجة الوجه/الرقبة. هذا يحول ملف الوسطاء الدهنية من مؤيد للالتهاب إلى مؤيد للحل (ريزولفينات، بروتيكتينات)، مما يحل الالتهاب الموجود في الرقبة والوجه بشكل فعال [PMID 17569218].",
           "visualImpact": "medium"
         },
         {
-          "time": "3:00 PM",
-          "category": "hydration",
-          "action": "500 mL water with lemon. Practice mewing for 15 minutes — tongue fully on palate, teeth lightly together, lips sealed.",
-          "scienceWhy": "Intermittent mewing practice throughout the day conditions the neuromuscular pattern. The masseter and temporalis co-activation during proper oral posture creates a mild isometric jaw exercise effect that enhances mandibular definition, further framing the Adam's apple region [Source: PMID 25611342].",
-          "visualImpact": "low"
-        },
-        {
-          "time": "4:30 PM",
+          "id": "d1t7",
+          "action": "Neck Strengthening Session 1: 3 × 15 neck curls (lying face-up, head off bench edge), 3 × 15 neck extensions (lying face-down), 2 × 12 lateral neck flexion (each side). Bodyweight only.",
+          "actionAr": "جلسة تقوية الرقبة 1: 3 × 15 ثني رقبة (مستلقٍ على الظهر، الرأس خارج حافة المقعد)، 3 × 15 مد رقبة (مستلقٍ على البطن)، 2 × 12 ثني رقبة جانبي (كل جانب). وزن الجسم فقط.",
           "category": "training",
-          "action": "Neck Strengthening Session 1: 3 × 15 neck curls (lying face-up on bench, head hanging off edge), 3 × 15 neck extensions (lying face-down), 2 × 12 lateral neck flexion (each side). Use bodyweight only — no added resistance yet.",
-          "scienceWhy": "The sternocleidomastoid (SCM) is the primary muscle targeted by neck curls (flexion). SCM hypertrophy creates two visible columns flanking the thyroid cartilage, producing the 'V-frame' effect that makes the Adam's apple appear larger by contrast. Starting with bodyweight ensures proper form and avoids cervical strain [Source: PMID 24164961].",
-          "visualImpact": "medium"
+          "scienceWhy": "The sternocleidomastoid (SCM) is the primary muscle targeted by neck curls (flexion). SCM hypertrophy creates two visible columns flanking the thyroid cartilage, producing the 'V-frame' effect that makes the Adam's apple appear larger by contrast. Starting with bodyweight ensures proper form and avoids cervical strain [PMID 24164961].",
+          "scienceWhyAr": "العضلة القصية الترقوية الخشائية (SCM) هي العضلة الأساسية المستهدفة بثني الرقبة. تضخم SCM يخلق عمودين مرئيين يؤطران الغضروف الدرقي، منتجاً تأثير 'الإطار V' الذي يجعل تفاحة آدم تبدو أكبر بالتباين. البدء بوزن الجسم يضمن الشكل الصحيح ويتجنب إجهاد العنق [PMID 24164961].",
+          "visualImpact": "medium",
+          "exerciseImage": "/exercises/neck-curl.svg"
         },
         {
-          "time": "6:00 PM",
+          "id": "d1t8",
+          "action": "Gentle neck self-massage: 5 minutes effleurage strokes along SCM from mastoid process to clavicle. Apply warm compress to anterior neck for 10 minutes.",
+          "actionAr": "تدليك ذاتي لطيف للرقبة: 5 دقائق مسحات خفيفة على طول SCM من النتوء الخشائي إلى الترقوة. ضع كمادة دافئة على مقدمة الرقبة لمدة 10 دقائق.",
           "category": "recovery",
-          "action": "Gentle neck self-massage: 5 minutes of effleurage strokes along SCM from mastoid process to clavicle. Apply warm compress to anterior neck for 10 minutes.",
-          "scienceWhy": "Manual lymphatic drainage of the anterior cervical chain reduces localized fluid retention that obscures thyroid cartilage definition. The warm compress increases local blood flow to the SCM, delivering nutrients for recovery and promoting the hypertrophic signaling cascade (mTOR/p70S6K) initiated by the neck training [Source: PMID 24164961].",
+          "scienceWhy": "Manual lymphatic drainage of the anterior cervical chain reduces localized fluid retention that obscures thyroid cartilage definition. The warm compress increases local blood flow to the SCM, delivering nutrients for recovery and promoting hypertrophic signaling cascade (mTOR/p70S6K) [PMID 24164961].",
+          "scienceWhyAr": "التصريف اللمفاوي اليدوي للسلسلة العنقية الأمامية يقلل احتباس السوائل الموضعي الذي يحجب تعريف الغضروف الدرقي. الكمادة الدافئة تزيد تدفق الدم الموضعي إلى SCM، موصلةً المغذيات للتعافي ومعززةً سلسلة إشارات التضخم (mTOR/p70S6K) [PMID 24164961].",
           "visualImpact": "low"
         },
         {
-          "time": "7:00 PM",
+          "id": "d1t9",
+          "action": "Dinner: Grilled chicken breast with steamed broccoli, roasted sweet potato (150 g), and fermented vegetables (kimchi or sauerkraut). Cup of ginger tea.",
+          "actionAr": "العشاء: صدر دجاج مشوي مع بروكلي على البخار، بطاطا حلوة محمصة (150 غ)، وخضروات مخمرة (كيمتشي أو مخلل الملفوف). كوب شاي زنجبيل.",
           "category": "meal",
-          "action": "Dinner: Grilled chicken breast with steamed broccoli, roasted sweet potato (150 g), and side of fermented vegetables (kimchi or sauerkraut). Cup of ginger tea.",
-          "scienceWhy": "Fermented vegetables contain probiotics that modulate the gut-inflammation axis. Gut dysbiosis increases systemic inflammation via LPS translocation, which causes facial/neck puffiness. Ginger gingerols inhibit COX-2 and 5-LOX, providing dual anti-inflammatory action complementary to the turmeric curcumin [Source: PMID 22129334] [Source: PMID 17569207].",
+          "scienceWhy": "Fermented vegetables contain probiotics that modulate the gut-inflammation axis. Gut dysbiosis increases systemic inflammation via LPS translocation, causing facial/neck puffiness. Ginger gingerols inhibit COX-2 and 5-LOX, providing dual anti-inflammatory action complementary to turmeric curcumin [PMID 22129334] [PMID 17569207].",
+          "scienceWhyAr": "الخضروات المخمرة تحتوي على بروبيوتيك تنظم محور الأمعاء-الالتهاب. اختلال الميكروبيوم يزيد الالتهاب الجهازي عبر انتقال LPS، مسبباً انتفاخ الوجه/الرقبة. جنجرولات الزنجبيل تثبط COX-2 و5-LOX، موفرةً فعلاً مزدوجاً مضاداً للالتهاب مكملاً لكركمين الكركم [PMID 22129334] [PMID 17569207].",
           "visualImpact": "medium"
         },
         {
-          "time": "10:00 PM",
-          "category": "sleep",
+          "id": "d1t10",
           "action": "Sleep on back (supine) with thin pillow or cervical roll to maintain neutral spine alignment. Avoid side sleeping which compresses the neck.",
-          "scienceWhy": "Supine sleeping with proper cervical support maintains the postural corrections achieved during the day. Side sleeping can cause asymmetric compression of the SCM and shift interstitial fluid to the dependent side of the neck, creating uneven puffiness that obscures thyroid cartilage definition [Source: PMID 29306562].",
+          "actionAr": "نم على الظهر (وضعية الاستلقاء) مع وسادة رقيقة أو دعامة عنقية للحفاظ على محاذاة العمود الفقري المحايدة. تجنب النوم الجانبي الذي يضغط الرقبة.",
+          "category": "sleep",
+          "scienceWhy": "Supine sleeping with proper cervical support maintains the postural corrections achieved during the day. Side sleeping can cause asymmetric compression of the SCM and shift interstitial fluid to the dependent side, creating uneven puffiness that obscures thyroid cartilage definition [PMID 29306562].",
+          "scienceWhyAr": "النوم على الظهر مع دعم عنقي مناسب يحافظ على التصحيحات الوضعية المحققة خلال اليوم. النوم الجانبي يمكن أن يسبب ضغطاً غير متماثل على SCM وينقل السائل الخلالي للجانب المعتمد، مما يخلق انتفاخاً غير متساوٍ يحجب تعريف الغضروف الدرقي [PMID 29306562].",
           "visualImpact": "low"
         }
       ]
@@ -108,83 +126,102 @@
     {
       "day": 2,
       "title": "SCM Activation & Inflammation Reduction",
+      "titleAr": "تنشيط العضلة القصية الترقوية الخشائية وتقليل الالتهاب",
       "theme": "Foundation Phase",
-      "schedule": [
+      "themeAr": "مرحلة التأسيس",
+      "dailyGoal": "Begin progressive neck resistance training and deepen anti-inflammatory effects",
+      "dailyGoalAr": "بدء تدريب المقاومة التدريجي للرقبة وتعميق التأثيرات المضادة للالتهاب",
+      "tasks": [
         {
-          "time": "6:00 AM",
-          "category": "wake",
+          "id": "d2t1",
           "action": "Wake up. Take profile photo to compare with Day 1 baseline. Drink 500 mL warm turmeric-lemon water with black pepper.",
-          "scienceWhy": "Early morning facial/neck puffiness peaks due to overnight gravitational fluid redistribution. Comparing today's morning photo with Day 1 should show initial de-bloating from 24 hours of sodium restriction and anti-inflammatory nutrition [Source: PMID 15084272].",
+          "actionAr": "استيقظ. التقط صورة جانبية للمقارنة مع خط أساس اليوم الأول. اشرب 500 مل ماء دافئ بالكركم والليمون والفلفل الأسود.",
+          "category": "wake",
+          "scienceWhy": "Early morning facial/neck puffiness peaks due to overnight gravitational fluid redistribution. Comparing today's morning photo with Day 1 should show initial de-bloating from 24 hours of sodium restriction and anti-inflammatory nutrition [PMID 15084272].",
+          "scienceWhyAr": "انتفاخ الوجه/الرقبة الصباحي يبلغ ذروته بسبب إعادة توزيع السوائل بالجاذبية ليلاً. مقارنة صورة اليوم الصباحية مع اليوم الأول يجب أن تظهر بدء زوال الانتفاخ من 24 ساعة من تقييد الصوديوم والتغذية المضادة للالتهاب [PMID 15084272].",
           "visualImpact": "low"
         },
         {
-          "time": "6:30 AM",
+          "id": "d2t2",
+          "action": "Take 2 g omega-3 fish oil + 500 mg curcumin extract (standardized 95% curcuminoids) + 500 mg Vitamin C",
+          "actionAr": "تناول 2 غ زيت سمك أوميغا-3 + 500 ملغ خلاصة كركمين (معيارية 95% كركمينويدات) + 500 ملغ فيتامين C",
           "category": "supplement",
-          "action": "2 g omega-3 fish oil + 500 mg curcumin extract (standardized 95% curcuminoids) + 500 mg Vitamin C",
-          "scienceWhy": "Curcumin extract is more potent than culinary turmeric, providing concentrated curcuminoids. Vitamin C is a cofactor for collagen synthesis in the dermis, and improving dermal collagen quality makes skin thinner and more taut over the thyroid cartilage, enhancing its visible projection [Source: PMID 17569207] [Source: PMID 12424092].",
+          "scienceWhy": "Curcumin extract is more potent than culinary turmeric, providing concentrated curcuminoids. Vitamin C is a cofactor for collagen synthesis in the dermis — improving dermal collagen quality makes skin thinner and more taut over the thyroid cartilage, enhancing its projection [PMID 17569207] [PMID 12424092].",
+          "scienceWhyAr": "خلاصة الكركمين أقوى من الكركم الطهوي، توفر كركمينويدات مركزة. فيتامين C عامل مساعد لتصنيع الكولاجين في الأدمة — تحسين جودة الكولاجين الجلدي يجعل البشرة أنحف وأكثر شداً فوق الغضروف الدرقي، معززاً بروزه [PMID 17569207] [PMID 12424092].",
           "visualImpact": "low"
         },
         {
-          "time": "7:00 AM",
-          "category": "meal",
+          "id": "d2t3",
           "action": "Breakfast: Greek yogurt with walnuts, chia seeds, sliced ginger, and honey. Side of green tea. No sodium.",
-          "scienceWhy": "Greek yogurt provides protein for muscle protein synthesis (MPS) needed for SCM hypertrophy. Chia seeds supply alpha-linolenic acid (ALA), a plant-based omega-3 that is partially converted to EPA. The ginger provides sustained anti-inflammatory gingerol throughout the morning [Source: PMID 24164961].",
+          "actionAr": "الفطور: زبادي يوناني مع جوز وبذور شيا وزنجبيل مقطع وعسل. كوب شاي أخضر. بدون صوديوم.",
+          "category": "meal",
+          "scienceWhy": "Greek yogurt provides protein for muscle protein synthesis (MPS) needed for SCM hypertrophy. Chia seeds supply alpha-linolenic acid (ALA), a plant-based omega-3 partially converted to EPA. Ginger provides sustained anti-inflammatory gingerol throughout the morning [PMID 24164961].",
+          "scienceWhyAr": "الزبادي اليوناني يوفر البروتين لتصنيع البروتين العضلي (MPS) اللازم لتضخم SCM. بذور الشيا توفر حمض ألفا-لينولينيك (ALA)، أوميغا-3 نباتي يتحول جزئياً إلى EPA. الزنجبيل يوفر جنجرول مضاد للالتهاب مستداماً طوال الصباح [PMID 24164961].",
           "visualImpact": "low"
         },
         {
-          "time": "9:30 AM",
-          "category": "training",
+          "id": "d2t4",
           "action": "Posture Correction Session: 4 × 15 chin tucks (hold 8 sec), 3 × 12 prone Y-raises, 3 × 15 band pull-aparts, 2 × 60-sec wall lean neck retraction holds.",
-          "scienceWhy": "Band pull-aparts and Y-raises target the lower trapezius and rhomboids, which are chronically weakened in FHP. Strengthening these posterior chain muscles retracts the scapulae and naturally pulls the head into alignment over the shoulders, increasing cervical extension and thyroid cartilage exposure [Source: PMID 29306562].",
-          "visualImpact": "medium"
+          "actionAr": "جلسة تصحيح الوضعية: 4 × 15 سحب ذقن (ثبات 8 ثوانٍ)، 3 × 12 رفع Y منبطحاً، 3 × 15 سحب مطاط، 2 × 60 ثانية ثبات سحب رقبة مائل على الجدار.",
+          "category": "training",
+          "scienceWhy": "Band pull-aparts and Y-raises target the lower trapezius and rhomboids, chronically weakened in FHP. Strengthening these posterior chain muscles retracts the scapulae and naturally pulls the head into alignment over the shoulders, increasing cervical extension and thyroid cartilage exposure [PMID 29306562].",
+          "scienceWhyAr": "سحب المطاط ورفع Y تستهدف شبه المنحرفة السفلية والعضلات المعينية، المُضعفة بشكل مزمن في وضعية الرأس الأمامية. تقوية هذه العضلات الخلفية تسحب لوحي الكتف وتسحب الرأس طبيعياً للمحاذاة فوق الكتفين، مما يزيد مد العنق وكشف الغضروف الدرقي [PMID 29306562].",
+          "visualImpact": "medium",
+          "exerciseImage": "/exercises/chin-tuck.svg"
         },
         {
-          "time": "10:30 AM",
-          "category": "training",
+          "id": "d2t5",
           "action": "Mewing + Jaw Exercise Session: 15 min mewing practice. Then 3 × 20 jaw clenches (moderate intensity, 3-sec hold), 3 × 15 chin lifts (tilt head back, push lower jaw forward, hold 5 sec).",
-          "scienceWhy": "Jaw clenches isometrically load the masseter and temporalis muscles, promoting hypertrophy that defines the jawline. Chin lifts stretch the platysma (the thin sheet muscle of the anterior neck) and activate the suprahyoid muscles, which tense the skin over the thyroid cartilage and improve its angular definition [Source: PMID 25611342].",
-          "visualImpact": "medium"
-        },
-        {
-          "time": "12:30 PM",
-          "category": "meal",
-          "action": "Lunch: Large bowl of bone broth (300 mL) with turmeric and ginger, alongside grilled mackerel with leafy green salad (arugula, watercress, spinach). Lemon dressing.",
-          "scienceWhy": "Bone broth provides type II collagen peptides and glycine that support cartilage health and dermal collagen remodeling. Mackerel is one of the richest sources of EPA/DHA (2.6 g per 100 g), maximizing anti-inflammatory omega-3 tissue incorporation. Watercress provides PEITC which activates Nrf2 antioxidant defenses [Source: PMID 17569218].",
-          "visualImpact": "medium"
-        },
-        {
-          "time": "2:00 PM",
-          "category": "hydration",
-          "action": "500 mL water. Practice maintaining mewing posture continuously. Check posture — ears should align over shoulders.",
-          "scienceWhy": "Continuous mewing practice develops the neuromuscular engram (motor pattern) needed for habitual proper tongue posture. The postural self-check reinforces conscious proprioceptive awareness of cervical alignment, accelerating the transition from conscious correction to automatic postural habit [Source: PMID 25611342] [Source: PMID 29306562].",
-          "visualImpact": "low"
-        },
-        {
-          "time": "4:00 PM",
+          "actionAr": "جلسة الميوينغ + تمارين الفك: 15 دقيقة تمرين ميوينغ. ثم 3 × 20 شد فك (شدة متوسطة، ثبات 3 ثوانٍ)، 3 × 15 رفع ذقن (أمل الرأس للخلف، ادفع الفك السفلي للأمام، ثبات 5 ثوانٍ).",
           "category": "training",
-          "action": "Neck Training Session 2: 4 × 15 neck curls (add 1 kg plate on forehead), 4 × 15 neck extensions (add 1 kg plate on back of head), 3 × 12 lateral flexion each side, 3 × 10 neck rotation against manual resistance.",
-          "scienceWhy": "Adding light resistance (1 kg) begins the progressive overload necessary for SCM hypertrophy. The SCM has a relatively high proportion of Type II fast-twitch fibers (approximately 35–45%), which respond well to moderate loads in the 12–15 rep range. Neck rotation specifically targets the SCM's rotational function [Source: PMID 24164961].",
-          "visualImpact": "high"
-        },
-        {
-          "time": "5:30 PM",
-          "category": "recovery",
-          "action": "Neck self-massage with arnica oil: 5 minutes effleurage along SCM bilaterally. Apply ice pack to submental area (under chin) for 10 minutes.",
-          "scienceWhy": "Arnica montana extract contains helenalin, which inhibits NF-κB and reduces exercise-induced muscle inflammation. Ice application to the submental area triggers cold-induced lipolysis (cryolipolysis effect at a micro-level) — cold exposure activates brown adipose tissue thermogenesis and promotes apoptosis of subcutaneous fat cells [Source: PMID 24164961] [Source: PMID 23640880].",
+          "scienceWhy": "Jaw clenches isometrically load the masseter and temporalis muscles, promoting hypertrophy that defines the jawline. Chin lifts stretch the platysma and activate suprahyoid muscles, which tense the skin over the thyroid cartilage and improve its angular definition [PMID 25611342].",
+          "scienceWhyAr": "شد الفك يحمّل العضلة الماضغة والعضلة الصدغية إيزومترياً، معززاً التضخم الذي يحدد خط الفك. رفع الذقن يمد العضلة الجلدية العنقية وينشط العضلات فوق اللامية، التي تشد الجلد فوق الغضروف الدرقي وتحسن تعريفه الزاوي [PMID 25611342].",
           "visualImpact": "medium"
         },
         {
-          "time": "7:00 PM",
+          "id": "d2t6",
+          "action": "Lunch: Large bowl of bone broth (300 mL) with turmeric and ginger, alongside grilled mackerel with leafy green salad (arugula, watercress, spinach). Lemon dressing.",
+          "actionAr": "الغداء: طبق كبير من مرق العظام (300 مل) بالكركم والزنجبيل، مع سمك الماكريل المشوي وسلطة خضروات ورقية (جرجير، جرجير الماء، سبانخ). صلصة ليمون.",
           "category": "meal",
-          "action": "Dinner: Baked cod with roasted Brussels sprouts, asparagus, and quinoa (100 g). Ginger-turmeric tea. 20 g dark chocolate.",
-          "scienceWhy": "Brussels sprouts contain indole-3-carbinol (I3C), which promotes healthy estrogen metabolism. Elevated estrogen in males can increase facial water retention and submental fat deposition — optimizing estrogen metabolism supports neck leanness. Asparagus provides natural diuretic compounds [Source: PMID 22129334].",
+          "scienceWhy": "Bone broth provides type II collagen peptides and glycine supporting cartilage health and dermal collagen remodeling. Mackerel is one of the richest sources of EPA/DHA (2.6 g per 100 g), maximizing anti-inflammatory omega-3 tissue incorporation. Watercress PEITC activates Nrf2 antioxidant defenses [PMID 17569218].",
+          "scienceWhyAr": "مرق العظام يوفر ببتيدات كولاجين النوع الثاني والغلايسين الداعمة لصحة الغضروف وإعادة تشكيل كولاجين الأدمة. الماكريل من أغنى مصادر EPA/DHA (2.6 غ لكل 100 غ)، مما يعظم دمج أوميغا-3 المضاد للالتهاب في الأنسجة. PEITC من جرجير الماء ينشط دفاعات Nrf2 المضادة للأكسدة [PMID 17569218].",
           "visualImpact": "medium"
         },
         {
-          "time": "10:00 PM",
+          "id": "d2t7",
+          "action": "Neck Training Session 2: 4 × 15 neck curls (add 1 kg plate on forehead), 4 × 15 neck extensions (1 kg on back of head), 3 × 12 lateral flexion each side, 3 × 10 neck rotation against manual resistance.",
+          "actionAr": "جلسة تدريب الرقبة 2: 4 × 15 ثني رقبة (أضف قرص 1 كغ على الجبهة)، 4 × 15 مد رقبة (1 كغ خلف الرأس)، 3 × 12 ثني جانبي كل جانب، 3 × 10 دوران رقبة ضد مقاومة يدوية.",
+          "category": "training",
+          "scienceWhy": "Adding light resistance (1 kg) begins the progressive overload necessary for SCM hypertrophy. The SCM has a relatively high proportion of Type II fast-twitch fibers (approximately 35–45%), which respond well to moderate loads in the 12–15 rep range. Neck rotation specifically targets the SCM's rotational function [PMID 24164961].",
+          "scienceWhyAr": "إضافة مقاومة خفيفة (1 كغ) يبدأ التحميل التدريجي اللازم لتضخم SCM. لدى SCM نسبة عالية نسبياً من ألياف النوع الثاني سريعة الانقباض (حوالي 35-45%)، التي تستجيب جيداً للأحمال المعتدلة في نطاق 12-15 تكرار. دوران الرقبة يستهدف تحديداً وظيفة SCM الدورانية [PMID 24164961].",
+          "visualImpact": "high",
+          "exerciseImage": "/exercises/neck-curl.svg"
+        },
+        {
+          "id": "d2t8",
+          "action": "Neck recovery: Self-massage with arnica oil along SCM bilaterally (5 min). Apply ice pack to submental area (under chin) for 10 minutes.",
+          "actionAr": "تعافي الرقبة: تدليك ذاتي بزيت الأرنيكا على طول SCM من الجانبين (5 دقائق). ضع كمادة ثلج على منطقة أسفل الذقن لمدة 10 دقائق.",
+          "category": "recovery",
+          "scienceWhy": "Arnica montana extract contains helenalin which inhibits NF-κB and reduces exercise-induced muscle inflammation. Ice on the submental area triggers cold-induced lipolysis (cryolipolysis effect) — cold activates brown adipose tissue thermogenesis and promotes apoptosis of subcutaneous fat cells [PMID 24164961] [PMID 23640880].",
+          "scienceWhyAr": "خلاصة الأرنيكا تحتوي هيلينالين الذي يثبط NF-κB ويقلل التهاب العضلات الناتج عن التمرين. الثلج على منطقة أسفل الذقن يحفز تحلل الدهون بالبرودة (تأثير تبريد الدهون) — البرودة تنشط توليد الحرارة في النسيج الدهني البني وتعزز موت خلايا الدهون تحت الجلد [PMID 24164961] [PMID 23640880].",
+          "visualImpact": "medium"
+        },
+        {
+          "id": "d2t9",
+          "action": "Dinner: Baked cod with roasted Brussels sprouts, asparagus, and quinoa (100 g). Ginger-turmeric tea. 20 g dark chocolate.",
+          "actionAr": "العشاء: سمك القد المخبوز مع كرنب بروكسل محمص وهليون وكينوا (100 غ). شاي زنجبيل وكركم. 20 غ شوكولاتة داكنة.",
+          "category": "meal",
+          "scienceWhy": "Brussels sprouts contain indole-3-carbinol (I3C) promoting healthy estrogen metabolism. Elevated estrogen in males can increase facial water retention and submental fat deposition — optimizing estrogen metabolism supports neck leanness. Asparagus provides natural diuretic compounds [PMID 22129334].",
+          "scienceWhyAr": "كرنب بروكسل يحتوي إندول-3-كربينول (I3C) الذي يعزز أيض الإستروجين الصحي. ارتفاع الإستروجين عند الذكور يمكن أن يزيد احتباس ماء الوجه وترسب دهون أسفل الذقن — تحسين أيض الإستروجين يدعم نحافة الرقبة. الهليون يوفر مركبات مدرة للبول طبيعية [PMID 22129334].",
+          "visualImpact": "medium"
+        },
+        {
+          "id": "d2t10",
+          "action": "Sleep supine with cervical roll. Mouth tape for nasal breathing if comfortable (use surgical tape over lips).",
+          "actionAr": "نم على الظهر مع دعامة عنقية. لصق الفم للتنفس من الأنف إن كان مريحاً (استخدم شريطاً طبياً على الشفاه).",
           "category": "sleep",
-          "action": "Sleep supine with cervical roll. Set reminder to maintain mewing posture during sleep (mouth taped if comfortable — use surgical tape over lips to encourage nasal breathing).",
-          "scienceWhy": "Mouth taping promotes obligate nasal breathing, which maintains proper tongue posture during sleep. Nasal breathing also increases nitric oxide production in the paranasal sinuses, which is inhaled into the lungs and provides systemic vasodilation and anti-inflammatory effects overnight [Source: PMID 25611342].",
+          "scienceWhy": "Mouth taping promotes obligate nasal breathing, maintaining proper tongue posture during sleep. Nasal breathing also increases nitric oxide production in the paranasal sinuses, providing systemic vasodilation and anti-inflammatory effects overnight [PMID 25611342].",
+          "scienceWhyAr": "لصق الفم يعزز التنفس الأنفي الإلزامي، محافظاً على وضعية اللسان الصحيحة أثناء النوم. التنفس الأنفي أيضاً يزيد إنتاج أكسيد النيتريك في الجيوب الأنفية، موفراً توسعاً وعائياً جهازياً وتأثيرات مضادة للالتهاب ليلاً [PMID 25611342].",
           "visualImpact": "low"
         }
       ]
@@ -192,83 +229,102 @@
     {
       "day": 3,
       "title": "Neck Hypertrophy Intensification",
+      "titleAr": "تكثيف تضخم الرقبة",
       "theme": "Foundation Phase",
-      "schedule": [
+      "themeAr": "مرحلة التأسيس",
+      "dailyGoal": "Increase neck training resistance and add creatine for enhanced muscle growth",
+      "dailyGoalAr": "زيادة مقاومة تدريب الرقبة وإضافة الكرياتين لتعزيز نمو العضلات",
+      "tasks": [
         {
-          "time": "6:00 AM",
+          "id": "d3t1",
+          "action": "Wake up. Check neck appearance — morning puffiness should be reducing. Drink 500 mL warm turmeric-ginger-lemon water.",
+          "actionAr": "استيقظ. تفقد مظهر الرقبة — يجب أن يتراجع الانتفاخ الصباحي. اشرب 500 مل ماء دافئ بالكركم والزنجبيل والليمون.",
           "category": "wake",
-          "action": "Wake up. Check neck appearance in mirror — morning puffiness should be reducing. Drink 500 mL warm turmeric-ginger-lemon water.",
-          "scienceWhy": "Three days of sodium restriction and anti-inflammatory nutrition has significantly reduced systemic inflammation markers. CRP levels can drop by 25–30% in 72 hours with concentrated anti-inflammatory dietary intervention, resulting in visible reduction of facial and cervical edema [Source: PMID 17569207].",
+          "scienceWhy": "Three days of sodium restriction and anti-inflammatory nutrition has significantly reduced systemic inflammation markers. CRP levels can drop by 25–30% in 72 hours with concentrated anti-inflammatory dietary intervention, resulting in visible reduction of facial and cervical edema [PMID 17569207].",
+          "scienceWhyAr": "ثلاثة أيام من تقييد الصوديوم والتغذية المضادة للالتهاب قللت بشكل ملحوظ علامات الالتهاب الجهازية. مستويات CRP يمكن أن تنخفض 25-30% في 72 ساعة مع تدخل غذائي مضاد للالتهاب مركز، مما ينتج انخفاضاً مرئياً في وذمة الوجه والرقبة [PMID 17569207].",
           "visualImpact": "medium"
         },
         {
-          "time": "6:30 AM",
+          "id": "d3t2",
+          "action": "Take 2 g omega-3 fish oil + 500 mg curcumin + 500 mg Vitamin C + 5 g creatine monohydrate",
+          "actionAr": "تناول 2 غ زيت سمك أوميغا-3 + 500 ملغ كركمين + 500 ملغ فيتامين C + 5 غ كرياتين مونوهيدرات",
           "category": "supplement",
-          "action": "2 g omega-3 fish oil + 500 mg curcumin + 500 mg Vitamin C + 5 g creatine monohydrate",
-          "scienceWhy": "Creatine is added on Day 3 to support neck muscle hypertrophy. Creatine increases phosphocreatine stores in muscle, allowing greater training volume. In the SCM and other neck muscles, this translates to 5–10% more reps per set, enhancing the hypertrophic stimulus. Creatine also draws water INTO muscle cells (not subcutaneous tissue), adding volume to the SCM [Source: PMID 12701816].",
+          "scienceWhy": "Creatine is added on Day 3 to support neck muscle hypertrophy. Creatine increases phosphocreatine stores, allowing greater training volume. In the SCM, this translates to 5–10% more reps per set. Creatine also draws water INTO muscle cells (not subcutaneous tissue), adding volume to the SCM [PMID 12701816].",
+          "scienceWhyAr": "يُضاف الكرياتين في اليوم الثالث لدعم تضخم عضلات الرقبة. الكرياتين يزيد مخازن الفوسفوكرياتين، مما يسمح بحجم تدريبي أكبر. في SCM، هذا يترجم إلى 5-10% تكرارات إضافية لكل مجموعة. الكرياتين أيضاً يسحب الماء إلى داخل خلايا العضلات (وليس تحت الجلد)، مضيفاً حجماً لـ SCM [PMID 12701816].",
           "visualImpact": "medium"
         },
         {
-          "time": "7:00 AM",
+          "id": "d3t3",
+          "action": "Breakfast: Smoked salmon on gluten-free toast with avocado, rinsed capers, and poached eggs. Blueberries. Green tea.",
+          "actionAr": "الفطور: سلمون مدخن على خبز محمص خالٍ من الغلوتين مع أفوكادو وكبر مغسول وبيض مسلوق. توت أزرق. شاي أخضر.",
           "category": "meal",
-          "action": "Breakfast: Smoked salmon on gluten-free toast with avocado, capers (rinsed to remove salt), and poached eggs. Handful of blueberries. Green tea.",
-          "scienceWhy": "Smoked salmon provides readily available protein with high leucine content (the key amino acid triggering mTOR-mediated muscle protein synthesis). The protein timing 1–2 hours before neck training maximizes the anabolic window. Avocado potassium (485 mg/100 g) continues to support sodium excretion [Source: PMID 24164961].",
+          "scienceWhy": "Smoked salmon provides readily available protein with high leucine content (the key amino acid triggering mTOR-mediated muscle protein synthesis). Protein timing 1–2 hours before neck training maximizes the anabolic window. Avocado potassium (485 mg/100 g) continues to support sodium excretion [PMID 24164961].",
+          "scienceWhyAr": "السلمون المدخن يوفر بروتيناً متاحاً بسهولة بمحتوى ليوسين عالٍ (الحمض الأميني الرئيسي المحفز لتصنيع البروتين العضلي بوساطة mTOR). توقيت البروتين 1-2 ساعة قبل تدريب الرقبة يعظم النافذة البنائية. بوتاسيوم الأفوكادو (485 ملغ/100 غ) يستمر بدعم طرح الصوديوم [PMID 24164961].",
           "visualImpact": "medium"
         },
         {
-          "time": "9:00 AM",
-          "category": "training",
+          "id": "d3t4",
           "action": "Posture & Deep Neck Flexor Session: 5 × 15 chin tucks with band resistance, 4 × 10 prone cervical retraction lifts, 3 × 30-sec isometric deep neck flexor holds, 3 × 15 scapular wall slides.",
-          "scienceWhy": "Adding band resistance to chin tucks increases the load on the deep cervical flexors, accelerating their strengthening. Strong deep neck flexors create a 'scaffolding' effect that holds the cervical spine in extension, permanently positioning the thyroid cartilage more anteriorly. Scapular wall slides correct thoracic kyphosis that contributes to FHP [Source: PMID 29306562].",
-          "visualImpact": "medium"
+          "actionAr": "جلسة وضعية وثانيات الرقبة العميقة: 5 × 15 سحب ذقن بمقاومة مطاط، 4 × 10 رفع سحب عنقي منبطحاً، 3 × 30 ثانية ثبات إيزومتري لثانيات الرقبة العميقة، 3 × 15 انزلاق لوحي كتف على الجدار.",
+          "category": "training",
+          "scienceWhy": "Adding band resistance to chin tucks increases load on deep cervical flexors, accelerating their strengthening. Strong deep neck flexors create a 'scaffolding' effect holding the cervical spine in extension, permanently positioning the thyroid cartilage more anteriorly. Scapular wall slides correct thoracic kyphosis [PMID 29306562].",
+          "scienceWhyAr": "إضافة مقاومة المطاط لسحب الذقن تزيد الحمل على ثانيات العنق العميقة، مسرعةً تقويتها. ثانيات الرقبة العميقة القوية تخلق تأثير 'سقالة' يثبت العمود الفقري العنقي في وضع الامتداد، مموضعاً الغضروف الدرقي أكثر أمامية بشكل دائم. انزلاقات لوحي الكتف تصحح حدب الصدر [PMID 29306562].",
+          "visualImpact": "medium",
+          "exerciseImage": "/exercises/chin-tuck.svg"
         },
         {
-          "time": "10:30 AM",
-          "category": "training",
+          "id": "d3t5",
           "action": "Mewing & Jaw Session: 20 min continuous mewing. 4 × 25 jaw clenches (5-sec holds), 3 × 20 chin lifts, 3 × 15 jaw side-to-side movements against resistance.",
-          "scienceWhy": "Increasing jaw exercise volume promotes masseter hypertrophy that widens the mandibular angle. A wider, more defined jaw creates visual contrast with the neck, making the thyroid cartilage prominence appear more dramatic. The lateral jaw movements target the lateral pterygoid, adding width to the posterior mandible [Source: PMID 25611342].",
-          "visualImpact": "medium"
-        },
-        {
-          "time": "12:30 PM",
-          "category": "meal",
-          "action": "Lunch: Large anti-inflammatory bowl — grilled chicken, brown rice (150 g), roasted turmeric cauliflower, kale, pumpkin seeds, and tahini dressing. No added sodium.",
-          "scienceWhy": "Pumpkin seeds provide zinc (7.5 mg per 30 g), which is essential for testosterone production. Optimal testosterone levels support both muscle hypertrophy (SCM growth) and fat mobilization (submental fat reduction). Tahini provides sesamin, a lignan that enhances fat oxidation via PPARα activation [Source: PMID 12701816].",
-          "visualImpact": "medium"
-        },
-        {
-          "time": "2:30 PM",
-          "category": "hydration",
-          "action": "500 mL water with lemon. 15-min mewing practice. Maintain conscious posture — head retracted, shoulders back, chest open.",
-          "scienceWhy": "Consistent hydration at 3.5 L/day continues to suppress aldosterone. The postural cues reinforce the neuromuscular pattern: the ears should align vertically over the acromioclavicular joints when viewed from the side. This position maximizes anterior neck surface area visible from the front [Source: PMID 15084272].",
-          "visualImpact": "low"
-        },
-        {
-          "time": "4:00 PM",
+          "actionAr": "جلسة ميوينغ وفك: 20 دقيقة ميوينغ مستمر. 4 × 25 شد فك (ثبات 5 ثوانٍ)، 3 × 20 رفع ذقن، 3 × 15 حركة فك جانبية ضد مقاومة.",
           "category": "training",
-          "action": "Neck Hypertrophy Session (Intensified): 5 × 15 neck curls (2 kg plate), 5 × 15 neck extensions (2 kg plate), 4 × 12 lateral flexion each side (1 kg), 3 × 8 manual resistance neck flexion (partner or self with towel — heavy effort), 3 × max-hold isometric neck flexion (hold at top for max time).",
-          "scienceWhy": "Doubling the resistance from Day 2 (1 kg to 2 kg) provides sufficient mechanical tension to stimulate Type II fiber recruitment in the SCM. The isometric holds at end-range create maximal muscle tension, which activates the mechanotransduction pathway (FAK/ERK) that upregulates muscle protein synthesis independent of the mTOR pathway [Source: PMID 24164961].",
-          "visualImpact": "high"
-        },
-        {
-          "time": "5:30 PM",
-          "category": "recovery",
-          "action": "Cold compress on submental area (10 min). Warm neck massage along SCM (5 min). Gentle neck stretches: ear to shoulder holds (30 sec each side).",
-          "scienceWhy": "The cold-then-warm contrast at the neck level mimics contrast therapy used for muscle recovery. Cold reduces exercise-induced inflammation in the SCM while the subsequent warmth increases blood flow for nutrient delivery. The stretches prevent exercise-induced SCM tightness that could restrict head rotation [Source: PMID 23640880] [Source: PMID 24164961].",
+          "scienceWhy": "Increasing jaw exercise volume promotes masseter hypertrophy that widens the mandibular angle. A wider, more defined jaw creates visual contrast with the neck, making the thyroid cartilage prominence appear more dramatic. Lateral jaw movements target the lateral pterygoid [PMID 25611342].",
+          "scienceWhyAr": "زيادة حجم تمارين الفك تعزز تضخم العضلة الماضغة التي توسع زاوية الفك السفلي. فك أوسع وأكثر تحديداً يخلق تبايناً بصرياً مع الرقبة، مما يجعل بروز الغضروف الدرقي يبدو أكثر دراماتيكية. الحركات الجانبية للفك تستهدف العضلة الجناحية الجانبية [PMID 25611342].",
           "visualImpact": "medium"
         },
         {
-          "time": "7:00 PM",
+          "id": "d3t6",
+          "action": "Lunch: Large anti-inflammatory bowl — grilled chicken, brown rice (150 g), roasted turmeric cauliflower, kale, pumpkin seeds, and tahini dressing. No added sodium.",
+          "actionAr": "الغداء: طبق كبير مضاد للالتهاب — دجاج مشوي، أرز بني (150 غ)، قرنبيط محمص بالكركم، كرنب، بذور قرع، وصلصة طحينة. بدون صوديوم مضاف.",
           "category": "meal",
-          "action": "Dinner: Grass-fed steak (150 g) with roasted beetroot, steamed broccoli, and mixed greens. Cup of ginger-turmeric tea. Small portion of fermented vegetables.",
-          "scienceWhy": "Red meat provides heme iron and complete protein with high bioavailability for muscle recovery. The creatine naturally present in beef (approximately 4.5 g per kg) supplements the exogenous creatine dose, ensuring phosphocreatine stores are fully saturated in the neck musculature for tomorrow's intensified training [Source: PMID 12701816].",
+          "scienceWhy": "Pumpkin seeds provide zinc (7.5 mg per 30 g), essential for testosterone production. Optimal testosterone supports both muscle hypertrophy (SCM growth) and fat mobilization (submental fat reduction). Tahini provides sesamin, a lignan that enhances fat oxidation via PPARα activation [PMID 12701816].",
+          "scienceWhyAr": "بذور القرع توفر الزنك (7.5 ملغ لكل 30 غ)، الضروري لإنتاج التستوستيرون. التستوستيرون الأمثل يدعم تضخم العضلات (نمو SCM) وتعبئة الدهون (تقليل دهون أسفل الذقن). الطحينة توفر السيسامين، لغنان يعزز أكسدة الدهون عبر تنشيط PPARα [PMID 12701816].",
           "visualImpact": "medium"
         },
         {
-          "time": "10:00 PM",
+          "id": "d3t7",
+          "action": "Neck Hypertrophy Session (Intensified): 5 × 15 neck curls (2 kg plate), 5 × 15 neck extensions (2 kg plate), 4 × 12 lateral flexion each side (1 kg), 3 × 8 heavy manual resistance neck flexion, 3 × max-hold isometric neck flexion.",
+          "actionAr": "جلسة تضخم الرقبة (مكثفة): 5 × 15 ثني رقبة (قرص 2 كغ)، 5 × 15 مد رقبة (قرص 2 كغ)، 4 × 12 ثني جانبي كل جانب (1 كغ)، 3 × 8 ثني رقبة بمقاومة يدوية ثقيلة، 3 × أقصى ثبات إيزومتري لثني الرقبة.",
+          "category": "training",
+          "scienceWhy": "Doubling resistance from Day 2 (1 kg to 2 kg) provides sufficient mechanical tension to stimulate Type II fiber recruitment in the SCM. Isometric holds at end-range create maximal muscle tension, activating the mechanotransduction pathway (FAK/ERK) that upregulates muscle protein synthesis independent of mTOR [PMID 24164961].",
+          "scienceWhyAr": "مضاعفة المقاومة من اليوم الثاني (1 كغ إلى 2 كغ) توفر توتراً ميكانيكياً كافياً لتحفيز تجنيد ألياف النوع الثاني في SCM. الثبات الإيزومتري عند أقصى مدى يخلق أقصى توتر عضلي، منشطاً مسار التحويل الميكانيكي (FAK/ERK) الذي يرفع تصنيع البروتين العضلي بشكل مستقل عن mTOR [PMID 24164961].",
+          "visualImpact": "high",
+          "exerciseImage": "/exercises/neck-curl.svg"
+        },
+        {
+          "id": "d3t8",
+          "action": "Cold compress on submental area (10 min). Warm neck massage along SCM (5 min). Gentle neck stretches: ear to shoulder holds (30 sec each side).",
+          "actionAr": "كمادة باردة على أسفل الذقن (10 دقائق). تدليك رقبة دافئ على طول SCM (5 دقائق). تمديدات رقبة لطيفة: أذن للكتف (30 ثانية كل جانب).",
+          "category": "recovery",
+          "scienceWhy": "Cold-then-warm contrast at the neck mimics contrast therapy for muscle recovery. Cold reduces exercise-induced inflammation in the SCM while subsequent warmth increases blood flow for nutrient delivery. Stretches prevent exercise-induced SCM tightness that could restrict head rotation [PMID 23640880] [PMID 24164961].",
+          "scienceWhyAr": "تباين البرودة ثم الدفء على الرقبة يحاكي العلاج المتباين لتعافي العضلات. البرودة تقلل التهاب SCM الناتج عن التمرين بينما الدفء اللاحق يزيد تدفق الدم لتوصيل المغذيات. التمديدات تمنع تصلب SCM الناتج عن التمرين الذي قد يقيد دوران الرأس [PMID 23640880] [PMID 24164961].",
+          "visualImpact": "medium"
+        },
+        {
+          "id": "d3t9",
+          "action": "Dinner: Grass-fed steak (150 g) with roasted beetroot, steamed broccoli, and mixed greens. Ginger-turmeric tea. Small portion of fermented vegetables.",
+          "actionAr": "العشاء: شريحة لحم بقري عضوي (150 غ) مع شمندر محمص وبروكلي على البخار وخضروات مشكلة. شاي زنجبيل وكركم. حصة صغيرة من الخضروات المخمرة.",
+          "category": "meal",
+          "scienceWhy": "Red meat provides heme iron and complete protein with high bioavailability for muscle recovery. The creatine naturally present in beef (approximately 4.5 g per kg) supplements the exogenous creatine dose, ensuring phosphocreatine stores are fully saturated in the neck musculature [PMID 12701816].",
+          "scienceWhyAr": "اللحم الأحمر يوفر الحديد الهيمي وبروتيناً كاملاً بتوافر حيوي عالٍ لتعافي العضلات. الكرياتين الموجود طبيعياً في اللحم البقري (حوالي 4.5 غ لكل كغ) يكمل جرعة الكرياتين الخارجية، مضمناً تشبع مخازن الفوسفوكرياتين بالكامل في عضلات الرقبة [PMID 12701816].",
+          "visualImpact": "medium"
+        },
+        {
+          "id": "d3t10",
+          "action": "Sleep supine with cervical roll. Mouth tape for nasal breathing. Cool room (18 °C).",
+          "actionAr": "نم على الظهر مع دعامة عنقية. لصق الفم للتنفس الأنفي. غرفة باردة (18°م).",
           "category": "sleep",
-          "action": "Sleep supine with cervical roll. Mouth tape for nasal breathing. Cool room (18 °C) for GH optimization.",
-          "scienceWhy": "Growth hormone release during deep sleep is critical for muscle repair and hypertrophy of the SCM. GH also promotes lipolysis, contributing to submental fat reduction. Cool room temperature enhances slow-wave sleep duration, maximizing the GH pulse magnitude by up to 70% [Source: PMID 10484056].",
+          "scienceWhy": "Growth hormone release during deep sleep is critical for SCM repair and hypertrophy. GH also promotes lipolysis, contributing to submental fat reduction. Cool room temperature enhances slow-wave sleep duration, maximizing GH pulse magnitude by up to 70% [PMID 10484056].",
+          "scienceWhyAr": "إفراز هرمون النمو خلال النوم العميق حاسم لإصلاح وتضخم SCM. يعزز GH أيضاً تحلل الدهون، مساهماً في تقليل دهون أسفل الذقن. درجة حرارة الغرفة الباردة تعزز مدة النوم العميق، معظمةً حجم نبضة GH بنسبة تصل إلى 70% [PMID 10484056].",
           "visualImpact": "low"
         }
       ]
@@ -276,83 +332,93 @@
     {
       "day": 4,
       "title": "Sodium Depletion & Volume Training",
+      "titleAr": "استنفاد الصوديوم والتدريب بالحجم",
       "theme": "Amplification Phase",
-      "schedule": [
+      "themeAr": "مرحلة التكثيف",
+      "dailyGoal": "Introduce natural diuretics, intensify neck training volume, and maximize fat mobilization",
+      "dailyGoalAr": "إدخال مدرات البول الطبيعية وتكثيف حجم تدريب الرقبة وتعظيم تعبئة الدهون",
+      "tasks": [
         {
-          "time": "6:00 AM",
+          "id": "d4t1",
+          "action": "Wake up. Morning neck profile should show improved definition. Take side-profile photo. Drink 500 mL warm water with turmeric, ginger, lemon, and cayenne pepper.",
+          "actionAr": "استيقظ. يجب أن يُظهر الملف الجانبي للرقبة الصباحي تحسناً في التعريف. التقط صورة جانبية. اشرب 500 مل ماء دافئ بالكركم والزنجبيل والليمون والفلفل الحار.",
           "category": "wake",
-          "action": "Wake up. Morning neck profile should show improved definition. Take side-profile photo. Drink 500 mL warm water with turmeric, ginger, lemon, and a pinch of cayenne pepper.",
-          "scienceWhy": "Cayenne pepper capsaicin activates TRPV1 receptors, increasing metabolic rate by 8–10% and promoting thermogenesis. This mild metabolic boost enhances fat oxidation including in the submental region. The TRPV1 activation also triggers a brief vasodilatory flush in the face/neck that aids lymphatic drainage of retained fluid [Source: PMID 22038945].",
+          "scienceWhy": "Cayenne pepper capsaicin activates TRPV1 receptors, increasing metabolic rate by 8–10% and promoting thermogenesis. This enhances fat oxidation including in the submental region. TRPV1 activation also triggers a vasodilatory flush in the face/neck that aids lymphatic drainage [PMID 22038945].",
+          "scienceWhyAr": "كابسايسين الفلفل الحار ينشط مستقبلات TRPV1، مما يزيد معدل الأيض 8-10% ويعزز توليد الحرارة. هذا يعزز أكسدة الدهون بما في ذلك منطقة أسفل الذقن. تنشيط TRPV1 أيضاً يحفز توسعاً وعائياً في الوجه/الرقبة يساعد في التصريف اللمفاوي [PMID 22038945].",
           "visualImpact": "medium"
         },
         {
-          "time": "6:30 AM",
+          "id": "d4t2",
+          "action": "Take 2 g omega-3 + 500 mg curcumin + 500 mg Vitamin C + 5 g creatine + 500 mg dandelion root extract",
+          "actionAr": "تناول 2 غ أوميغا-3 + 500 ملغ كركمين + 500 ملغ فيتامين C + 5 غ كرياتين + 500 ملغ خلاصة جذر الهندباء",
           "category": "supplement",
-          "action": "2 g omega-3 + 500 mg curcumin + 500 mg Vitamin C + 5 g creatine + 500 mg dandelion root extract",
-          "scienceWhy": "Dandelion root extract is introduced on Day 4 as a potassium-sparing diuretic to intensify subcutaneous water loss. The aquaretic effect specifically targets extracellular water in the face and neck, enhancing the definition of anatomical structures including the thyroid cartilage, SCM borders, and jawline [Source: PMID 19678785].",
+          "scienceWhy": "Dandelion root extract is introduced as a potassium-sparing diuretic to intensify subcutaneous water loss. The aquaretic effect specifically targets extracellular water in the face and neck, enhancing definition of thyroid cartilage, SCM borders, and jawline [PMID 19678785].",
+          "scienceWhyAr": "يُدخل خلاصة جذر الهندباء كمدر بول موفر للبوتاسيوم لتكثيف فقدان الماء تحت الجلد. التأثير المدر للماء يستهدف تحديداً الماء خارج الخلايا في الوجه والرقبة، معززاً تعريف الغضروف الدرقي وحدود SCM وخط الفك [PMID 19678785].",
           "visualImpact": "medium"
         },
         {
-          "time": "7:00 AM",
+          "id": "d4t3",
+          "action": "Breakfast: Egg white omelet (4 whites, 1 whole egg) with asparagus, spinach, and garlic. Cup of green tea. No carbs at breakfast.",
+          "actionAr": "الفطور: أومليت بياض بيض (4 بياض، 1 بيضة كاملة) مع هليون وسبانخ وثوم. كوب شاي أخضر. بدون كربوهيدرات في الفطور.",
           "category": "meal",
-          "action": "Breakfast: Egg white omelet (4 whites, 1 whole egg) with asparagus, spinach, and garlic. Cup of green tea. No carbs at breakfast today.",
-          "scienceWhy": "Reducing morning carbohydrates on Day 4 creates a mild glycogen deficit that the body compensates for by increasing fat oxidation. Asparagus acts as a gentle natural diuretic. The high protein content (approximately 30 g) supports SCM recovery and growth from yesterday's intensified training [Source: PMID 24164961].",
+          "scienceWhy": "Reducing morning carbohydrates creates a mild glycogen deficit compensated by increased fat oxidation. Asparagus acts as a gentle natural diuretic. The high protein content (approximately 30 g) supports SCM recovery and growth from yesterday's intensified training [PMID 24164961].",
+          "scienceWhyAr": "تقليل الكربوهيدرات الصباحية يخلق عجزاً خفيفاً في الغليكوجين يُعوض بزيادة أكسدة الدهون. الهليون يعمل كمدر بول طبيعي لطيف. المحتوى العالي من البروتين (حوالي 30 غ) يدعم تعافي ونمو SCM من تدريب أمس المكثف [PMID 24164961].",
           "visualImpact": "medium"
         },
         {
-          "time": "9:00 AM",
+          "id": "d4t4",
+          "action": "Advanced Posture Drill: 5 × 20 chin tucks with heavy band, 4 × 12 prone I-Y-T raises, 3 × 45-sec cervical retraction holds with 2 kg plate, 3 × 15 face pulls with resistance band.",
+          "actionAr": "تمرين وضعية متقدم: 5 × 20 سحب ذقن بمطاط ثقيل، 4 × 12 رفع I-Y-T منبطحاً، 3 × 45 ثانية ثبات سحب عنقي بقرص 2 كغ، 3 × 15 سحب وجه بالمطاط.",
           "category": "training",
-          "action": "Advanced Posture Drill: 5 × 20 chin tucks with band (heavy resistance), 4 × 12 prone I-Y-T raises, 3 × 45-sec cervical retraction holds against wall with 2 kg plate on forehead, 3 × 15 face pulls with resistance band.",
-          "scienceWhy": "Face pulls target the external rotators of the shoulder and middle trapezius, counteracting internal rotation and protraction that contribute to upper crossed syndrome. Correcting this pattern opens the chest, retracts the shoulders, and allows the head to sit naturally over the spine, increasing thyroid cartilage anterior projection [Source: PMID 29306562].",
-          "visualImpact": "medium"
+          "scienceWhy": "Face pulls target the external rotators and middle trapezius, counteracting internal rotation and protraction contributing to upper crossed syndrome. Correcting this opens the chest, retracts the shoulders, and allows the head to sit naturally over the spine, increasing thyroid cartilage anterior projection [PMID 29306562].",
+          "scienceWhyAr": "سحب الوجه يستهدف المدورات الخارجية وشبه المنحرفة الوسطى، مقاوماً الدوران الداخلي والبروز المساهمين في متلازمة التقاطع العلوي. تصحيح هذا يفتح الصدر، يسحب الكتفين للخلف، ويسمح للرأس بالجلوس طبيعياً فوق العمود الفقري، مما يزيد البروز الأمامي للغضروف الدرقي [PMID 29306562].",
+          "visualImpact": "medium",
+          "exerciseImage": "/exercises/chin-tuck.svg"
         },
         {
-          "time": "10:30 AM",
+          "id": "d4t5",
+          "action": "Jaw & Mewing Intensification: 20-min continuous mewing with firm tongue pressure. 5 × 30 jaw clenches with mastic gum. 3 × 20 chin lifts with neck extension.",
+          "actionAr": "تكثيف الفك والميوينغ: 20 دقيقة ميوينغ مستمر بضغط لسان ثابت. 5 × 30 شد فك بعلكة المستكة. 3 × 20 رفع ذقن مع مد الرقبة.",
           "category": "training",
-          "action": "Jaw & Mewing Intensification: 20-min continuous mewing with tongue pressed firmly. 5 × 30 jaw clenches with chewing gum (mastic gum preferred for higher resistance). 3 × 20 chin lifts with neck extension.",
-          "scienceWhy": "Mastic gum provides 5–10× the resistance of regular chewing gum, significantly increasing masseter loading. Studies show 30 minutes of daily mastic gum chewing for 1 month increases masseter thickness by 3–4%. Even 4 days of intensified chewing begins the hypertrophic signaling cascade [Source: PMID 25611342].",
+          "scienceWhy": "Mastic gum provides 5–10× the resistance of regular chewing gum, significantly increasing masseter loading. Studies show 30 minutes of daily mastic gum chewing for 1 month increases masseter thickness by 3–4%. Even 4 days of intensified chewing begins the hypertrophic signaling cascade [PMID 25611342].",
+          "scienceWhyAr": "علكة المستكة توفر 5-10 أضعاف مقاومة العلكة العادية، مما يزيد حمل العضلة الماضغة بشكل ملحوظ. تظهر الدراسات أن 30 دقيقة من مضغ علكة المستكة يومياً لمدة شهر تزيد سمك العضلة الماضغة 3-4%. حتى 4 أيام من المضغ المكثف تبدأ سلسلة إشارات التضخم [PMID 25611342].",
           "visualImpact": "medium"
         },
         {
-          "time": "12:30 PM",
-          "category": "meal",
-          "action": "Lunch: Sardines (canned in olive oil, 120 g) with large salad of mixed greens, cucumber, celery, and lemon-olive oil dressing. Cup of dandelion root tea.",
-          "scienceWhy": "Sardines provide the highest EPA/DHA concentration per calorie of any fish, plus calcium from edible bones. Celery contains apigenin, a flavonoid that inhibits aromatase (the enzyme converting testosterone to estrogen), supporting optimal hormonal balance for both muscle growth and fat mobilization [Source: PMID 17569218] [Source: PMID 19678785].",
-          "visualImpact": "medium"
+          "id": "d4t6",
+          "action": "High-Volume Neck Session: 6 × 15 neck curls (2.5 kg), 6 × 15 neck extensions (2.5 kg), 5 × 12 lateral flexion each side (1.5 kg), 4 × 10 neck rotation against band, 3 × max-hold isometric neck flexion. Total: 24+ working sets.",
+          "actionAr": "جلسة رقبة عالية الحجم: 6 × 15 ثني رقبة (2.5 كغ)، 6 × 15 مد رقبة (2.5 كغ)، 5 × 12 ثني جانبي كل جانب (1.5 كغ)، 4 × 10 دوران رقبة ضد مطاط، 3 × أقصى ثبات إيزومتري لثني الرقبة. المجموع: 24+ مجموعة عمل.",
+          "category": "training",
+          "scienceWhy": "This high-volume session (24+ sets) creates significant metabolic stress and mechanical tension in the neck musculature. Research shows 20+ sets per week for a muscle group optimize hypertrophic response. The SCM should show visible pump post-workout, previewing the final result [PMID 24164961].",
+          "scienceWhyAr": "هذه الجلسة عالية الحجم (24+ مجموعة) تخلق إجهاداً أيضياً وتوتراً ميكانيكياً كبيراً في عضلات الرقبة. تظهر الأبحاث أن 20+ مجموعة أسبوعياً لمجموعة عضلية تحسن الاستجابة التضخمية. يجب أن تظهر SCM ضخاً مرئياً بعد التمرين، كمعاينة للنتيجة النهائية [PMID 24164961].",
+          "visualImpact": "high",
+          "exerciseImage": "/exercises/neck-curl.svg"
         },
         {
-          "time": "2:30 PM",
+          "id": "d4t7",
+          "action": "Cold exposure: Apply ice pack to submental area and anterior neck for 15 minutes. Perform gentle neck rotations afterward. Reduce total water to 3 L today.",
+          "actionAr": "تعرض بارد: ضع كمادة ثلج على أسفل الذقن ومقدمة الرقبة لمدة 15 دقيقة. نفذ دورانات رقبة لطيفة بعدها. قلل إجمالي الماء إلى 3 لترات اليوم.",
           "category": "recovery",
-          "action": "Cold exposure: Apply ice pack or cold compress directly to submental area and anterior neck for 15 minutes. Perform gentle neck rotations afterward.",
-          "scienceWhy": "Localized cold exposure at 4–10 °C triggers cold-induced thermogenesis in the subcutaneous fat of the neck via activation of uncoupling protein 1 (UCP1) in beige adipocytes. The anterior neck and submental area have relatively high beige fat potential, making them responsive to cold-induced lipolysis [Source: PMID 23640880].",
+          "scienceWhy": "Localized cold exposure at 4–10 °C triggers cold-induced thermogenesis via activation of UCP1 in beige adipocytes. The anterior neck and submental area have relatively high beige fat potential, making them responsive to cold-induced lipolysis [PMID 23640880].",
+          "scienceWhyAr": "التعرض البارد الموضعي عند 4-10°م يحفز توليد الحرارة بالبرودة عبر تنشيط UCP1 في الخلايا الدهنية البيجية. مقدمة الرقبة وأسفل الذقن لديهما إمكانية دهن بيجي عالية نسبياً، مما يجعلهما استجابة لتحلل الدهون بالبرودة [PMID 23640880].",
           "visualImpact": "medium"
         },
         {
-          "time": "4:00 PM",
-          "category": "training",
-          "action": "High-Volume Neck Session: 6 × 15 neck curls (2.5 kg), 6 × 15 neck extensions (2.5 kg), 5 × 12 lateral flexion each side (1.5 kg), 4 × 10 neck rotation against band resistance, 3 × max-hold isometric neck flexion. Total: 24+ working sets.",
-          "scienceWhy": "This high-volume session (24+ sets) creates significant metabolic stress and mechanical tension in the neck musculature. Research shows that training volumes of 20+ sets per week for a muscle group optimize hypertrophic response. The SCM should show visible pump post-workout, previewing the final result [Source: PMID 24164961].",
-          "visualImpact": "high"
-        },
-        {
-          "time": "5:30 PM",
-          "category": "hydration",
-          "action": "500 mL water with electrolytes (potassium, magnesium — zero sodium). Reduce total water intake to 3 L today.",
-          "scienceWhy": "Beginning water reduction while maintaining the diuretic effect of dandelion root creates a net negative fluid balance. Combined with four days of sodium restriction, the face and neck should show markedly improved definition. Potassium and magnesium prevent cramping during the intensified training [Source: PMID 15084272] [Source: PMID 25430610].",
-          "visualImpact": "medium"
-        },
-        {
-          "time": "7:00 PM",
+          "id": "d4t8",
+          "action": "Dinner: Grilled turkey breast with steamed broccoli and cauliflower rice. Ginger tea. Small kimchi portion. 20 g dark chocolate.",
+          "actionAr": "العشاء: صدر ديك رومي مشوي مع بروكلي على البخار وأرز القرنبيط. شاي زنجبيل. حصة صغيرة كيمتشي. 20 غ شوكولاتة داكنة.",
           "category": "meal",
-          "action": "Dinner: Grilled turkey breast with steamed broccoli and cauliflower rice. Cup of ginger tea. Small portion of kimchi. 20 g dark chocolate.",
-          "scienceWhy": "Cauliflower rice provides the bulk of a carb serving without the glycemic load, maintaining the mild caloric deficit needed for continued fat mobilization. Turkey tryptophan supports serotonin and melatonin production for restorative sleep. Dark chocolate flavanols improve blood flow to recovering muscles [Source: PMID 22129334].",
+          "scienceWhy": "Cauliflower rice provides bulk without the glycemic load, maintaining the mild caloric deficit for continued fat mobilization. Turkey tryptophan supports serotonin and melatonin for restorative sleep. Dark chocolate flavanols improve blood flow to recovering muscles [PMID 22129334].",
+          "scienceWhyAr": "أرز القرنبيط يوفر حجماً بدون الحمل السكري، محافظاً على العجز الحراري الخفيف لاستمرار تعبئة الدهون. تريبتوفان الديك الرومي يدعم السيروتونين والميلاتونين للنوم الترميمي. فلافانولات الشوكولاتة الداكنة تحسن تدفق الدم للعضلات المتعافية [PMID 22129334].",
           "visualImpact": "medium"
         },
         {
-          "time": "10:00 PM",
+          "id": "d4t9",
+          "action": "Sleep supine. Mouth tape. Cool room. Apply light neck massage before bed for overnight lymphatic drainage.",
+          "actionAr": "نم على الظهر. لصق الفم. غرفة باردة. دلك الرقبة بلطف قبل النوم للتصريف اللمفاوي الليلي.",
           "category": "sleep",
-          "action": "Sleep supine. Mouth tape. Cool room. Apply light neck massage before bed to promote lymphatic drainage overnight.",
-          "scienceWhy": "Pre-sleep lymphatic massage along the anterior cervical chain (from jaw to clavicle) activates the superficial lymphatic vessels that drain interstitial fluid from the neck. This prevents overnight fluid accumulation in the submental and anterior cervical regions, resulting in a leaner neck appearance upon waking [Source: PMID 29306562].",
+          "scienceWhy": "Pre-sleep lymphatic massage along the anterior cervical chain activates superficial lymphatic vessels draining interstitial fluid from the neck. This prevents overnight fluid accumulation in the submental and anterior cervical regions, resulting in a leaner neck appearance upon waking [PMID 29306562].",
+          "scienceWhyAr": "تدليك لمفاوي قبل النوم على طول السلسلة العنقية الأمامية ينشط الأوعية اللمفاوية السطحية التي تصرف السائل الخلالي من الرقبة. هذا يمنع تراكم السوائل الليلي في مناطق أسفل الذقن وأمام الرقبة، مما ينتج مظهر رقبة أنحف عند الاستيقاظ [PMID 29306562].",
           "visualImpact": "low"
         }
       ]
@@ -360,83 +426,93 @@
     {
       "day": 5,
       "title": "Peak Preparation & Definition Enhancement",
+      "titleAr": "تحضير الذروة وتعزيز التعريف",
       "theme": "Amplification Phase",
-      "schedule": [
+      "themeAr": "مرحلة التكثيف",
+      "dailyGoal": "Final high-intensity neck session with maximum resistance before peak phase recovery",
+      "dailyGoalAr": "جلسة رقبة عالية الشدة نهائية بأقصى مقاومة قبل تعافي مرحلة الذروة",
+      "tasks": [
         {
-          "time": "6:00 AM",
-          "category": "wake",
+          "id": "d5t1",
           "action": "Wake up. Neck definition should be significantly improved. Take comparison photos (front, 45°, profile). Drink 400 mL warm turmeric-ginger-lemon-cayenne water.",
-          "scienceWhy": "Five days of combined anti-inflammatory nutrition, sodium depletion, and targeted neck training has reduced cervical subcutaneous water and begun visible SCM hypertrophy. The thyroid cartilage should appear noticeably more prominent in profile view compared to Day 1 baseline [Source: PMID 17569207] [Source: PMID 24164961].",
+          "actionAr": "استيقظ. يجب أن يكون تعريف الرقبة محسناً بشكل ملحوظ. التقط صور مقارنة (أمامية، 45°، جانبية). اشرب 400 مل ماء دافئ بالكركم والزنجبيل والليمون والفلفل الحار.",
+          "category": "wake",
+          "scienceWhy": "Five days of combined anti-inflammatory nutrition, sodium depletion, and targeted neck training has reduced cervical subcutaneous water and begun visible SCM hypertrophy. The thyroid cartilage should appear noticeably more prominent in profile view compared to Day 1 [PMID 17569207] [PMID 24164961].",
+          "scienceWhyAr": "خمسة أيام من التغذية المضادة للالتهاب وتقييد الصوديوم وتدريب الرقبة المستهدف قللت الماء تحت الجلد العنقي وبدأت تضخم SCM المرئي. يجب أن يبدو الغضروف الدرقي أكثر بروزاً بشكل ملحوظ في المنظر الجانبي مقارنة باليوم الأول [PMID 17569207] [PMID 24164961].",
           "visualImpact": "medium"
         },
         {
-          "time": "6:30 AM",
+          "id": "d5t2",
+          "action": "Take 2 g omega-3 + 500 mg curcumin + 500 mg Vitamin C + 5 g creatine + 500 mg dandelion root extract + 200 mg caffeine (green tea extract)",
+          "actionAr": "تناول 2 غ أوميغا-3 + 500 ملغ كركمين + 500 ملغ فيتامين C + 5 غ كرياتين + 500 ملغ خلاصة هندباء + 200 ملغ كافيين (خلاصة شاي أخضر)",
           "category": "supplement",
-          "action": "2 g omega-3 + 500 mg curcumin + 500 mg Vitamin C + 5 g creatine + 500 mg dandelion root extract + 200 mg caffeine (green tea extract)",
-          "scienceWhy": "Caffeine from green tea extract provides a thermogenic boost that increases resting metabolic rate and promotes norepinephrine-mediated lipolysis. The combination of caffeine with EGCG in green tea extract produces a synergistic fat-oxidation effect that is 16% greater than caffeine alone [Source: PMID 22038945].",
+          "scienceWhy": "Caffeine from green tea extract provides thermogenic boost increasing resting metabolic rate and promoting norepinephrine-mediated lipolysis. The combination of caffeine with EGCG in green tea extract produces a synergistic fat-oxidation effect 16% greater than caffeine alone [PMID 22038945].",
+          "scienceWhyAr": "الكافيين من خلاصة الشاي الأخضر يوفر دفعة حرارية تزيد معدل الأيض الأساسي وتعزز تحلل الدهون بوساطة النورإبينفرين. الجمع بين الكافيين وEGCG في خلاصة الشاي الأخضر ينتج تأثير أكسدة دهون تآزري أعلى 16% من الكافيين وحده [PMID 22038945].",
           "visualImpact": "medium"
         },
         {
-          "time": "7:00 AM",
+          "id": "d5t3",
+          "action": "Breakfast: Protein smoothie — whey protein (30 g), spinach, ginger, blueberries, almond butter (1 tbsp), unsweetened almond milk. No added sugar.",
+          "actionAr": "الفطور: سموذي بروتين — واي بروتين (30 غ)، سبانخ، زنجبيل، توت أزرق، زبدة لوز (1 ملعقة)، حليب لوز غير محلى. بدون سكر مضاف.",
           "category": "meal",
-          "action": "Breakfast: Protein smoothie — whey protein (30 g), spinach, ginger, blueberries, almond butter (1 tbsp), and unsweetened almond milk. No added sugar.",
-          "scienceWhy": "Whey protein provides the highest leucine content of any protein source (approximately 11 g per 100 g protein), maximally stimulating mTOR-mediated muscle protein synthesis in the recovering SCM. The liquid form ensures rapid amino acid delivery within the post-sleep catabolic window [Source: PMID 24164961].",
+          "scienceWhy": "Whey protein provides the highest leucine content of any protein source (approximately 11 g per 100 g protein), maximally stimulating mTOR-mediated muscle protein synthesis in the recovering SCM. Liquid form ensures rapid amino acid delivery within the post-sleep catabolic window [PMID 24164961].",
+          "scienceWhyAr": "واي البروتين يوفر أعلى محتوى ليوسين من أي مصدر بروتين (حوالي 11 غ لكل 100 غ بروتين)، محفزاً تصنيع البروتين العضلي بوساطة mTOR بأقصى حد في SCM المتعافية. الشكل السائل يضمن توصيل الأحماض الأمينية السريع ضمن النافذة التقويضية بعد النوم [PMID 24164961].",
           "visualImpact": "medium"
         },
         {
-          "time": "9:00 AM",
+          "id": "d5t4",
+          "action": "Posture Mastery Session: 4 × 20 chin tucks with heavy band, 4 × 15 prone I-Y-T raises with light dumbbells, 3 × 60-sec wall posture holds, 5-min walking with book on head.",
+          "actionAr": "جلسة إتقان الوضعية: 4 × 20 سحب ذقن بمطاط ثقيل، 4 × 15 رفع I-Y-T منبطحاً بدمبل خفيف، 3 × 60 ثانية ثبات وضعي على الجدار، 5 دقائق مشي بكتاب على الرأس.",
           "category": "training",
-          "action": "Posture Mastery Session: 4 × 20 chin tucks with heavy band, 4 × 15 prone I-Y-T raises with light dumbbells, 3 × 60-sec wall posture holds (head, shoulders, glutes, heels touching wall). Practice walking with book on head for 5 minutes.",
-          "scienceWhy": "The book-on-head drill activates cervical proprioceptors and forces alignment of the entire spinal column. This 'stacking' effect positions the cervical vertebrae in their optimal lordotic curve, maximizing the anterior projection of the thyroid cartilage. The wall holds build endurance in the postural muscles for sustained correction [Source: PMID 29306562].",
-          "visualImpact": "medium"
+          "scienceWhy": "The book-on-head drill activates cervical proprioceptors and forces alignment of the entire spinal column. This 'stacking' effect positions the cervical vertebrae in their optimal lordotic curve, maximizing the anterior projection of the thyroid cartilage. Wall holds build endurance in postural muscles [PMID 29306562].",
+          "scienceWhyAr": "تمرين الكتاب على الرأس ينشط المستقبلات الحسية العنقية ويفرض محاذاة العمود الفقري بأكمله. تأثير 'التكديس' هذا يموضع الفقرات العنقية في منحنى التقوس الأمثل، معظماً البروز الأمامي للغضروف الدرقي. ثبات الجدار يبني التحمل في العضلات الوضعية [PMID 29306562].",
+          "visualImpact": "medium",
+          "exerciseImage": "/exercises/chin-tuck.svg"
         },
         {
-          "time": "10:30 AM",
+          "id": "d5t5",
+          "action": "Jaw & Mewing Peak Session: 30 min continuous mewing with maximum tongue pressure. 5 × 30 mastic gum chews. 4 × 20 chin lifts with manual resistance under chin.",
+          "actionAr": "جلسة ذروة الفك والميوينغ: 30 دقيقة ميوينغ مستمر بأقصى ضغط لسان. 5 × 30 مضغ علكة مستكة. 4 × 20 رفع ذقن بمقاومة يدوية تحت الذقن.",
           "category": "training",
-          "action": "Jaw & Mewing Peak Session: 30 min continuous mewing with maximum tongue pressure. 5 × 30 mastic gum chews. 4 × 20 chin lifts with manual resistance under chin. 3 × 15 jaw protrusion exercises.",
-          "scienceWhy": "Maximum tongue pressure mewing activates the geniohyoid and mylohyoid muscles that directly insert on the hyoid bone. Strengthening these muscles elevates the hyoid, which tensions the thyrohyoid ligament, pulling the superior horn of the thyroid cartilage upward and making the laryngeal prominence more visible [Source: PMID 25611342].",
+          "scienceWhy": "Maximum tongue pressure mewing activates the geniohyoid and mylohyoid muscles that directly insert on the hyoid bone. Strengthening these elevates the hyoid, tensioning the thyrohyoid ligament, pulling the superior horn of the thyroid cartilage upward and making the laryngeal prominence more visible [PMID 25611342].",
+          "scienceWhyAr": "الميوينغ بأقصى ضغط لسان ينشط العضلات الذقنية اللامية والفكية اللامية التي تندغم مباشرة في العظم اللامي. تقوية هذه يرفع العظم اللامي، مما يشد الرباط الدرقي اللامي، ساحباً القرن العلوي للغضروف الدرقي للأعلى وجاعلاً البروز الحنجري أكثر وضوحاً [PMID 25611342].",
           "visualImpact": "high"
         },
         {
-          "time": "12:30 PM",
-          "category": "meal",
-          "action": "Lunch: Grilled salmon (200 g) with large salad (watercress, arugula, radish, cucumber), asparagus, and olive oil-lemon dressing. Cup of dandelion root tea.",
-          "scienceWhy": "Radish contains isothiocyanates that activate Nrf2-mediated detoxification pathways, reducing systemic inflammation. Combined with the omega-3 from salmon and the diuretic effects of asparagus and dandelion, this meal supports continued neck definition through multiple anti-inflammatory and water-shedding mechanisms [Source: PMID 17569218] [Source: PMID 19678785].",
-          "visualImpact": "medium"
-        },
-        {
-          "time": "2:30 PM",
-          "category": "recovery",
-          "action": "Cold exposure protocol: 10-minute cold compress on entire anterior neck and submental area. Follow with 5-minute warm compress. Repeat once.",
-          "scienceWhy": "Alternating cold and warm compresses on the anterior neck creates a localized contrast therapy effect. The cold triggers vasoconstriction and cryolipolysis, while the subsequent warmth produces rebound vasodilation that flushes metabolic waste and inflammatory mediators from the neck tissue [Source: PMID 23640880].",
-          "visualImpact": "medium"
-        },
-        {
-          "time": "4:00 PM",
+          "id": "d5t6",
+          "action": "Final High-Intensity Neck Session: 5 × 15 neck curls (3 kg), 5 × 15 neck extensions (3 kg), 4 × 12 lateral flexion each side (2 kg), 4 × 10 neck rotation against heavy band, 3 × max isometric holds. Finish with 50 rapid bodyweight neck nods.",
+          "actionAr": "جلسة رقبة عالية الشدة نهائية: 5 × 15 ثني رقبة (3 كغ)، 5 × 15 مد رقبة (3 كغ)، 4 × 12 ثني جانبي كل جانب (2 كغ)، 4 × 10 دوران رقبة ضد مطاط ثقيل، 3 × أقصى ثبات إيزومتري. أنهِ بـ 50 إيماءة رقبة سريعة بوزن الجسم.",
           "category": "training",
-          "action": "Final High-Intensity Neck Session: 5 × 15 neck curls (3 kg), 5 × 15 neck extensions (3 kg), 4 × 12 lateral flexion each side (2 kg), 4 × 10 neck rotation against heavy band, 3 × max isometric holds in each direction. Finish with 50 rapid bodyweight neck nods.",
-          "scienceWhy": "The highest resistance of the protocol (3 kg for curls/extensions) creates maximum mechanical tension in the SCM fibers. The rapid bodyweight nods at the end produce a final metabolic pump, flooding the SCM with blood and metabolites. Five days of progressive neck training has now initiated measurable fascicular hypertrophy [Source: PMID 24164961].",
-          "visualImpact": "high"
+          "scienceWhy": "The highest resistance of the protocol (3 kg) creates maximum mechanical tension in SCM fibers. Rapid bodyweight nods produce a final metabolic pump, flooding the SCM with blood and metabolites. Five days of progressive neck training has now initiated measurable fascicular hypertrophy [PMID 24164961].",
+          "scienceWhyAr": "أعلى مقاومة في البروتوكول (3 كغ) تخلق أقصى توتر ميكانيكي في ألياف SCM. إيماءات وزن الجسم السريعة تنتج ضخاً أيضياً نهائياً، مغرقةً SCM بالدم والنواتج الأيضية. خمسة أيام من تدريب الرقبة التدريجي بدأت الآن تضخماً حزيمياً قابلاً للقياس [PMID 24164961].",
+          "visualImpact": "high",
+          "exerciseImage": "/exercises/neck-curl.svg"
         },
         {
-          "time": "6:00 PM",
+          "id": "d5t7",
+          "action": "Full neck recovery: Hot shower on neck (5 min), gentle neck stretches all directions (30 sec each), self-massage along SCM with arnica oil (5 min). Cold-warm contrast on submental area.",
+          "actionAr": "تعافي رقبة كامل: دش ساخن على الرقبة (5 دقائق)، تمديدات رقبة لطيفة بجميع الاتجاهات (30 ثانية لكل منها)، تدليك ذاتي على طول SCM بزيت الأرنيكا (5 دقائق). تباين بارد-دافئ على أسفل الذقن.",
           "category": "recovery",
-          "action": "Full neck recovery routine: Hot shower focused on neck (5 min), gentle neck stretches (all directions, 30 sec each), self-massage along SCM with arnica oil (5 min).",
-          "scienceWhy": "Hot water increases local blood flow to the SCM by up to 3-fold, delivering amino acids and growth factors needed for repair and hypertrophy. The stretches maintain range of motion and prevent the SCM from shortening, which could pull the head forward and undo postural corrections [Source: PMID 24164961].",
+          "scienceWhy": "Hot water increases local blood flow to the SCM by up to 3-fold, delivering amino acids and growth factors for repair and hypertrophy. Stretches maintain range of motion and prevent SCM shortening that could pull the head forward. Cold-warm contrast on submental area performs final cryolipolysis [PMID 24164961] [PMID 23640880].",
+          "scienceWhyAr": "الماء الساخن يزيد تدفق الدم الموضعي إلى SCM حتى 3 أضعاف، موصلاً الأحماض الأمينية وعوامل النمو للإصلاح والتضخم. التمديدات تحافظ على مدى الحركة وتمنع تقصر SCM الذي قد يسحب الرأس للأمام. تباين البرودة-الدفء على أسفل الذقن يؤدي تبريد دهون نهائي [PMID 24164961] [PMID 23640880].",
           "visualImpact": "medium"
         },
         {
-          "time": "7:00 PM",
-          "category": "meal",
+          "id": "d5t8",
           "action": "Dinner: Lean steak (150 g) with roasted sweet potato (150 g), steamed asparagus, and sauerkraut. Ginger tea. No added sodium.",
-          "scienceWhy": "The sweet potato carbohydrate provides moderate glycogen repletion for neck muscles ahead of the final peak phase. Steak creatine and protein support overnight muscle recovery and growth. The sauerkraut probiotics maintain gut barrier integrity to prevent LPS-mediated inflammation [Source: PMID 12701816] [Source: PMID 22129334].",
+          "actionAr": "العشاء: شريحة لحم خالية الدهن (150 غ) مع بطاطا حلوة محمصة (150 غ) وهليون على البخار ومخلل ملفوف. شاي زنجبيل. بدون صوديوم مضاف.",
+          "category": "meal",
+          "scienceWhy": "Sweet potato carbohydrate provides moderate glycogen repletion for neck muscles ahead of the peak phase. Steak creatine and protein support overnight muscle recovery. Sauerkraut probiotics maintain gut barrier integrity to prevent LPS-mediated inflammation [PMID 12701816] [PMID 22129334].",
+          "scienceWhyAr": "كربوهيدرات البطاطا الحلوة توفر تعويضاً معتدلاً للغليكوجين لعضلات الرقبة قبل مرحلة الذروة. كرياتين وبروتين اللحم يدعمان تعافي العضلات الليلي. بروبيوتيك مخلل الملفوف يحافظ على سلامة حاجز الأمعاء لمنع الالتهاب بوساطة LPS [PMID 12701816] [PMID 22129334].",
           "visualImpact": "medium"
         },
         {
-          "time": "10:00 PM",
-          "category": "sleep",
+          "id": "d5t9",
           "action": "Sleep supine. Mouth tape. Cool room (17–18 °C). Pre-sleep neck lymphatic massage (3 min).",
-          "scienceWhy": "The slightly cooler room temperature (17–18 °C vs 18–19 °C) on Day 5 further enhances deep sleep and GH release. The pre-sleep lymphatic massage ensures the neck wakes with minimal fluid retention, setting up optimal conditions for the peak definition days ahead [Source: PMID 10484056].",
+          "actionAr": "نم على الظهر. لصق الفم. غرفة باردة (17-18°م). تدليك لمفاوي للرقبة قبل النوم (3 دقائق).",
+          "category": "sleep",
+          "scienceWhy": "Slightly cooler room (17–18 °C vs 18–19 °C) further enhances deep sleep and GH release. Pre-sleep lymphatic massage ensures the neck wakes with minimal fluid retention, setting up optimal conditions for peak definition days [PMID 10484056].",
+          "scienceWhyAr": "غرفة أبرد قليلاً (17-18°م مقابل 18-19°م) تعزز أكثر النوم العميق وإفراز GH. التدليك اللمفاوي قبل النوم يضمن استيقاظ الرقبة بأقل احتباس سوائل، مهيئاً ظروفاً مثالية لأيام ذروة التعريف [PMID 10484056].",
           "visualImpact": "low"
         }
       ]
@@ -444,83 +520,93 @@
     {
       "day": 6,
       "title": "Peak Definition — Visual Optimization",
+      "titleAr": "ذروة التعريف — التحسين البصري",
       "theme": "Peak Phase",
-      "schedule": [
+      "themeAr": "مرحلة الذروة",
+      "dailyGoal": "Strategic glycogen loading for SCM fullness while maintaining subcutaneous water depletion",
+      "dailyGoalAr": "شحن غليكوجين استراتيجي لامتلاء SCM مع الحفاظ على استنفاد الماء تحت الجلد",
+      "tasks": [
         {
-          "time": "6:00 AM",
+          "id": "d6t1",
+          "action": "Wake up. Neck should look significantly leaner and more defined. Take photos for comparison. Drink 300 mL warm turmeric-lemon water only. Reduce water to 2.5 L today.",
+          "actionAr": "استيقظ. يجب أن تبدو الرقبة أنحف وأكثر تحديداً بشكل ملحوظ. التقط صوراً للمقارنة. اشرب 300 مل ماء دافئ بالكركم والليمون فقط. قلل الماء إلى 2.5 لتر اليوم.",
           "category": "wake",
-          "action": "Wake up. Neck should look significantly leaner and more defined. Take photos for comparison. Drink 300 mL warm turmeric-lemon water only.",
-          "scienceWhy": "Six days of combined sodium restriction, anti-inflammatory diet, and diuresis has substantially reduced subcutaneous cervical water. The SCM should be visibly more prominent alongside the thyroid cartilage when the head is turned. Reduce water to 2.5 L today for final subcutaneous water manipulation [Source: PMID 15084272] [Source: PMID 24164961].",
+          "scienceWhy": "Six days of combined sodium restriction, anti-inflammatory diet, and diuresis has substantially reduced subcutaneous cervical water. The SCM should be visibly more prominent alongside the thyroid cartilage when the head is turned. Reduced water with glycogen loading drives water INTO muscle cells [PMID 15084272] [PMID 24164961].",
+          "scienceWhyAr": "ستة أيام من تقييد الصوديوم والنظام الغذائي المضاد للالتهاب والإدرار قللت بشكل كبير الماء تحت الجلد العنقي. يجب أن تكون SCM أكثر بروزاً بصرياً بجانب الغضروف الدرقي عند تدوير الرأس. تقليل الماء مع شحن الغليكوجين يدفع الماء إلى داخل خلايا العضلات [PMID 15084272] [PMID 24164961].",
           "visualImpact": "high"
         },
         {
-          "time": "6:30 AM",
+          "id": "d6t2",
+          "action": "Take 2 g omega-3 + 500 mg curcumin + 500 mg Vitamin C + 5 g creatine. Drop dandelion root — preserve intravascular volume for neck pump.",
+          "actionAr": "تناول 2 غ أوميغا-3 + 500 ملغ كركمين + 500 ملغ فيتامين C + 5 غ كرياتين. أوقف الهندباء — احفظ الحجم داخل الأوعية لضخ الرقبة.",
           "category": "supplement",
-          "action": "2 g omega-3 + 500 mg curcumin + 500 mg Vitamin C + 5 g creatine. Drop dandelion root — preserve intravascular volume for neck pump.",
-          "scienceWhy": "Stopping the diuretic on Day 6 prevents excessive dehydration while allowing the previous days' effects to persist. Maintaining creatine ensures the SCM retains intracellular water for maximal muscle fullness and definition. The anti-inflammatory stack continues to minimize any remaining cervical edema [Source: PMID 12701816].",
+          "scienceWhy": "Stopping the diuretic prevents excessive dehydration while previous days' effects persist. Maintaining creatine ensures SCM retains intracellular water for maximal muscle fullness and definition. Anti-inflammatory stack continues to minimize any remaining cervical edema [PMID 12701816].",
+          "scienceWhyAr": "إيقاف مدر البول يمنع الجفاف المفرط بينما تستمر تأثيرات الأيام السابقة. الحفاظ على الكرياتين يضمن احتفاظ SCM بالماء داخل الخلايا لأقصى امتلاء وتعريف عضلي. المكدس المضاد للالتهاب يستمر بتقليل أي وذمة عنقية متبقية [PMID 12701816].",
           "visualImpact": "medium"
         },
         {
-          "time": "7:00 AM",
-          "category": "meal",
+          "id": "d6t3",
           "action": "Breakfast: Eggs (3) with spinach and avocado. Small portion of oatmeal (50 g dry) with blueberries and cinnamon. Green tea.",
-          "scienceWhy": "The moderate carbohydrate from oatmeal begins strategic glycogen loading in the neck muscles. Unlike the hand-veins protocol, the neck carb load is subtle — the goal is to fill SCM glycogen stores to create maximum muscle fullness that enhances the visual contrast with the thyroid cartilage, not to push veins to the surface [Source: PMID 24164961].",
+          "actionAr": "الفطور: بيض (3) مع سبانخ وأفوكادو. حصة صغيرة من الشوفان (50 غ جاف) مع توت أزرق وقرفة. شاي أخضر.",
+          "category": "meal",
+          "scienceWhy": "The moderate carbohydrate from oatmeal begins strategic glycogen loading in neck muscles. Unlike the hand-veins protocol, the neck carb load is subtle — the goal is to fill SCM glycogen stores for maximum muscle fullness that enhances visual contrast with the thyroid cartilage [PMID 24164961].",
+          "scienceWhyAr": "الكربوهيدرات المعتدلة من الشوفان تبدأ شحن الغليكوجين الاستراتيجي في عضلات الرقبة. على عكس بروتوكول عروق اليد، شحن الكربوهيدرات للرقبة خفيف — الهدف ملء مخازن غليكوجين SCM لأقصى امتلاء عضلي يعزز التباين البصري مع الغضروف الدرقي [PMID 24164961].",
           "visualImpact": "medium"
         },
         {
-          "time": "9:00 AM",
-          "category": "training",
+          "id": "d6t4",
           "action": "Posture Perfection: 5 × 20 chin tucks (hold 10 sec each), 3 × 60-sec wall posture holds, 5-min walking with book on head, 3 × 30-sec cervical retraction holds against resistance.",
-          "scienceWhy": "Six days of daily postural correction has significantly strengthened the deep cervical flexors and retrained the habitual head position. These final drills consolidate the motor pattern. Studies show measurable FHP correction (4–8 mm reduction in craniovertebral angle) within one week of daily targeted exercise [Source: PMID 29306562].",
-          "visualImpact": "high"
-        },
-        {
-          "time": "10:30 AM",
+          "actionAr": "إتقان الوضعية: 5 × 20 سحب ذقن (ثبات 10 ثوانٍ لكل منها)، 3 × 60 ثانية ثبات وضعي على الجدار، 5 دقائق مشي بكتاب على الرأس، 3 × 30 ثانية ثبات سحب عنقي ضد مقاومة.",
           "category": "training",
-          "action": "Jaw Definition Session: 30-min continuous mewing with maximum force. 5 × 30 mastic gum chews with 5-sec holds at maximum clench. 4 × 20 chin lifts. Jawline should appear more defined.",
-          "scienceWhy": "Six days of progressive jaw loading has initiated measurable masseter and temporalis hypertrophy. The enlarged masseter creates a wider, more angular jaw that visually frames the neck and makes the thyroid cartilage prominence appear more dramatic by contrast [Source: PMID 25611342].",
+          "scienceWhy": "Six days of daily postural correction has significantly strengthened deep cervical flexors and retrained habitual head position. These final drills consolidate the motor pattern. Studies show measurable FHP correction (4–8 mm reduction in craniovertebral angle) within one week [PMID 29306562].",
+          "scienceWhyAr": "ستة أيام من التصحيح الوضعي اليومي قوّت بشكل ملحوظ ثانيات العنق العميقة وأعادت تدريب وضعية الرأس المعتادة. هذه التمارين النهائية تثبت النمط الحركي. تظهر الدراسات تصحيحاً قابلاً للقياس في وضعية الرأس الأمامية (تقليل 4-8 مم في الزاوية القحفية الفقرية) خلال أسبوع واحد [PMID 29306562].",
+          "visualImpact": "high",
+          "exerciseImage": "/exercises/chin-tuck.svg"
+        },
+        {
+          "id": "d6t5",
+          "action": "Jaw Definition Session: 30-min continuous mewing with maximum force. 5 × 30 mastic gum chews with 5-sec holds at maximum clench. 4 × 20 chin lifts.",
+          "actionAr": "جلسة تحديد الفك: 30 دقيقة ميوينغ مستمر بأقصى قوة. 5 × 30 مضغ علكة مستكة بثبات 5 ثوانٍ عند أقصى شد. 4 × 20 رفع ذقن.",
+          "category": "training",
+          "scienceWhy": "Six days of progressive jaw loading has initiated measurable masseter and temporalis hypertrophy. The enlarged masseter creates a wider, more angular jaw that visually frames the neck and makes the thyroid cartilage prominence appear more dramatic by contrast [PMID 25611342].",
+          "scienceWhyAr": "ستة أيام من التحميل التدريجي للفك بدأت تضخماً قابلاً للقياس في العضلة الماضغة والعضلة الصدغية. العضلة الماضغة المتضخمة تخلق فكاً أوسع وأكثر زاوية يؤطر الرقبة بصرياً ويجعل بروز الغضروف الدرقي يبدو أكثر دراماتيكية بالتباين [PMID 25611342].",
           "visualImpact": "high"
         },
         {
-          "time": "12:30 PM",
+          "id": "d6t6",
+          "action": "Lunch: Grilled chicken with brown rice (200 g), large leafy green salad, olive oil dressing. Moderate carb load to fill neck muscles.",
+          "actionAr": "الغداء: دجاج مشوي مع أرز بني (200 غ)، سلطة خضروات ورقية كبيرة، صلصة زيت زيتون. شحن كربوهيدرات معتدل لملء عضلات الرقبة.",
           "category": "meal",
-          "action": "Lunch: Grilled chicken with brown rice (200 g), large leafy green salad, and olive oil dressing. Moderate carb load to fill neck muscles.",
-          "scienceWhy": "The brown rice provides complex carbohydrate for glycogen loading in the SCM and other neck muscles. Each gram of glycogen binds approximately 2.7 g of water intracellularly, physically expanding the muscles flanking the thyroid cartilage. This expansion pushes the skin tighter over the cartilage structure [Source: PMID 24164961].",
+          "scienceWhy": "Brown rice complex carbohydrate for glycogen loading in the SCM and neck muscles. Each gram of glycogen binds approximately 2.7 g of water intracellularly, physically expanding muscles flanking the thyroid cartilage. This pushes skin tighter over the cartilage structure [PMID 24164961].",
+          "scienceWhyAr": "كربوهيدرات الأرز البني المعقدة لشحن الغليكوجين في SCM وعضلات الرقبة. كل غرام غليكوجين يربط حوالي 2.7 غ ماء داخل الخلايا، موسعاً فيزيائياً العضلات المحيطة بالغضروف الدرقي. هذا يشد البشرة أكثر فوق بنية الغضروف [PMID 24164961].",
           "visualImpact": "high"
         },
         {
-          "time": "2:30 PM",
-          "category": "recovery",
-          "action": "Final cold exposure: 10-min ice compress on submental area. Then warm compress on SCM bilaterally (10 min) to promote pump appearance.",
-          "scienceWhy": "The cold on the submental area performs a final cryolipolysis and de-puffing effect. The warm compresses on the SCM promote local vasodilation and blood pooling in the muscle, creating a visual 'pump' effect in the neck that enhances the framing of the thyroid cartilage [Source: PMID 23640880].",
-          "visualImpact": "high"
-        },
-        {
-          "time": "4:00 PM",
+          "id": "d6t7",
+          "action": "Neck Pump Session: 4 × 20 light neck curls (controlled, squeeze at top), 4 × 20 light neck extensions, 3 × 15 lateral flexion each side, 3 × 20 rapid neck nods. Final cold compress on submental area, warm compress on SCM.",
+          "actionAr": "جلسة ضخ الرقبة: 4 × 20 ثني رقبة خفيف (مسيطر، ضغط في القمة)، 4 × 20 مد رقبة خفيف، 3 × 15 ثني جانبي كل جانب، 3 × 20 إيماءة رقبة سريعة. كمادة باردة أخيرة على أسفل الذقن، كمادة دافئة على SCM.",
           "category": "training",
-          "action": "Neck Pump Session: 4 × 20 light neck curls (controlled, squeeze at top), 4 × 20 light neck extensions, 3 × 15 lateral flexion each side, 3 × 20 neck nods (rapid). Focus on mind-muscle connection and maximum blood flow.",
-          "scienceWhy": "Light resistance with high reps and controlled tempo on Day 6 creates maximum metabolic pump in the SCM without causing excessive microtrauma that would still be present on Peak Day. The mind-muscle connection cue enhances motor unit recruitment, ensuring maximal SCM activation even with lighter loads [Source: PMID 24164961].",
-          "visualImpact": "high"
+          "scienceWhy": "Light resistance with high reps on Day 6 creates maximum metabolic pump in the SCM without excessive microtrauma still present on Peak Day. Warm compress on SCM promotes local vasodilation and blood pooling, creating visual 'pump' effect enhancing thyroid cartilage framing [PMID 24164961] [PMID 23640880].",
+          "scienceWhyAr": "مقاومة خفيفة بتكرارات عالية في اليوم السادس تخلق أقصى ضخ أيضي في SCM دون إحداث ضرر مجهري مفرط يكون موجوداً في يوم الذروة. الكمادة الدافئة على SCM تعزز التوسع الوعائي الموضعي وتجمع الدم، مما يخلق تأثير 'ضخ' بصري يعزز تأطير الغضروف الدرقي [PMID 24164961] [PMID 23640880].",
+          "visualImpact": "high",
+          "exerciseImage": "/exercises/neck-curl.svg"
         },
         {
-          "time": "6:00 PM",
-          "category": "recovery",
-          "action": "Gentle neck stretches. Apply moisturizer to anterior neck to maintain skin elasticity and translucency. Practice optimal posture — stand tall, chin slightly tucked, shoulders back.",
-          "scienceWhy": "Well-moisturized skin has greater optical translucency, allowing underlying anatomical structures (thyroid cartilage, SCM borders) to appear more visible. The posture practice ensures that the corrected alignment is maintained during social situations where the visual result matters most [Source: PMID 29306562].",
+          "id": "d6t8",
+          "action": "Dinner: Salmon with sweet potato (200 g), steamed vegetables, small salad. Moderate carbs to top off glycogen. Ginger tea. No sodium. Apply neck moisturizer for skin translucency.",
+          "actionAr": "العشاء: سلمون مع بطاطا حلوة (200 غ)، خضروات على البخار، سلطة صغيرة. كربوهيدرات معتدلة لإتمام الغليكوجين. شاي زنجبيل. بدون صوديوم. ضع مرطب رقبة لشفافية البشرة.",
+          "category": "meal",
+          "scienceWhy": "This final carb-containing meal ensures SCM glycogen stores are fully loaded overnight. Salmon omega-3s maintain anti-inflammatory status going into Peak Day. Well-moisturized skin has greater optical translucency, allowing underlying structures (thyroid cartilage, SCM borders) to appear more visible [PMID 17569218] [PMID 29306562].",
+          "scienceWhyAr": "هذه الوجبة الأخيرة المحتوية على كربوهيدرات تضمن شحن مخازن غليكوجين SCM بالكامل ليلاً. أوميغا-3 من السلمون تحافظ على الحالة المضادة للالتهاب قبل يوم الذروة. البشرة المرطبة جيداً لها شفافية بصرية أكبر، مما يسمح للبنى التحتية (الغضروف الدرقي، حدود SCM) بالظهور بشكل أكثر وضوحاً [PMID 17569218] [PMID 29306562].",
           "visualImpact": "medium"
         },
         {
-          "time": "7:00 PM",
-          "category": "meal",
-          "action": "Dinner: Salmon with sweet potato (200 g), steamed vegetables, and small salad. Moderate carbs to top off glycogen. Ginger tea. No sodium.",
-          "scienceWhy": "This final carb-containing meal ensures SCM glycogen stores are fully loaded overnight. The salmon omega-3s maintain anti-inflammatory status going into Peak Day. No sodium ensures the subcutaneous compartment remains depleted of excess water for maximum definition [Source: PMID 17569218].",
-          "visualImpact": "medium"
-        },
-        {
-          "time": "10:00 PM",
-          "category": "sleep",
+          "id": "d6t9",
           "action": "Sleep supine with cervical roll. Mouth tape. Warm room (20–21 °C) to maintain mild vasodilation in neck muscles. Pre-sleep neck lymphatic massage.",
-          "scienceWhy": "Slightly warmer sleep temperature on the eve of Peak Day maintains peripheral vasodilation in the neck, keeping the SCM engorged with the glycogen-loaded volume. The lymphatic massage ensures any residual fluid in the submental area is cleared overnight [Source: PMID 10484056].",
+          "actionAr": "نم على الظهر مع دعامة عنقية. لصق الفم. غرفة دافئة (20-21°م) للحفاظ على توسع وعائي خفيف في عضلات الرقبة. تدليك لمفاوي للرقبة قبل النوم.",
+          "category": "sleep",
+          "scienceWhy": "Slightly warmer sleep temperature on the eve of Peak Day maintains peripheral vasodilation in the neck, keeping the SCM engorged with glycogen-loaded volume. Lymphatic massage ensures residual fluid in the submental area is cleared overnight [PMID 10484056].",
+          "scienceWhyAr": "درجة حرارة نوم أعلى قليلاً عشية يوم الذروة تحافظ على توسع الأوعية المحيطية في الرقبة، مبقيةً SCM ممتلئة بالحجم المحمل بالغليكوجين. التدليك اللمفاوي يضمن تصريف السوائل المتبقية في منطقة أسفل الذقن ليلاً [PMID 10484056].",
           "visualImpact": "medium"
         }
       ]
@@ -528,83 +614,103 @@
     {
       "day": 7,
       "title": "Peak Day — Maximum Adam's Apple Prominence",
+      "titleAr": "يوم الذروة — أقصى بروز لتفاحة آدم",
       "theme": "Peak Phase",
-      "schedule": [
+      "themeAr": "مرحلة الذروة",
+      "dailyGoal": "Achieve peak thyroid cartilage visibility through final pump, optimal posture, and photo documentation",
+      "dailyGoalAr": "تحقيق ذروة ظهور الغضروف الدرقي من خلال الضخ الأخير والوضعية المثالية وتوثيق الصور",
+      "tasks": [
         {
-          "time": "6:00 AM",
-          "category": "wake",
+          "id": "d7t1",
           "action": "Wake up. Immediately observe neck in mirror — thyroid cartilage should be dramatically more visible. Take final comparison photos (front, 45°, profile) against Day 1 baseline.",
-          "scienceWhy": "After 7 days of systematic intervention — anti-inflammatory diet (reduced CRP/cervical edema), sodium depletion (reduced subcutaneous water), SCM hypertrophy (enhanced cartilage framing), and posture correction (increased anterior projection) — all factors converge for peak thyroid cartilage visibility [Source: PMID 17569207] [Source: PMID 24164961] [Source: PMID 29306562].",
+          "actionAr": "استيقظ. راقب الرقبة فوراً في المرآة — يجب أن يكون الغضروف الدرقي أكثر وضوحاً بشكل كبير. التقط صور مقارنة نهائية (أمامية، 45°، جانبية) مقابل خط أساس اليوم الأول.",
+          "category": "wake",
+          "scienceWhy": "After 7 days of systematic intervention — anti-inflammatory diet (reduced CRP/cervical edema), sodium depletion (reduced subcutaneous water), SCM hypertrophy (enhanced cartilage framing), and posture correction (increased anterior projection) — all factors converge for peak thyroid cartilage visibility [PMID 17569207] [PMID 24164961] [PMID 29306562].",
+          "scienceWhyAr": "بعد 7 أيام من التدخل المنهجي — نظام غذائي مضاد للالتهاب (تقليل CRP/وذمة عنقية)، استنفاد الصوديوم (تقليل الماء تحت الجلد)، تضخم SCM (تعزيز تأطير الغضروف)، وتصحيح الوضعية (زيادة البروز الأمامي) — تتقارب جميع العوامل لذروة ظهور الغضروف الدرقي [PMID 17569207] [PMID 24164961] [PMID 29306562].",
           "visualImpact": "high"
         },
         {
-          "time": "6:30 AM",
-          "category": "supplement",
+          "id": "d7t2",
           "action": "Final supplement stack: 2 g omega-3 + 500 mg curcumin + 500 mg Vitamin C + 5 g creatine. Small espresso (30 mL).",
-          "scienceWhy": "The low-dose caffeine provides mild sympathetic stimulation that enhances alertness and posture maintenance. Creatine ensures SCM intracellular water is at maximum for full muscle volume. The anti-inflammatory stack maintains the reduced edema state achieved over the week [Source: PMID 12701816].",
+          "actionAr": "مكدس المكملات الأخير: 2 غ أوميغا-3 + 500 ملغ كركمين + 500 ملغ فيتامين C + 5 غ كرياتين. إسبريسو صغير (30 مل).",
+          "category": "supplement",
+          "scienceWhy": "Low-dose caffeine provides mild sympathetic stimulation enhancing alertness and posture maintenance. Creatine ensures SCM intracellular water is at maximum for full muscle volume. Anti-inflammatory stack maintains reduced edema state achieved over the week [PMID 12701816].",
+          "scienceWhyAr": "الكافيين بجرعة منخفضة يوفر تحفيزاً ودياً خفيفاً يعزز اليقظة والحفاظ على الوضعية. الكرياتين يضمن أن الماء داخل خلايا SCM في أقصاه لحجم عضلي كامل. المكدس المضاد للالتهاب يحافظ على حالة الوذمة المنخفضة المحققة خلال الأسبوع [PMID 12701816].",
           "visualImpact": "medium"
         },
         {
-          "time": "7:00 AM",
-          "category": "meal",
+          "id": "d7t3",
           "action": "Light breakfast: 2 eggs with spinach. Small sweet potato (100 g). Minimal water — sips only until peak photos are complete.",
-          "scienceWhy": "A light carb-containing breakfast maintains glycogen stores without adding significant water volume. Minimal water intake preserves the subcutaneous water depletion for maximum neck definition during the morning peak window [Source: PMID 15084272].",
-          "visualImpact": "medium"
-        },
-        {
-          "time": "8:30 AM",
-          "category": "training",
-          "action": "Final Neck Pump: 3 × 20 light neck curls (controlled, peak contraction squeeze), 3 × 20 light neck extensions, 3 × 15 lateral flexion each side. Finish with 30-sec isometric holds in flexion and extension. 5 × 30 mastic gum jaw clenches.",
-          "scienceWhy": "This final light pump session maximally engorges the SCM with blood, creating visible muscle columns flanking the thyroid cartilage. The isometric holds create sustained occlusion that prolongs the pump effect. Jaw clenches define the mandibular angle for complete neck aesthetics [Source: PMID 24164961] [Source: PMID 25611342].",
-          "visualImpact": "high"
-        },
-        {
-          "time": "9:30 AM",
-          "category": "recovery",
-          "action": "Warm compress on anterior neck for 10 minutes to maintain vasodilation and pump. Practice mewing with maximum tongue pressure.",
-          "scienceWhy": "The warm compress maintains the exercise-induced vasodilation in the SCM, prolonging the peak visual window. Maximal mewing pressure elevates the hyoid bone to its highest position, tensioning the thyrohyoid membrane and maximizing the angular projection of the thyroid cartilage [Source: PMID 25611342].",
-          "visualImpact": "high"
-        },
-        {
-          "time": "10:00 AM",
-          "category": "recovery",
-          "action": "PEAK WINDOW: Assume optimal posture — chin slightly tucked, cervical spine extended, shoulders retracted, chest open. Take final result photos and videos. Compare with Day 1 baseline.",
-          "scienceWhy": "The convergence of all protocol factors — reduced cervical subcutaneous water (anti-inflammatory diet + sodium depletion + diuresis), enhanced SCM volume (6 days progressive hypertrophy + creatine), corrected posture (deep cervical flexor strengthening + habitual retraining), and elevated hyoid (mewing practice) — creates a window of maximum thyroid cartilage prominence lasting approximately 60–90 minutes post-pump [Source: PMID 24164961] [Source: PMID 29306562] [Source: PMID 25611342].",
-          "visualImpact": "high"
-        },
-        {
-          "time": "12:00 PM",
+          "actionAr": "فطور خفيف: 2 بيضة مع سبانخ. بطاطا حلوة صغيرة (100 غ). ماء ضئيل — رشفات فقط حتى اكتمال صور الذروة.",
           "category": "meal",
-          "action": "Post-Peak Meal: Resume normal hydration. Balanced meal — grilled fish, sweet potato, large salad, avocado. Begin slowly reintroducing normal sodium levels.",
-          "scienceWhy": "Gradual sodium reintroduction over 24–48 hours prevents aldosterone rebound and rapid water retention. The balanced meal provides recovery nutrition for the neck muscles and overall systemic recovery from the week-long protocol [Source: PMID 15084272].",
+          "scienceWhy": "A light carb-containing breakfast maintains glycogen stores without adding significant water volume. Minimal water preserves subcutaneous water depletion for maximum neck definition during the morning peak window [PMID 15084272].",
+          "scienceWhyAr": "فطور خفيف يحتوي كربوهيدرات يحافظ على مخازن الغليكوجين دون إضافة حجم ماء كبير. الماء الضئيل يحفظ استنفاد الماء تحت الجلد لأقصى تعريف للرقبة خلال نافذة ذروة الصباح [PMID 15084272].",
           "visualImpact": "medium"
         },
         {
-          "time": "2:00 PM",
+          "id": "d7t4",
+          "action": "Final Neck Pump: 3 × 20 light neck curls (controlled, peak contraction squeeze), 3 × 20 light neck extensions, 3 × 15 lateral flexion each side. 30-sec isometric holds in flexion and extension. 5 × 30 mastic gum jaw clenches.",
+          "actionAr": "ضخ الرقبة الأخير: 3 × 20 ثني رقبة خفيف (مسيطر، ضغط ذروة الانقباض)، 3 × 20 مد رقبة خفيف، 3 × 15 ثني جانبي كل جانب. 30 ثانية ثبات إيزومتري في الثني والمد. 5 × 30 شد فك بعلكة المستكة.",
+          "category": "training",
+          "scienceWhy": "This final light pump session maximally engorges the SCM with blood, creating visible muscle columns flanking the thyroid cartilage. Isometric holds create sustained occlusion prolonging the pump effect. Jaw clenches define the mandibular angle for complete neck aesthetics [PMID 24164961] [PMID 25611342].",
+          "scienceWhyAr": "جلسة الضخ الخفيف الأخيرة تملأ SCM بالدم لأقصى حد، مخلقةً أعمدة عضلية مرئية تؤطر الغضروف الدرقي. الثبات الإيزومتري يخلق انسداداً مستداماً يطيل تأثير الضخ. شد الفك يحدد زاوية الفك السفلي لجماليات رقبة كاملة [PMID 24164961] [PMID 25611342].",
+          "visualImpact": "high",
+          "exerciseImage": "/exercises/neck-curl.svg"
+        },
+        {
+          "id": "d7t5",
+          "action": "Warm compress on anterior neck for 10 minutes to maintain vasodilation and pump. Practice mewing with maximum tongue pressure.",
+          "actionAr": "كمادة دافئة على مقدمة الرقبة لمدة 10 دقائق للحفاظ على التوسع الوعائي والضخ. مارس الميوينغ بأقصى ضغط لسان.",
+          "category": "recovery",
+          "scienceWhy": "Warm compress maintains exercise-induced vasodilation in the SCM, prolonging the peak visual window. Maximal mewing pressure elevates the hyoid bone to its highest position, tensioning the thyrohyoid membrane and maximizing angular projection of the thyroid cartilage [PMID 25611342].",
+          "scienceWhyAr": "الكمادة الدافئة تحافظ على التوسع الوعائي الناتج عن التمرين في SCM، مطيلةً نافذة الذروة البصرية. أقصى ضغط ميوينغ يرفع العظم اللامي لأعلى موضع، مشدداً الغشاء الدرقي اللامي ومعظماً البروز الزاوي للغضروف الدرقي [PMID 25611342].",
+          "visualImpact": "high"
+        },
+        {
+          "id": "d7t6",
+          "action": "PEAK WINDOW: Assume optimal posture — chin slightly tucked, cervical spine extended, shoulders retracted, chest open. Take final result photos and videos. Compare with Day 1 baseline.",
+          "actionAr": "نافذة الذروة: اتخذ الوضعية المثالية — ذقن مسحوب قليلاً، العمود الفقري العنقي ممتد، الكتفان مسحوبان، الصدر مفتوح. التقط صور وفيديوهات النتائج النهائية. قارن مع خط أساس اليوم الأول.",
+          "category": "recovery",
+          "scienceWhy": "The convergence of all protocol factors — reduced cervical subcutaneous water, enhanced SCM volume (6 days progressive hypertrophy + creatine), corrected posture (deep cervical flexor strengthening), and elevated hyoid (mewing practice) — creates a window of maximum thyroid cartilage prominence lasting approximately 60–90 minutes post-pump [PMID 24164961] [PMID 29306562] [PMID 25611342].",
+          "scienceWhyAr": "تقارب جميع عوامل البروتوكول — تقليل الماء تحت الجلد العنقي، تعزيز حجم SCM (6 أيام تضخم تدريجي + كرياتين)، تصحيح الوضعية (تقوية ثانيات العنق العميقة)، ورفع العظم اللامي (ممارسة الميوينغ) — يخلق نافذة أقصى بروز للغضروف الدرقي تستمر حوالي 60-90 دقيقة بعد الضخ [PMID 24164961] [PMID 29306562] [PMID 25611342].",
+          "visualImpact": "high",
+          "tips": "Use side lighting and slight upward camera angle for best Adam's apple visibility in photos",
+          "tipsAr": "استخدم إضاءة جانبية وزاوية كاميرا مرتفعة قليلاً لأفضل ظهور لتفاحة آدم في الصور"
+        },
+        {
+          "id": "d7t7",
+          "action": "Post-Peak Meal: Resume normal hydration. Balanced meal — grilled fish, sweet potato, large salad, avocado. Begin slowly reintroducing normal sodium levels.",
+          "actionAr": "وجبة ما بعد الذروة: استأنف الترطيب الطبيعي. وجبة متوازنة — سمك مشوي، بطاطا حلوة، سلطة كبيرة، أفوكادو. ابدأ بإعادة إدخال مستويات الصوديوم الطبيعية ببطء.",
+          "category": "meal",
+          "scienceWhy": "Gradual sodium reintroduction over 24–48 hours prevents aldosterone rebound and rapid water retention. Balanced meal provides recovery nutrition for neck muscles and overall systemic recovery from the week-long protocol [PMID 15084272].",
+          "scienceWhyAr": "إعادة إدخال الصوديوم تدريجياً خلال 24-48 ساعة يمنع ارتداد الألدوستيرون واحتباس الماء السريع. الوجبة المتوازنة توفر تغذية تعافي لعضلات الرقبة والتعافي الجهازي الشامل من البروتوكول الأسبوعي [PMID 15084272].",
+          "visualImpact": "medium"
+        },
+        {
+          "id": "d7t8",
+          "action": "Resume normal water intake (2–3 L/day). Optional: Light posture drills and chin tucks. Continue mewing as a permanent habit. Maintain 3× weekly neck training.",
+          "actionAr": "استأنف تناول الماء الطبيعي (2-3 لتر/يوم). اختياري: تمارين وضعية خفيفة وسحب ذقن. استمر بالميوينغ كعادة دائمة. حافظ على تدريب رقبة 3 مرات أسبوعياً.",
           "category": "hydration",
-          "action": "Resume normal water intake (2–3 L/day). Drink 500 mL water with electrolytes.",
-          "scienceWhy": "Rehydration restores plasma volume and kidney function to normal. The structural changes (SCM hypertrophy, improved posture, habitual mewing) are semi-permanent and will persist. The definition may decrease slightly as normal water balance returns, but will remain significantly improved over pre-protocol baseline [Source: PMID 25430610].",
+          "scienceWhy": "Rehydration restores plasma volume and kidney function. Structural changes (SCM hypertrophy, improved posture, habitual mewing) are semi-permanent and will persist. Continued neck training (3× per week) preserves SCM hypertrophy, mewing maintains hyoid elevation, and chin tucks prevent FHP recurrence [PMID 24164961] [PMID 29306562].",
+          "scienceWhyAr": "إعادة الترطيب تستعيد حجم البلازما ووظيفة الكلى. التغيرات الهيكلية (تضخم SCM، تحسن الوضعية، الميوينغ المعتاد) شبه دائمة وستستمر. استمرار تدريب الرقبة (3 مرات أسبوعياً) يحافظ على تضخم SCM، والميوينغ يحافظ على ارتفاع العظم اللامي، وسحب الذقن يمنع تكرار وضعية الرأس الأمامية [PMID 24164961] [PMID 29306562].",
           "visualImpact": "low"
         },
         {
-          "time": "4:00 PM",
-          "category": "training",
-          "action": "Optional maintenance: Light posture drills and chin tucks. Continue mewing practice as a permanent habit. Maintain 3× weekly neck training going forward.",
-          "scienceWhy": "To maintain results long-term, continued neck training (3× per week) preserves SCM hypertrophy, habitual mewing maintains hyoid elevation, and daily chin tucks prevent FHP recurrence. These become lifestyle habits rather than acute protocol elements [Source: PMID 24164961] [Source: PMID 29306562].",
-          "visualImpact": "medium"
-        },
-        {
-          "time": "7:00 PM",
+          "id": "d7t9",
+          "action": "Dinner: Normal balanced meal. Resume regular anti-inflammatory eating. Continue omega-3, turmeric, and ginger as daily habits for maintained neck definition. Protocol complete.",
+          "actionAr": "العشاء: وجبة متوازنة طبيعية. استأنف الأكل المضاد للالتهاب المعتاد. استمر بأوميغا-3 والكركم والزنجبيل كعادات يومية للحفاظ على تعريف الرقبة. اكتمل البروتوكول.",
           "category": "meal",
-          "action": "Dinner: Normal balanced meal. Resume regular anti-inflammatory eating. Continue omega-3, turmeric, and ginger as daily habits for maintained neck definition.",
-          "scienceWhy": "The acute protocol is complete. Long-term maintenance of results requires continued anti-inflammatory nutrition (omega-3, turmeric, ginger daily), regular neck training, and consistent mewing. The postural improvements will compound over weeks and months as muscle memory deepens [Source: PMID 17569207] [Source: PMID 24164961].",
+          "scienceWhy": "The acute protocol is complete. Long-term maintenance requires continued anti-inflammatory nutrition (omega-3, turmeric, ginger daily), regular neck training, and consistent mewing. Postural improvements will compound over weeks and months as muscle memory deepens [PMID 17569207] [PMID 24164961].",
+          "scienceWhyAr": "اكتمل البروتوكول الحاد. الصيانة طويلة الأمد تتطلب تغذية مستمرة مضادة للالتهاب (أوميغا-3، كركم، زنجبيل يومياً)، تدريب رقبة منتظم، وميوينغ مستمر. التحسينات الوضعية ستتراكم عبر الأسابيع والأشهر مع تعمق الذاكرة العضلية [PMID 17569207] [PMID 24164961].",
           "visualImpact": "medium"
         },
         {
-          "time": "10:00 PM",
+          "id": "d7t10",
+          "action": "Resume normal sleep conditions. Continue sleeping supine with cervical support as a permanent habit. SCM gains will continue for 4–8 weeks if training is maintained.",
+          "actionAr": "استأنف ظروف النوم الطبيعية. استمر بالنوم على الظهر مع دعم عنقي كعادة دائمة. مكاسب SCM ستستمر 4-8 أسابيع إذا استمر التدريب.",
           "category": "sleep",
-          "action": "Resume normal sleep conditions. Continue sleeping supine with cervical support as a permanent habit. Protocol complete.",
-          "scienceWhy": "The postural, muscular, and nutritional adaptations achieved over the 7-day protocol provide a foundation for continued improvement. SCM hypertrophy gains will continue for 4–8 weeks if training is maintained. Postural corrections become automatic within 3–4 weeks of consistent practice [Source: PMID 29306562] [Source: PMID 10484056].",
+          "scienceWhy": "The postural, muscular, and nutritional adaptations achieved over the 7-day protocol provide a foundation for continued improvement. SCM hypertrophy gains will continue for 4–8 weeks if training is maintained. Postural corrections become automatic within 3–4 weeks of consistent practice [PMID 29306562] [PMID 10484056].",
+          "scienceWhyAr": "التكيفات الوضعية والعضلية والتغذوية المحققة خلال بروتوكول الـ 7 أيام توفر أساساً للتحسن المستمر. مكاسب تضخم SCM ستستمر 4-8 أسابيع إذا استمر التدريب. التصحيحات الوضعية تصبح تلقائية خلال 3-4 أسابيع من الممارسة المستمرة [PMID 29306562] [PMID 10484056].",
           "visualImpact": "low"
         }
       ]

@@ -1,12 +1,17 @@
 import { protocols } from "@/lib/protocols";
 import Link from "next/link";
 import ProtocolDashboard from "@/components/ProtocolDashboard";
+import AiProtocolLoader from "@/components/AiProtocolLoader";
 
 export default async function ProtocolPage({
   params,
 }: {
   params: { slug: string };
 }) {
+  if (params.slug === "ai-generated") {
+    return <AiProtocolLoader />;
+  }
+
   const protocol = protocols[params.slug];
 
   if (!protocol) {

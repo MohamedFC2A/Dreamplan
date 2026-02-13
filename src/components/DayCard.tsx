@@ -3,26 +3,37 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { DayPlan } from "@/lib/protocols";
-import ScienceTooltip from "@/components/ScienceTooltip";
+import { useLanguage } from "@/lib/LanguageContext";
+import { t } from "@/lib/i18n";
+import Popover from "@/components/Popover";
+import ExercisePopover from "@/components/ExercisePopover";
 
-const categoryColors: Record<string, string> = {
-  wake: "text-purple-400 bg-purple-500/10 border-purple-500/20",
-  meal: "text-orange-400 bg-orange-500/10 border-orange-500/20",
-  supplement: "text-pink-400 bg-pink-500/10 border-pink-500/20",
-  training: "text-red-400 bg-red-500/10 border-red-500/20",
-  recovery: "text-blue-400 bg-blue-500/10 border-blue-500/20",
-  hydration: "text-cyan-400 bg-cyan-500/10 border-cyan-500/20",
-  sleep: "text-indigo-400 bg-indigo-500/10 border-indigo-500/20",
+const categoryConfig: Record<string, { color: string; icon: string; labelEn: string; labelAr: string }> = {
+  wake: { color: "text-purple-400 bg-purple-500/10 border-purple-500/20", icon: "🌅", labelEn: "Wake", labelAr: "استيقاظ" },
+  meal: { color: "text-orange-400 bg-orange-500/10 border-orange-500/20", icon: "🍽️", labelEn: "Meal", labelAr: "وجبة" },
+  supplement: { color: "text-pink-400 bg-pink-500/10 border-pink-500/20", icon: "💊", labelEn: "Supplement", labelAr: "مكمل" },
+  training: { color: "text-red-400 bg-red-500/10 border-red-500/20", icon: "🏋️", labelEn: "Training", labelAr: "تمرين" },
+  recovery: { color: "text-blue-400 bg-blue-500/10 border-blue-500/20", icon: "🧊", labelEn: "Recovery", labelAr: "تعافي" },
+  hydration: { color: "text-cyan-400 bg-cyan-500/10 border-cyan-500/20", icon: "💧", labelEn: "Hydration", labelAr: "ترطيب" },
+  sleep: { color: "text-indigo-400 bg-indigo-500/10 border-indigo-500/20", icon: "🌙", labelEn: "Sleep", labelAr: "نوم" },
 };
 
-function ImpactDot({ level }: { level: "low" | "medium" | "high" }) {
-  const color =
-    level === "high"
-      ? "bg-green-400"
-      : level === "medium"
-      ? "bg-yellow-400"
-      : "bg-gray-500";
-  return <span className={`inline-block w-2 h-2 rounded-full ${color}`} />;
+function ImpactBar({ level, locale }: { level: "low" | "medium" | "high"; locale: string }) {
+  const widths = { low: "w-1/4", medium: "w-1/2", high: "w-3/4" };
+  const colors = { low: "bg-gray-500", medium: "bg-yellow-400", high: "bg-green-400" };
+  const labels = locale === "ar"
+    ? { low: "منخفض", medium: "متوسط", high: "عالي" }
+    : { low: "Low", medium: "Med", high: "High" };
+  return (
+    <div className="flex items-center gap-2">
+      <div className="w-16 h-1.5 rounded-full bg-dark-border overflow-hidden">
+        <div className={`h-full rounded-full ${colors[level]} ${widths[level]}`} />
+      </div>
+      <span className={`text-[9px] uppercase font-bold ${level === "high" ? "text-green-400" : level === "medium" ? "text-yellow-400" : "text-gray-500"}`}>
+        {labels[level]}
+      </span>
+    </div>
+  );
 }
 
 export default function DayCard({
@@ -33,13 +44,35 @@ export default function DayCard({
   dayIndex: number;
 }) {
   const [expanded, setExpanded] = useState(dayIndex === 0);
+  const [completedTasks, setCompletedTasks] = useState<Set<string>>(new Set());
+  const { locale } = useLanguage();
+
+  const toggleTask = (taskId: string) => {
+    setCompletedTasks((prev) => {
+      const next = new Set(prev);
+      if (next.has(taskId)) {
+        next.delete(taskId);
+      } else {
+        next.add(taskId);
+      }
+      return next;
+    });
+  };
+
+  const totalTasks = day.tasks.length;
+  const completedCount = day.tasks.filter((task) => completedTasks.has(task.id)).length;
+  const progressPercent = totalTasks > 0 ? (completedCount / totalTasks) * 100 : 0;
+
+  const dayTitle = locale === "ar" ? day.titleAr : day.title;
+  const dayTheme = locale === "ar" ? day.themeAr : day.theme;
+  const dailyGoal = locale === "ar" ? day.dailyGoalAr : day.dailyGoal;
 
   return (
     <div className="bg-dark-card border border-dark-border rounded-xl overflow-hidden">
       <button
         type="button"
         onClick={() => setExpanded(!expanded)}
-        className="w-full flex items-center gap-4 p-5 text-left hover:bg-dark-border/20 transition-colors"
+        className="w-full flex items-center gap-4 p-5 text-start hover:bg-dark-border/20 transition-colors"
         aria-expanded={expanded}
       >
         <span className="font-heading text-3xl font-bold text-cyber-500 shrink-0 w-12 text-center">
@@ -47,11 +80,24 @@ export default function DayCard({
         </span>
         <div className="flex-1 min-w-0">
           <h3 className="font-heading text-xl font-bold text-gray-100 tracking-wide">
-            {day.title}
+            {dayTitle}
           </h3>
           <span className="text-xs text-cyber-400 uppercase tracking-widest">
-            {day.theme}
+            {dayTheme}
           </span>
+          <div className="mt-2 flex items-center gap-3">
+            <div className="flex-1 h-2 rounded-full bg-dark-border overflow-hidden max-w-[200px]">
+              <motion.div
+                className="h-full rounded-full bg-gradient-to-r from-cyber-500 to-cyber-400"
+                initial={{ width: 0 }}
+                animate={{ width: `${progressPercent}%` }}
+                transition={{ duration: 0.5 }}
+              />
+            </div>
+            <span className="text-xs text-gray-500">
+              {completedCount}/{totalTasks} {t(locale, "tasks")}
+            </span>
+          </div>
         </div>
         <motion.svg
           width="20"
@@ -81,34 +127,102 @@ export default function DayCard({
             transition={{ duration: 0.3, ease: "easeInOut" }}
             className="overflow-hidden"
           >
-            <div className="px-5 pb-5 space-y-2">
-              {day.schedule.map((entry, i) => (
-                <div
-                  key={i}
-                  className="flex gap-3 p-3 rounded-lg bg-dark-bg/50 border border-dark-border/50"
-                >
-                  <div className="shrink-0 w-16 text-xs font-mono text-cyber-400 pt-0.5">
-                    {entry.time}
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2 mb-1 flex-wrap">
-                      <span
-                        className={`text-[10px] uppercase tracking-wider font-bold px-2 py-0.5 rounded border ${
-                          categoryColors[entry.category] ||
-                          "text-gray-400 bg-gray-500/10 border-gray-500/20"
+            <div className="px-5 pb-5">
+              {dailyGoal && (
+                <div className="mb-4 p-3 rounded-lg bg-cyber-500/5 border border-cyber-500/20">
+                  <span className="text-[10px] text-cyber-400 font-bold uppercase tracking-wider">
+                    {t(locale, "dailyGoal")} 🎯
+                  </span>
+                  <p className="text-sm text-gray-300 mt-1">{dailyGoal}</p>
+                </div>
+              )}
+
+              <div className="space-y-2">
+                {day.tasks.map((task, i) => {
+                  const isCompleted = completedTasks.has(task.id);
+                  const cat = categoryConfig[task.category] || categoryConfig.wake;
+                  const taskAction = locale === "ar" ? task.actionAr : task.action;
+                  const taskScience = locale === "ar" ? task.scienceWhyAr : task.scienceWhy;
+
+                  return (
+                    <motion.div
+                      key={task.id}
+                      initial={{ opacity: 0, x: locale === "ar" ? 10 : -10 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: i * 0.05 }}
+                      className={`flex gap-3 p-3 rounded-lg border transition-all duration-300 ${
+                        isCompleted
+                          ? "bg-cyber-500/5 border-cyber-500/30"
+                          : "bg-dark-bg/50 border-dark-border/50"
+                      }`}
+                    >
+                      <button
+                        type="button"
+                        onClick={() => toggleTask(task.id)}
+                        className={`shrink-0 w-6 h-6 rounded-full border-2 flex items-center justify-center transition-all mt-0.5 ${
+                          isCompleted
+                            ? "border-cyber-500 bg-cyber-500 text-dark-bg"
+                            : "border-gray-600 hover:border-cyber-500/50"
                         }`}
                       >
-                        {entry.category}
-                      </span>
-                      <ImpactDot level={entry.visualImpact} />
-                    </div>
-                    <p className="text-gray-200 text-sm">
-                      {entry.action}
-                      <ScienceTooltip text={entry.scienceWhy} />
-                    </p>
-                  </div>
-                </div>
-              ))}
+                        {isCompleted && (
+                          <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+                            <path d="M2.5 6L5 8.5L9.5 3.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                          </svg>
+                        )}
+                      </button>
+
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2 mb-1.5 flex-wrap">
+                          <span className={`text-[10px] uppercase tracking-wider font-bold px-2 py-0.5 rounded border ${cat.color}`}>
+                            {cat.icon} {locale === "ar" ? cat.labelAr : cat.labelEn}
+                          </span>
+                          <ImpactBar level={task.visualImpact} locale={locale} />
+                        </div>
+
+                        <p className={`text-sm mb-1.5 transition-all ${isCompleted ? "text-gray-500 line-through" : "text-gray-200"}`}>
+                          {taskAction}
+                        </p>
+
+                        <div className="flex items-center gap-2 flex-wrap">
+                          <Popover
+                            title={t(locale, "scienceExplanation")}
+                            trigger={
+                              <span className="text-[10px] px-2 py-0.5 rounded border border-cyber-500/30 text-cyber-400 bg-cyber-500/10 hover:bg-cyber-500/20 transition-colors cursor-pointer">
+                                {t(locale, "whyThis")} 🔬
+                              </span>
+                            }
+                          >
+                            <p>{taskScience}</p>
+                          </Popover>
+
+                          {task.category === "training" && (
+                            <ExercisePopover
+                              exerciseName={task.action}
+                              exerciseNameAr={task.actionAr}
+                              tips={task.tips}
+                              tipsAr={task.tipsAr}
+                            />
+                          )}
+
+                          {task.tips && task.category !== "training" && (
+                            <Popover
+                              title={t(locale, "tips")}
+                              trigger={
+                                <span className="text-[10px] px-2 py-0.5 rounded border border-yellow-500/30 text-yellow-400 bg-yellow-500/10 hover:bg-yellow-500/20 transition-colors cursor-pointer">
+                                  {t(locale, "tips")} 💡
+                                </span>
+                              }
+                            >
+                              <p>{locale === "ar" ? task.tipsAr : task.tips}</p>
+                            </Popover>
+                          )}
+                        </div>
+                      </div>
+                    </motion.div>
+                  );
+                })}
+              </div>
             </div>
           </motion.div>
         )}

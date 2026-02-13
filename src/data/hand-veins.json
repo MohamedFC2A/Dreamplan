@@ -1,9 +1,13 @@
 {
   "id": "hand-veins",
   "title": "Ultimate Vascularity: Hand Veins Protocol",
+  "titleAr": "العروق البارزة: بروتوكول عروق اليد",
   "subtitle": "Maximize dorsal venous network visibility through vasodilation, subcutaneous water manipulation & targeted training",
+  "subtitleAr": "تعزيز ظهور الشبكة الوريدية الظهرية عبر توسيع الأوعية والتحكم بالماء تحت الجلد والتدريب المستهدف",
   "focus": ["Vasodilation", "Subcutaneous Water Loss", "Nitric Oxide Maximization", "Glycogen Loading"],
+  "focusAr": ["توسيع الأوعية", "فقدان الماء تحت الجلد", "تعظيم أكسيد النيتريك", "شحن الغليكوجين"],
   "scienceOverview": "The dorsal venous network of the hand consists of superficial veins lying within the subcutaneous tissue above the deep fascia. Vein visibility is primarily determined by three factors: (1) the diameter of the venous lumen, regulated by nitric oxide (NO)-mediated vasodilation via the L-arginine–NO–cGMP pathway; (2) the thickness of subcutaneous adipose tissue and water between the vein and the skin surface; and (3) intramuscular glycogen volume, which physically pushes veins closer to the skin when muscles are engorged. This protocol systematically manipulates all three variables over seven days—first priming the NO pathway with dietary nitrate precursors and L-Citrulline supplementation, then strategically reducing subcutaneous water through natural diuresis and sodium tapering, and finally executing a glycogen super-compensation carb load on Day 6 to maximize the 'pump' effect that forces veins to the surface on Peak Day.",
+  "scienceOverviewAr": "تتكون الشبكة الوريدية الظهرية لليد من أوردة سطحية تقع ضمن النسيج تحت الجلد فوق اللفافة العميقة. يتحدد ظهور العروق بثلاثة عوامل رئيسية: (1) قطر التجويف الوريدي الذي ينظمه توسع الأوعية بوساطة أكسيد النيتريك عبر مسار L-أرجينين–NO–cGMP؛ (2) سمك النسيج الدهني والماء تحت الجلد بين الوريد وسطح البشرة؛ (3) حجم الغليكوجين داخل العضلات الذي يدفع الأوردة نحو السطح عند امتلاء العضلات. يعمل هذا البروتوكول على التحكم في المتغيرات الثلاثة بشكل منهجي خلال سبعة أيام — بدءاً بتجهيز مسار أكسيد النيتريك عبر النترات الغذائية ومكملات L-سيترولين، ثم تقليل الماء تحت الجلد من خلال الإدرار الطبيعي وتقليل الصوديوم، وأخيراً تنفيذ شحن كربوهيدراتي فائق في اليوم السادس لتعظيم تأثير 'الضخ' الذي يدفع العروق للسطح في يوم الذروة.",
   "progressData": [
     { "day": 1, "impact": 5 },
     { "day": 2, "impact": 8 },
@@ -17,90 +21,98 @@
     {
       "day": 1,
       "title": "Sodium Flush & NO Priming",
+      "titleAr": "طرد الصوديوم وتجهيز أكسيد النيتريك",
       "theme": "Priming Phase",
-      "schedule": [
+      "themeAr": "مرحلة التمهيد",
+      "dailyGoal": "Begin NO pathway activation and start 4L water loading to suppress aldosterone",
+      "dailyGoalAr": "بدء تنشيط مسار أكسيد النيتريك وتحميل 4 لترات ماء لتثبيط الألدوستيرون",
+      "tasks": [
         {
-          "time": "6:00 AM",
-          "category": "wake",
+          "id": "d1t1",
           "action": "Wake up, drink 500 mL room-temperature water with a pinch of potassium chloride (salt substitute)",
-          "scienceWhy": "Hydrating immediately upon waking restores plasma volume after overnight dehydration, supporting renal clearance of excess sodium. Potassium competes with sodium at the Na+/K+-ATPase pump, promoting natriuresis and reducing subcutaneous water retention [Source: PMID 25430610].",
-          "visualImpact": "low"
+          "actionAr": "استيقظ واشرب 500 مل ماء بدرجة حرارة الغرفة مع رشة من كلوريد البوتاسيوم (بديل الملح)",
+          "category": "wake",
+          "scienceWhy": "Hydrating immediately upon waking restores plasma volume after overnight dehydration, supporting renal clearance of excess sodium. Potassium competes with sodium at the Na+/K+-ATPase pump, promoting natriuresis and reducing subcutaneous water retention [PMID 25430610].",
+          "scienceWhyAr": "الترطيب فور الاستيقاظ يستعيد حجم البلازما بعد جفاف الليل، ويدعم التصفية الكلوية للصوديوم الزائد. يتنافس البوتاسيوم مع الصوديوم على مضخة Na+/K+-ATPase، مما يعزز طرح الصوديوم ويقلل احتباس الماء تحت الجلد [PMID 25430610].",
+          "visualImpact": "low",
+          "tips": "Use potassium chloride salt substitute, not regular table salt",
+          "tipsAr": "استخدم بديل ملح كلوريد البوتاسيوم وليس ملح الطعام العادي"
         },
         {
-          "time": "6:30 AM",
-          "category": "supplement",
+          "id": "d1t2",
           "action": "Take 6 g L-Citrulline Malate on an empty stomach",
-          "scienceWhy": "L-Citrulline is converted to L-Arginine in the kidneys, which serves as the substrate for endothelial nitric oxide synthase (eNOS) to produce NO. Citrulline has higher oral bioavailability than direct arginine supplementation, resulting in greater sustained plasma arginine levels and prolonged vasodilation [Source: PMID 20499249].",
-          "visualImpact": "medium"
-        },
-        {
-          "time": "7:00 AM",
-          "category": "meal",
-          "action": "Breakfast: 3-egg spinach omelet with garlic, side of watermelon slices (200 g)",
-          "scienceWhy": "Spinach is rich in dietary nitrate (NO₃⁻), which oral bacteria reduce to nitrite (NO₂⁻) and is subsequently converted to NO in acidic environments like the stomach. Garlic contains allicin, which activates hydrogen sulfide (H₂S) signaling that synergizes with NO to relax vascular smooth muscle. Watermelon is one of the richest natural sources of L-Citrulline [Source: PMID 22773188] [Source: PMID 17826867].",
-          "visualImpact": "medium"
-        },
-        {
-          "time": "9:00 AM",
-          "category": "hydration",
-          "action": "Drink 500 mL water — target 4 L total today. Zero added sodium in all meals.",
-          "scienceWhy": "Water loading at 4 L/day downregulates aldosterone secretion from the adrenal zona glomerulosa. By suppressing the RAAS (Renin-Angiotensin-Aldosterone System), the body shifts into a natriuretic state, excreting excess sodium and the subcutaneous water bound to it [Source: PMID 15084272].",
-          "visualImpact": "low"
-        },
-        {
-          "time": "10:30 AM",
+          "actionAr": "تناول 6 غرام من L-سيترولين مالات على معدة فارغة",
           "category": "supplement",
-          "action": "Drink 250 mL organic beetroot juice (cold-pressed)",
-          "scienceWhy": "Beetroot juice provides approximately 6–8 mmol of inorganic nitrate per serving. The nitrate–nitrite–NO pathway operates independently of eNOS, providing an alternative route to vasodilation that is especially potent during exercise when tissue oxygen tension drops [Source: PMID 22248502].",
+          "scienceWhy": "L-Citrulline is converted to L-Arginine in the kidneys, which serves as the substrate for endothelial nitric oxide synthase (eNOS) to produce NO. Citrulline has higher oral bioavailability than direct arginine supplementation, resulting in greater sustained plasma arginine levels and prolonged vasodilation [PMID 20499249].",
+          "scienceWhyAr": "يتحول L-سيترولين إلى L-أرجينين في الكلى، والذي يعمل كركيزة لإنزيم سينثاز أكسيد النيتريك البطاني (eNOS) لإنتاج NO. للسيترولين توافر حيوي فموي أعلى من مكملات الأرجينين المباشرة، مما ينتج مستويات أرجينين بلازمية مستدامة أكبر وتوسع أوعية مطول [PMID 20499249].",
           "visualImpact": "medium"
         },
         {
-          "time": "12:30 PM",
+          "id": "d1t3",
+          "action": "Breakfast: 3-egg spinach omelet with garlic, side of watermelon slices (200 g). Drink 250 mL organic beetroot juice.",
+          "actionAr": "الفطور: أومليت بالسبانخ من 3 بيضات مع الثوم، مع شرائح بطيخ (200 غ). اشرب 250 مل عصير شمندر عضوي.",
           "category": "meal",
-          "action": "Lunch: Grilled salmon (200 g) with roasted beetroot salad, walnuts, and pomegranate seeds. No added salt.",
-          "scienceWhy": "Salmon provides omega-3 fatty acids (EPA/DHA) that upregulate eNOS expression via PPAR-γ activation, enhancing baseline NO production. Walnuts supply L-Arginine and polyphenols. Pomegranate ellagitannins protect NO from oxidative degradation by scavenging superoxide radicals [Source: PMID 16339432] [Source: PMID 17164053].",
-          "visualImpact": "medium"
+          "scienceWhy": "Spinach is rich in dietary nitrate (NO₃⁻), which oral bacteria reduce to nitrite (NO₂⁻) and is subsequently converted to NO. Garlic contains allicin which activates H₂S signaling that synergizes with NO. Watermelon is a rich natural source of L-Citrulline. Beetroot juice provides 6–8 mmol of inorganic nitrate via the nitrate–nitrite–NO pathway [PMID 22773188] [PMID 17826867] [PMID 22248502].",
+          "scienceWhyAr": "السبانخ غنية بالنترات الغذائية (NO₃⁻) التي تختزلها البكتيريا الفموية إلى نيتريت (NO₂⁻) ثم تتحول إلى NO. يحتوي الثوم على الأليسين الذي ينشط إشارات H₂S المتآزرة مع NO. البطيخ مصدر غني بـ L-سيترولين. عصير الشمندر يوفر 6-8 ملي مول من النترات غير العضوية عبر مسار النترات–نيتريت–NO [PMID 22773188] [PMID 17826867] [PMID 22248502].",
+          "visualImpact": "medium",
+          "tips": "Avoid mouthwash — it kills the oral bacteria needed to convert nitrate to nitrite",
+          "tipsAr": "تجنب غسول الفم — فهو يقتل البكتيريا الفموية اللازمة لتحويل النترات إلى نيتريت"
         },
         {
-          "time": "2:00 PM",
+          "id": "d1t4",
+          "action": "Drink 500 mL water — target 4 L total today. Zero added sodium in all meals.",
+          "actionAr": "اشرب 500 مل ماء — الهدف 4 لترات إجمالاً اليوم. بدون صوديوم مضاف في جميع الوجبات.",
           "category": "hydration",
-          "action": "Drink 750 mL water with squeeze of lemon",
-          "scienceWhy": "Maintaining high water intake sustains glomerular filtration rate (GFR) and natriuresis. Lemon provides vitamin C which regenerates tetrahydrobiopterin (BH4), a critical cofactor for eNOS coupling; uncoupled eNOS produces superoxide instead of NO [Source: PMID 12424092].",
+          "scienceWhy": "Water loading at 4 L/day downregulates aldosterone secretion from the adrenal zona glomerulosa. By suppressing the RAAS (Renin-Angiotensin-Aldosterone System), the body shifts into a natriuretic state, excreting excess sodium and the subcutaneous water bound to it [PMID 15084272].",
+          "scienceWhyAr": "تحميل الماء بمعدل 4 لترات/يوم يثبط إفراز الألدوستيرون من المنطقة الكبيبية للغدة الكظرية. بتثبيط نظام RAAS (الرينين-أنجيوتنسين-ألدوستيرون)، يتحول الجسم لحالة طرح الصوديوم، مما يُخرج الصوديوم الزائد والماء المرتبط به تحت الجلد [PMID 15084272].",
           "visualImpact": "low"
         },
         {
-          "time": "4:00 PM",
-          "category": "training",
+          "id": "d1t5",
+          "action": "Lunch: Grilled salmon (200 g) with roasted beetroot salad, walnuts, and pomegranate seeds. No added salt. Drink 750 mL water with lemon.",
+          "actionAr": "الغداء: سلمون مشوي (200 غ) مع سلطة شمندر محمص وجوز ورمان. بدون ملح مضاف. اشرب 750 مل ماء مع ليمون.",
+          "category": "meal",
+          "scienceWhy": "Salmon provides omega-3 fatty acids (EPA/DHA) that upregulate eNOS expression via PPAR-γ activation. Walnuts supply L-Arginine and polyphenols. Pomegranate ellagitannins protect NO from oxidative degradation. Lemon provides vitamin C which regenerates BH4, a critical cofactor for eNOS coupling [PMID 16339432] [PMID 17164053] [PMID 12424092].",
+          "scienceWhyAr": "يوفر السلمون أحماض أوميغا-3 الدهنية (EPA/DHA) التي ترفع تعبير eNOS عبر تنشيط PPAR-γ. يوفر الجوز L-أرجينين وبوليفينولات. تانينات الرمان تحمي NO من التحلل التأكسدي. الليمون يوفر فيتامين C الذي يجدد BH4، وهو عامل مساعد حرج لاقتران eNOS [PMID 16339432] [PMID 17164053] [PMID 12424092].",
+          "visualImpact": "medium"
+        },
+        {
+          "id": "d1t6",
           "action": "Grip & Forearm Training: 4 × 30 wrist curls, 4 × 30 reverse wrist curls, 3 × 60-sec dead hangs, 3 × 20 hand gripper squeezes (moderate resistance)",
-          "scienceWhy": "High-repetition forearm training with short rest periods (30–45 sec) creates sustained metabolic stress and local hypoxia in the forearm musculature. This triggers exercise-induced hyperemia — the shear stress on the endothelial walls from increased blood flow upregulates eNOS activity and releases NO, acutely dilating forearm veins [Source: PMID 17218556].",
-          "visualImpact": "high"
+          "actionAr": "تدريب القبضة والساعد: 4 × 30 تمرين ثني المعصم، 4 × 30 ثني معصم عكسي، 3 × 60 ثانية تعلق، 3 × 20 ضغط قابض اليد (مقاومة متوسطة)",
+          "category": "training",
+          "scienceWhy": "High-repetition forearm training with short rest periods (30–45 sec) creates sustained metabolic stress and local hypoxia. This triggers exercise-induced hyperemia — the shear stress on endothelial walls from increased blood flow upregulates eNOS activity and releases NO, acutely dilating forearm veins [PMID 17218556].",
+          "scienceWhyAr": "تدريب الساعد بتكرارات عالية مع فترات راحة قصيرة (30-45 ثانية) يخلق إجهاداً أيضياً مستداماً ونقص أكسجين موضعي. هذا يحفز فرط الدم الناتج عن التمرين — إجهاد القص على جدران البطانة من تدفق الدم المتزايد يرفع نشاط eNOS ويحرر NO، موسعاً أوردة الساعد بشكل حاد [PMID 17218556].",
+          "visualImpact": "high",
+          "exerciseImage": "/exercises/grip-training.svg",
+          "tips": "Rest only 30-45 seconds between sets for maximum metabolic stress",
+          "tipsAr": "استرح فقط 30-45 ثانية بين المجموعات لأقصى إجهاد أيضي"
         },
         {
-          "time": "5:30 PM",
-          "category": "recovery",
+          "id": "d1t7",
           "action": "15-minute dry sauna session at 80–90 °C",
-          "scienceWhy": "Passive heat exposure causes peripheral vasodilation via activation of TRPV1 and TRPV4 thermoreceptors in endothelial cells, increasing skin blood flow up to 7-fold. This acute vasodilation physically enlarges the venous diameter. Repeated heat stress also upregulates heat shock protein 90 (HSP90), which stabilizes eNOS [Source: PMID 29849142].",
+          "actionAr": "جلسة ساونا جافة لمدة 15 دقيقة عند 80-90 درجة مئوية",
+          "category": "recovery",
+          "scienceWhy": "Passive heat exposure causes peripheral vasodilation via activation of TRPV1 and TRPV4 thermoreceptors in endothelial cells, increasing skin blood flow up to 7-fold. This acute vasodilation physically enlarges venous diameter. Repeated heat stress also upregulates HSP90, which stabilizes eNOS [PMID 29849142].",
+          "scienceWhyAr": "التعرض الحراري السلبي يسبب توسع الأوعية المحيطية عبر تنشيط مستقبلات TRPV1 وTRPV4 الحرارية في الخلايا البطانية، مما يزيد تدفق الدم الجلدي حتى 7 أضعاف. هذا التوسع الحاد يكبر قطر الأوردة فعلياً. الإجهاد الحراري المتكرر يرفع أيضاً HSP90 الذي يثبت eNOS [PMID 29849142].",
           "visualImpact": "high"
         },
         {
-          "time": "7:00 PM",
+          "id": "d1t8",
+          "action": "Dinner: Grilled chicken breast with steamed broccoli, sweet potato (150 g), side of dark chocolate (30 g, 85%+ cacao). Final 500 mL water.",
+          "actionAr": "العشاء: صدر دجاج مشوي مع بروكلي مطهو على البخار، بطاطا حلوة (150 غ)، شوكولاتة داكنة (30 غ، 85%+ كاكاو). آخر 500 مل ماء.",
           "category": "meal",
-          "action": "Dinner: Grilled chicken breast with steamed broccoli, sweet potato (150 g), side of dark chocolate (30 g, 85%+ cacao)",
-          "scienceWhy": "Sweet potato provides complex carbohydrates that begin glycogen priming for the later carb-load phase. Dark chocolate is rich in flavanols (epicatechin), which stimulate NO production independently of the nitrate pathway by activating PI3K/Akt signaling that phosphorylates eNOS at Ser1177 [Source: PMID 17513403].",
+          "scienceWhy": "Sweet potato provides complex carbohydrates for glycogen priming. Dark chocolate is rich in flavanols (epicatechin), which stimulate NO production independently by activating PI3K/Akt signaling that phosphorylates eNOS at Ser1177. Completing the 4 L water target ensures sustained aldosterone suppression overnight [PMID 17513403] [PMID 15084272].",
+          "scienceWhyAr": "البطاطا الحلوة توفر كربوهيدرات معقدة لتجهيز الغليكوجين. الشوكولاتة الداكنة غنية بالفلافانول (إبيكاتيكين) التي تحفز إنتاج NO بشكل مستقل عبر تنشيط PI3K/Akt الذي يفسفر eNOS عند Ser1177. إتمام هدف 4 لترات ماء يضمن تثبيط الألدوستيرون المستدام ليلاً [PMID 17513403] [PMID 15084272].",
           "visualImpact": "medium"
         },
         {
-          "time": "9:00 PM",
-          "category": "hydration",
-          "action": "Final 500 mL water intake for the day. No food or caloric drinks after this point.",
-          "scienceWhy": "Completing the 4 L water target ensures sustained aldosterone suppression overnight. The fasting window reduces insulin levels, which allows lipolysis to proceed, contributing to gradual subcutaneous fat thinning over the skin of the hands [Source: PMID 15084272].",
-          "visualImpact": "low"
-        },
-        {
-          "time": "10:00 PM",
-          "category": "sleep",
+          "id": "d1t9",
           "action": "Sleep in a cool room (18–19 °C). Elevate hands above heart level for 10 min before sleep.",
-          "scienceWhy": "Cool ambient temperature during sleep promotes growth hormone (GH) release during slow-wave sleep. GH stimulates lipolysis, reducing subcutaneous fat thickness. Elevating the hands briefly reduces venous pooling and edema, ensuring a leaner look upon waking [Source: PMID 10484056].",
+          "actionAr": "نم في غرفة باردة (18-19 درجة مئوية). ارفع يديك فوق مستوى القلب لمدة 10 دقائق قبل النوم.",
+          "category": "sleep",
+          "scienceWhy": "Cool ambient temperature during sleep promotes growth hormone (GH) release during slow-wave sleep. GH stimulates lipolysis, reducing subcutaneous fat thickness. Elevating the hands briefly reduces venous pooling and edema, ensuring a leaner look upon waking [PMID 10484056].",
+          "scienceWhyAr": "درجة الحرارة المنخفضة أثناء النوم تعزز إفراز هرمون النمو (GH) خلال النوم العميق. يحفز GH تحلل الدهون، مما يقلل سمك الدهون تحت الجلد. رفع اليدين لفترة وجيزة يقلل تجمع الدم الوريدي والوذمة، مما يضمن مظهراً أنحف عند الاستيقاظ [PMID 10484056].",
           "visualImpact": "low"
         }
       ]
@@ -108,90 +120,101 @@
     {
       "day": 2,
       "title": "NO Pathway Amplification",
+      "titleAr": "تضخيم مسار أكسيد النيتريك",
       "theme": "Priming Phase",
-      "schedule": [
+      "themeAr": "مرحلة التمهيد",
+      "dailyGoal": "Intensify NO production from multiple pathways and continue sodium flushing",
+      "dailyGoalAr": "تكثيف إنتاج أكسيد النيتريك من مسارات متعددة ومواصلة طرد الصوديوم",
+      "tasks": [
         {
-          "time": "6:00 AM",
+          "id": "d2t1",
+          "action": "Wake up. Drink 500 mL water with potassium chloride. Observe dorsal hand veins in warm water immersion test (30 sec warm water) to track baseline.",
+          "actionAr": "استيقظ. اشرب 500 مل ماء مع كلوريد البوتاسيوم. راقب عروق ظهر اليد باختبار غمر الماء الدافئ (30 ثانية) لتتبع خط الأساس.",
           "category": "wake",
-          "action": "Wake up. Drink 500 mL water with potassium chloride. Observe dorsal hand veins in warm water immersion test (30 sec warm water) to establish baseline.",
-          "scienceWhy": "Warm water immersion is a clinical bedside test for venous distensibility. By comparing today's response to Day 1, you begin tracking venous reactivity improvements as NO bioavailability increases [Source: PMID 20499249].",
+          "scienceWhy": "Warm water immersion is a clinical bedside test for venous distensibility. By comparing today's response to Day 1, you begin tracking venous reactivity improvements as NO bioavailability increases [PMID 20499249].",
+          "scienceWhyAr": "غمر الماء الدافئ هو اختبار سريري لتمدد الأوردة. بمقارنة استجابة اليوم بالأمس، تبدأ بتتبع تحسن التفاعل الوريدي مع زيادة التوافر الحيوي لأكسيد النيتريك [PMID 20499249].",
           "visualImpact": "low"
         },
         {
-          "time": "6:30 AM",
+          "id": "d2t2",
+          "action": "Take 6 g L-Citrulline Malate + 500 mg Vitamin C",
+          "actionAr": "تناول 6 غرام L-سيترولين مالات + 500 ملغ فيتامين C",
           "category": "supplement",
-          "action": "6 g L-Citrulline Malate + 500 mg Vitamin C",
-          "scienceWhy": "Vitamin C (ascorbic acid) is a potent antioxidant that scavenges superoxide anion (O₂⁻), preventing it from reacting with NO to form peroxynitrite (ONOO⁻). This preserves NO half-life in plasma, extending vasodilation duration. Combined with citrulline, it maximizes the functional NO pool [Source: PMID 12424092].",
+          "scienceWhy": "Vitamin C scavenges superoxide anion (O₂⁻), preventing it from reacting with NO to form peroxynitrite (ONOO⁻). This preserves NO half-life in plasma, extending vasodilation duration. Combined with citrulline, it maximizes the functional NO pool [PMID 12424092].",
+          "scienceWhyAr": "فيتامين C يزيل جذور الأكسيد الفائق (O₂⁻)، مانعاً تفاعلها مع NO لتكوين البيروكسينيتريت (ONOO⁻). هذا يحفظ عمر النصف لـ NO في البلازما، مما يطيل مدة توسع الأوعية. مع السيترولين، يعظم مجمع NO الوظيفي [PMID 12424092].",
           "visualImpact": "medium"
         },
         {
-          "time": "7:00 AM",
-          "category": "meal",
+          "id": "d2t3",
           "action": "Breakfast: Overnight oats with walnuts, pomegranate seeds, and sliced banana. Side of 250 mL beetroot juice.",
-          "scienceWhy": "Oats provide beta-glucan fiber that slows glucose absorption, providing steady energy without insulin spikes. Walnuts offer L-Arginine (approximately 2.3 g per 30 g serving). Pomegranate punicalagins increase NO synthase activity and protect circulating NO from oxidative destruction [Source: PMID 17164053].",
+          "actionAr": "الفطور: شوفان ليلي مع جوز وبذور رمان وشرائح موز. مع 250 مل عصير شمندر.",
+          "category": "meal",
+          "scienceWhy": "Oats provide beta-glucan fiber that slows glucose absorption. Walnuts offer L-Arginine (approximately 2.3 g per 30 g serving). Pomegranate punicalagins increase NO synthase activity and protect circulating NO from oxidative destruction [PMID 17164053].",
+          "scienceWhyAr": "الشوفان يوفر ألياف بيتا-غلوكان التي تبطئ امتصاص الجلوكوز. الجوز يوفر L-أرجينين (حوالي 2.3 غ لكل 30 غ). بونيكالاغينات الرمان تزيد نشاط سينثاز NO وتحمي NO الدائر من التدمير التأكسدي [PMID 17164053].",
           "visualImpact": "medium"
         },
         {
-          "time": "9:30 AM",
+          "id": "d2t4",
+          "action": "Drink 500 mL water. Continue sodium-free day — use herbs and spices only for flavor. Drink 300 mL watermelon juice (blended with rind).",
+          "actionAr": "اشرب 500 مل ماء. استمر بيوم خالٍ من الصوديوم — استخدم الأعشاب والتوابل فقط. اشرب 300 مل عصير بطيخ (مخلوط مع القشرة).",
           "category": "hydration",
-          "action": "500 mL water. Continue sodium-free day — use herbs and spices only for flavor.",
-          "scienceWhy": "Continued sodium restriction forces the kidneys to excrete sodium via reduced aldosterone, pulling bound extracellular water with it. The subcutaneous tissue of the hand dorsum is particularly thin, so even small reductions in interstitial fluid significantly improve vein definition [Source: PMID 25430610].",
+          "scienceWhy": "Continued sodium restriction forces kidneys to excrete sodium, pulling bound extracellular water with it. The watermelon rind contains the highest concentration of L-Citrulline (up to 24 mg/g dry weight), providing a second NO-precursor dose [PMID 25430610] [PMID 22773188].",
+          "scienceWhyAr": "استمرار تقييد الصوديوم يجبر الكلى على إخراج الصوديوم، ساحباً الماء خارج الخلايا المرتبط به. قشرة البطيخ تحتوي أعلى تركيز من L-سيترولين (حتى 24 ملغ/غ وزن جاف)، مما يوفر جرعة ثانية من سلائف NO [PMID 25430610] [PMID 22773188].",
           "visualImpact": "low"
         },
         {
-          "time": "11:00 AM",
-          "category": "supplement",
-          "action": "Drink 300 mL watermelon juice (fresh-blended with rind included)",
-          "scienceWhy": "The watermelon rind contains the highest concentration of L-Citrulline in the fruit (up to 24 mg/g dry weight), significantly more than the flesh. Blending the rind captures this reservoir, providing a second NO-precursor dose timed to overlap with declining morning citrulline levels [Source: PMID 22773188].",
-          "visualImpact": "medium"
-        },
-        {
-          "time": "12:30 PM",
-          "category": "meal",
+          "id": "d2t5",
           "action": "Lunch: Large spinach and arugula salad with grilled shrimp, avocado, garlic vinaigrette, and beet slices",
-          "scienceWhy": "Arugula has one of the highest nitrate contents of any leafy green (approximately 480 mg/100 g). Combined with spinach nitrate, this provides a sustained dietary nitrate load. Avocado supplies potassium (485 mg per 100 g) to further oppose sodium retention [Source: PMID 22248502].",
-          "visualImpact": "medium"
-        },
-        {
-          "time": "2:30 PM",
-          "category": "hydration",
-          "action": "750 mL water. Total intake targeting 4 L today.",
-          "scienceWhy": "Sustaining 4 L for multiple days deepens aldosterone suppression. The body adapts by increasing aquaporin-2 downregulation in the collecting duct, meaning it becomes progressively more efficient at excreting free water — this effect will be exploited when water is cut on Days 6–7 [Source: PMID 15084272].",
-          "visualImpact": "low"
-        },
-        {
-          "time": "4:00 PM",
-          "category": "training",
-          "action": "Forearm Pump Session: 5 × 25 barbell wrist curls (superset with reverse curls), 4 × 20 farmer's walks (30 sec each), 3 × max-rep tennis ball squeezes",
-          "scienceWhy": "Supersets eliminate rest periods, maintaining continuous blood flow and metabolic byproduct accumulation (H⁺, Pi, lactate) in the forearm. This metabolic milieu triggers local prostaglandin and adenosine release, which synergize with NO to produce prolonged reactive hyperemia lasting 20–30 min post-exercise [Source: PMID 17218556].",
-          "visualImpact": "high"
-        },
-        {
-          "time": "5:30 PM",
-          "category": "recovery",
-          "action": "15-minute sauna (80–90 °C) followed by 2-minute cold shower, then return to sauna for 10 minutes",
-          "scienceWhy": "The contrast between heat and cold creates a 'vascular pumping' effect: heat dilates peripheral vessels while cold triggers transient vasoconstriction. The subsequent re-warming produces a rebound vasodilation that is greater than heat alone, a phenomenon called post-occlusive reactive hyperemia applied passively [Source: PMID 29849142].",
-          "visualImpact": "high"
-        },
-        {
-          "time": "7:00 PM",
+          "actionAr": "الغداء: سلطة سبانخ وجرجير كبيرة مع روبيان مشوي وأفوكادو وصلصة ثوم وشرائح شمندر",
           "category": "meal",
-          "action": "Dinner: Grass-fed beef stir-fry with bell peppers, garlic, ginger, and brown rice (150 g). 30 g dark chocolate for dessert.",
-          "scienceWhy": "Beef provides heme iron, which is necessary for the heme group in guanylate cyclase — the downstream target of NO that produces cGMP for smooth muscle relaxation. Bell peppers provide vitamin C to protect NO. Ginger contains gingerol, which inhibits thromboxane A2 synthesis, reducing vasoconstriction [Source: PMID 17513403].",
+          "scienceWhy": "Arugula has one of the highest nitrate contents of any leafy green (approximately 480 mg/100 g). Combined with spinach nitrate, this provides a sustained dietary nitrate load. Avocado supplies potassium (485 mg per 100 g) to further oppose sodium retention [PMID 22248502].",
+          "scienceWhyAr": "الجرجير من أغنى الخضروات الورقية بالنترات (حوالي 480 ملغ/100 غ). مع نترات السبانخ، يوفر حملة نترات غذائية مستدامة. الأفوكادو يوفر البوتاسيوم (485 ملغ لكل 100 غ) لمعارضة احتباس الصوديوم [PMID 22248502].",
           "visualImpact": "medium"
         },
         {
-          "time": "9:30 PM",
+          "id": "d2t6",
+          "action": "Forearm Pump Session: 5 × 25 barbell wrist curls (superset with reverse curls), 4 × 20 farmer's walks (30 sec each), 3 × max-rep tennis ball squeezes",
+          "actionAr": "جلسة ضخ الساعد: 5 × 25 ثني معصم بالبار (مجموعة مزدوجة مع عكسي)، 4 × 20 مشي بالأثقال (30 ثانية)، 3 × أقصى تكرار ضغط كرة تنس",
+          "category": "training",
+          "scienceWhy": "Supersets eliminate rest periods, maintaining continuous blood flow and metabolic byproduct accumulation (H⁺, Pi, lactate) in the forearm. This triggers local prostaglandin and adenosine release, which synergize with NO to produce prolonged reactive hyperemia lasting 20–30 min post-exercise [PMID 17218556].",
+          "scienceWhyAr": "المجموعات المزدوجة تلغي فترات الراحة، مما يحافظ على تدفق الدم المستمر وتراكم النواتج الأيضية (H⁺، Pi، لاكتات) في الساعد. هذا يحفز إطلاق البروستاغلاندين والأدينوسين الموضعي، اللذين يتآزران مع NO لإنتاج فرط دم تفاعلي مطول يستمر 20-30 دقيقة بعد التمرين [PMID 17218556].",
+          "visualImpact": "high",
+          "exerciseImage": "/exercises/grip-training.svg"
+        },
+        {
+          "id": "d2t7",
+          "action": "15-minute sauna (80–90 °C) followed by 2-minute cold shower, then return to sauna for 10 minutes",
+          "actionAr": "ساونا 15 دقيقة (80-90°م) يليها دش بارد دقيقتين، ثم العودة للساونا 10 دقائق",
+          "category": "recovery",
+          "scienceWhy": "The contrast between heat and cold creates a 'vascular pumping' effect: heat dilates peripheral vessels while cold triggers transient vasoconstriction. The subsequent re-warming produces rebound vasodilation greater than heat alone — post-occlusive reactive hyperemia applied passively [PMID 29849142].",
+          "scienceWhyAr": "التباين بين الحرارة والبرودة يخلق تأثير 'ضخ وعائي': الحرارة توسع الأوعية المحيطية بينما البرودة تسبب تضيقاً عابراً. إعادة التسخين اللاحقة تنتج توسعاً ارتدادياً أكبر من الحرارة وحدها [PMID 29849142].",
+          "visualImpact": "high"
+        },
+        {
+          "id": "d2t8",
+          "action": "Dinner: Grass-fed beef stir-fry with bell peppers, garlic, ginger, and brown rice (150 g). 30 g dark chocolate for dessert.",
+          "actionAr": "العشاء: لحم بقري مقلي مع فلفل حلو وثوم وزنجبيل وأرز بني (150 غ). 30 غ شوكولاتة داكنة كتحلية.",
+          "category": "meal",
+          "scienceWhy": "Beef provides heme iron necessary for the heme group in guanylate cyclase — the downstream target of NO that produces cGMP for smooth muscle relaxation. Bell peppers provide vitamin C. Ginger contains gingerol which inhibits thromboxane A2, reducing vasoconstriction [PMID 17513403].",
+          "scienceWhyAr": "يوفر اللحم البقري الحديد الهيمي الضروري لمجموعة الهيم في غوانيلات سيكلاز — الهدف النهائي لـ NO الذي ينتج cGMP لاسترخاء العضلات الملساء. الفلفل يوفر فيتامين C. الزنجبيل يحتوي الجنجرول الذي يثبط الثرومبوكسان A2 لتقليل التضيق الوعائي [PMID 17513403].",
+          "visualImpact": "medium"
+        },
+        {
+          "id": "d2t9",
+          "action": "Final 500 mL water. Apply moisturizer to hands to prevent skin dryness from sodium depletion.",
+          "actionAr": "آخر 500 مل ماء. ضع مرطباً على اليدين لمنع جفاف البشرة من نقص الصوديوم.",
           "category": "hydration",
-          "action": "Final 500 mL water. Apply a thin layer of moisturizer to hands to prevent skin dryness from sodium depletion.",
-          "scienceWhy": "Sodium depletion can reduce the water content of the stratum corneum, leading to dry, less translucent skin that paradoxically obscures veins. Maintaining skin hydration topically preserves the optical clarity that makes veins visible beneath the surface [Source: PMID 25430610].",
+          "scienceWhy": "Sodium depletion can reduce stratum corneum water content, leading to dry, less translucent skin that paradoxically obscures veins. Maintaining skin hydration topically preserves the optical clarity that makes veins visible beneath the surface [PMID 25430610].",
+          "scienceWhyAr": "نقص الصوديوم يمكن أن يقلل محتوى الماء في الطبقة القرنية، مما يؤدي لبشرة جافة أقل شفافية تحجب العروق بشكل متناقض. الحفاظ على ترطيب البشرة موضعياً يحفظ الوضوح البصري الذي يجعل العروق مرئية تحت السطح [PMID 25430610].",
           "visualImpact": "low"
         },
         {
-          "time": "10:00 PM",
-          "category": "sleep",
+          "id": "d2t10",
           "action": "Sleep 7–9 hours. Keep room cool (18–19 °C).",
-          "scienceWhy": "Adequate sleep supports parasympathetic nervous system dominance, which promotes baseline vasodilation via acetylcholine-mediated eNOS activation. Sleep deprivation increases sympathetic tone and norepinephrine, causing vasoconstriction that counteracts the entire protocol [Source: PMID 10484056].",
+          "actionAr": "نم 7-9 ساعات. حافظ على برودة الغرفة (18-19°م).",
+          "category": "sleep",
+          "scienceWhy": "Adequate sleep supports parasympathetic nervous system dominance, promoting baseline vasodilation via acetylcholine-mediated eNOS activation. Sleep deprivation increases sympathetic tone and norepinephrine, causing vasoconstriction that counteracts the entire protocol [PMID 10484056].",
+          "scienceWhyAr": "النوم الكافي يدعم هيمنة الجهاز العصبي نظير الودي، معززاً توسع الأوعية الأساسي عبر تنشيط eNOS بوساطة الأسيتيل كولين. الحرمان من النوم يزيد التوتر الودي والنورإبينفرين، مسبباً تضيقاً وعائياً يعاكس البروتوكول بأكمله [PMID 10484056].",
           "visualImpact": "low"
         }
       ]
@@ -199,83 +222,95 @@
     {
       "day": 3,
       "title": "Vascular Conditioning & Heat Adaptation",
+      "titleAr": "تكييف الأوعية والتأقلم الحراري",
       "theme": "Priming Phase",
-      "schedule": [
+      "themeAr": "مرحلة التمهيد",
+      "dailyGoal": "Maximize NO from all three pathways and begin heat acclimation for vascular training",
+      "dailyGoalAr": "تعظيم أكسيد النيتريك من المسارات الثلاثة وبدء التأقلم الحراري لتدريب الأوعية",
+      "tasks": [
         {
-          "time": "6:00 AM",
-          "category": "wake",
+          "id": "d3t1",
           "action": "Wake up. Drink 500 mL warm water with lemon and potassium chloride.",
-          "scienceWhy": "Warm water upon waking stimulates the gastrocolic reflex and promotes early morning renal perfusion. The potassium continues to support natriuresis while lemon vitamin C protects the growing NO pool from oxidative degradation [Source: PMID 12424092].",
+          "actionAr": "استيقظ. اشرب 500 مل ماء دافئ مع ليمون وكلوريد البوتاسيوم.",
+          "category": "wake",
+          "scienceWhy": "Warm water upon waking stimulates the gastrocolic reflex and promotes early morning renal perfusion. Potassium continues to support natriuresis while lemon vitamin C protects the growing NO pool from oxidative degradation [PMID 12424092].",
+          "scienceWhyAr": "الماء الدافئ عند الاستيقاظ يحفز المنعكس المعدي القولوني ويعزز التروية الكلوية الصباحية. البوتاسيوم يستمر بدعم طرح الصوديوم بينما فيتامين C من الليمون يحمي مجمع NO المتنامي من التحلل التأكسدي [PMID 12424092].",
           "visualImpact": "low"
         },
         {
-          "time": "6:30 AM",
+          "id": "d3t2",
+          "action": "Take 6 g L-Citrulline Malate + 1 g Omega-3 fish oil + 500 mg Vitamin C",
+          "actionAr": "تناول 6 غ L-سيترولين مالات + 1 غ زيت سمك أوميغا-3 + 500 ملغ فيتامين C",
           "category": "supplement",
-          "action": "6 g L-Citrulline Malate + 1 g Omega-3 fish oil + 500 mg Vitamin C",
-          "scienceWhy": "By Day 3, sustained citrulline supplementation has increased plasma arginine levels by approximately 30%, enhancing substrate availability for eNOS. Adding omega-3s upregulates eNOS gene expression via EPA-mediated PPAR-γ activation, compounding the vasodilatory effect [Source: PMID 20499249] [Source: PMID 16339432].",
+          "scienceWhy": "By Day 3, sustained citrulline supplementation has increased plasma arginine levels by approximately 30%. Adding omega-3s upregulates eNOS gene expression via EPA-mediated PPAR-γ activation, compounding the vasodilatory effect [PMID 20499249] [PMID 16339432].",
+          "scienceWhyAr": "بحلول اليوم الثالث، رفعت مكملات السيترولين المستدامة مستويات الأرجينين البلازمية بحوالي 30%. إضافة أوميغا-3 ترفع تعبير جين eNOS عبر تنشيط PPAR-γ بوساطة EPA، مضاعفةً التأثير الموسع للأوعية [PMID 20499249] [PMID 16339432].",
           "visualImpact": "medium"
         },
         {
-          "time": "7:30 AM",
+          "id": "d3t3",
+          "action": "Breakfast: NO Smoothie — 200 g watermelon, 100 g spinach, 1 banana, 30 g walnuts, 250 mL beetroot juice",
+          "actionAr": "الفطور: سموذي NO — 200 غ بطيخ، 100 غ سبانخ، 1 موزة، 30 غ جوز، 250 مل عصير شمندر",
           "category": "meal",
-          "action": "Breakfast: Smoothie — 200 g watermelon, 100 g spinach, 1 banana, 30 g walnuts, 250 mL beetroot juice",
-          "scienceWhy": "This 'NO Smoothie' combines three independent NO-boosting pathways in one meal: citrulline from watermelon (eNOS substrate pathway), nitrate from spinach and beetroot (nitrate-nitrite-NO reductive pathway), and arginine from walnuts (direct eNOS substrate). The banana provides potassium for sodium excretion [Source: PMID 22773188] [Source: PMID 22248502].",
-          "visualImpact": "medium"
+          "scienceWhy": "This smoothie combines three independent NO pathways: citrulline from watermelon (eNOS substrate), nitrate from spinach and beetroot (nitrate-nitrite-NO reductive pathway), and arginine from walnuts (direct eNOS substrate). Banana provides potassium for sodium excretion [PMID 22773188] [PMID 22248502].",
+          "scienceWhyAr": "هذا السموذي يجمع ثلاثة مسارات NO مستقلة: سيترولين من البطيخ (ركيزة eNOS)، نترات من السبانخ والشمندر (مسار النترات-نيتريت-NO الاختزالي)، وأرجينين من الجوز (ركيزة eNOS مباشرة). الموز يوفر البوتاسيوم لطرح الصوديوم [PMID 22773188] [PMID 22248502].",
+          "visualImpact": "medium",
+          "tips": "Blend everything together for a complete NO-boosting smoothie",
+          "tipsAr": "اخلط كل شيء معاً للحصول على سموذي معزز لأكسيد النيتريك"
         },
         {
-          "time": "9:30 AM",
-          "category": "hydration",
-          "action": "500 mL water. Zero sodium meals all day.",
-          "scienceWhy": "Three consecutive days of sodium restriction has now significantly depleted extracellular sodium stores. The resultant decrease in plasma osmolality reduces ADH (vasopressin) secretion, allowing the kidneys to excrete free water and thin the subcutaneous layer further [Source: PMID 15084272].",
-          "visualImpact": "low"
-        },
-        {
-          "time": "11:00 AM",
+          "id": "d3t4",
+          "action": "Active Recovery: 20-minute brisk walk in warm environment. Perform hand-opening/closing exercises (100 reps) while walking. Drink 500 mL water.",
+          "actionAr": "تعافٍ نشط: مشي سريع 20 دقيقة في بيئة دافئة. نفذ تمارين فتح/إغلاق اليد (100 تكرار) أثناء المشي. اشرب 500 مل ماء.",
           "category": "training",
-          "action": "Active Recovery: 20-minute brisk walk in warm outdoor environment or heated room. Perform hand-opening/closing exercises (100 reps) while walking.",
-          "scienceWhy": "Low-intensity steady-state activity in heat doubles skin blood flow compared to thermoneutral exercise. The rhythmic hand contractions serve as a 'muscle pump' that mechanically compresses and releases veins, promoting venous distension and preventing venous valve stiffness [Source: PMID 29849142].",
-          "visualImpact": "medium"
+          "scienceWhy": "Low-intensity exercise in heat doubles skin blood flow compared to thermoneutral exercise. Rhythmic hand contractions serve as a 'muscle pump' that mechanically compresses and releases veins, promoting venous distension and preventing venous valve stiffness [PMID 29849142].",
+          "scienceWhyAr": "التمرين منخفض الشدة في الحرارة يضاعف تدفق الدم الجلدي مقارنة بالتمرين في درجة حرارة معتدلة. انقباضات اليد الإيقاعية تعمل كـ'مضخة عضلية' تضغط وتحرر الأوردة ميكانيكياً، معززة تمدد الأوردة ومانعة تصلب الصمامات الوريدية [PMID 29849142].",
+          "visualImpact": "medium",
+          "exerciseImage": "/exercises/grip-training.svg"
         },
         {
-          "time": "12:30 PM",
-          "category": "meal",
+          "id": "d3t5",
           "action": "Lunch: Grilled salmon (200 g) with turmeric-roasted cauliflower, large arugula salad with pomegranate, and garlic-lemon dressing",
-          "scienceWhy": "Turmeric curcumin is a potent anti-inflammatory that reduces CRP and IL-6, which cause endothelial dysfunction and impair NO signaling. Salmon EPA/DHA and arugula nitrate provide continued vascular support. This anti-inflammatory stack reduces any vascular inflammation from the training on Days 1–2 [Source: PMID 17164053] [Source: PMID 16339432].",
-          "visualImpact": "medium"
-        },
-        {
-          "time": "3:00 PM",
-          "category": "hydration",
-          "action": "750 mL water with lemon. Sip throughout the afternoon.",
-          "scienceWhy": "Distributed hydration maintains stable glomerular filtration rate, preventing the kidneys from activating water-conservation mechanisms prematurely. This continued high-water intake keeps aldosterone low in preparation for the water-cutting phase beginning Day 4 [Source: PMID 15084272].",
-          "visualImpact": "low"
-        },
-        {
-          "time": "4:30 PM",
-          "category": "training",
-          "action": "Forearm Hypertrophy Session: 5 × 20 behind-the-back barbell wrist curls, 4 × 25 reverse curls with EZ bar, 3 × 30-sec towel wringing, 3 × 20 plate pinch holds",
-          "scienceWhy": "Progressive overload in the forearms stimulates sarcoplasmic hypertrophy — the expansion of intracellular fluid, glycogen, and ATP stores within the muscle fiber. This physical expansion of forearm musculature pushes superficial veins closer to the skin surface, a key structural adaptation for vein visibility [Source: PMID 17218556].",
-          "visualImpact": "high"
-        },
-        {
-          "time": "6:00 PM",
-          "category": "recovery",
-          "action": "20-minute sauna session at 85–90 °C. Focus on relaxing hands and forearms in the heat.",
-          "scienceWhy": "By the third consecutive sauna session, heat acclimation begins — plasma volume expands by up to 12%, aldosterone sensitivity decreases, and resting core temperature drops slightly. The expanded plasma volume means more blood is available to engorge dilated superficial veins during subsequent heat exposure [Source: PMID 29849142].",
-          "visualImpact": "high"
-        },
-        {
-          "time": "7:30 PM",
+          "actionAr": "الغداء: سلمون مشوي (200 غ) مع قرنبيط محمص بالكركم، سلطة جرجير كبيرة بالرمان، وصلصة ثوم وليمون",
           "category": "meal",
-          "action": "Dinner: Turkey breast with steamed asparagus, sweet potato mash (200 g), and mixed greens. 30 g dark chocolate.",
-          "scienceWhy": "Asparagus contains asparagine and potassium that act as mild natural diuretics, previewing the diuretic phase of Days 4–5. Sweet potato provides moderate carbohydrate to maintain glycogen stores without excess. Turkey provides tryptophan, a serotonin precursor that promotes sleep quality [Source: PMID 17513403].",
+          "scienceWhy": "Turmeric curcumin reduces CRP and IL-6 which cause endothelial dysfunction and impair NO signaling. Salmon EPA/DHA and arugula nitrate provide continued vascular support. This anti-inflammatory stack reduces vascular inflammation from training on Days 1–2 [PMID 17164053] [PMID 16339432].",
+          "scienceWhyAr": "كركمين الكركم يقلل CRP وIL-6 اللذين يسببان خلل البطانة ويضعفان إشارات NO. EPA/DHA من السلمون ونترات الجرجير يوفران دعماً وعائياً مستمراً. هذا المزيج المضاد للالتهاب يقلل التهاب الأوعية من تدريب اليومين 1-2 [PMID 17164053] [PMID 16339432].",
           "visualImpact": "medium"
         },
         {
-          "time": "10:00 PM",
-          "category": "sleep",
+          "id": "d3t6",
+          "action": "Forearm Hypertrophy Session: 5 × 20 behind-the-back barbell wrist curls, 4 × 25 reverse curls with EZ bar, 3 × 30-sec towel wringing, 3 × 20 plate pinch holds",
+          "actionAr": "جلسة تضخم الساعد: 5 × 20 ثني معصم خلف الظهر بالبار، 4 × 25 ثني عكسي بالبار المنحني، 3 × 30 ثانية عصر المنشفة، 3 × 20 إمساك الأقراص بالأصابع",
+          "category": "training",
+          "scienceWhy": "Progressive overload in the forearms stimulates sarcoplasmic hypertrophy — expansion of intracellular fluid, glycogen, and ATP stores within muscle fibers. This physical expansion pushes superficial veins closer to the skin surface, a key structural adaptation for vein visibility [PMID 17218556].",
+          "scienceWhyAr": "التحميل التدريجي في الساعدين يحفز التضخم الساركوبلازمي — توسع السائل داخل الخلايا والغليكوجين ومخازن ATP داخل ألياف العضلات. هذا التوسع الفيزيائي يدفع الأوردة السطحية أقرب لسطح البشرة، وهو تكيف هيكلي رئيسي لظهور العروق [PMID 17218556].",
+          "visualImpact": "high",
+          "exerciseImage": "/exercises/grip-training.svg"
+        },
+        {
+          "id": "d3t7",
+          "action": "20-minute sauna session at 85–90 °C. Focus on relaxing hands and forearms in the heat.",
+          "actionAr": "جلسة ساونا 20 دقيقة عند 85-90 درجة مئوية. ركز على استرخاء اليدين والساعدين في الحرارة.",
+          "category": "recovery",
+          "scienceWhy": "By the third consecutive sauna session, heat acclimation begins — plasma volume expands by up to 12%, aldosterone sensitivity decreases, and resting core temperature drops slightly. Expanded plasma volume means more blood to engorge dilated superficial veins [PMID 29849142].",
+          "scienceWhyAr": "بحلول جلسة الساونا الثالثة المتتالية، يبدأ التأقلم الحراري — يتمدد حجم البلازما حتى 12%، تنخفض حساسية الألدوستيرون، وتنخفض درجة حرارة الجسم الأساسية قليلاً. حجم البلازما المتمدد يعني المزيد من الدم لملء الأوردة السطحية المتوسعة [PMID 29849142].",
+          "visualImpact": "high"
+        },
+        {
+          "id": "d3t8",
+          "action": "Dinner: Turkey breast with steamed asparagus, sweet potato mash (200 g), and mixed greens. 30 g dark chocolate.",
+          "actionAr": "العشاء: صدر ديك رومي مع هليون مطهو على البخار، بطاطا حلوة مهروسة (200 غ)، وخضروات مشكلة. 30 غ شوكولاتة داكنة.",
+          "category": "meal",
+          "scienceWhy": "Asparagus contains asparagine and potassium that act as mild natural diuretics, previewing the diuretic phase. Sweet potato provides moderate carbohydrate to maintain glycogen stores. Turkey provides tryptophan for serotonin production and sleep quality [PMID 17513403].",
+          "scienceWhyAr": "الهليون يحتوي على الأسباراجين والبوتاسيوم اللذين يعملان كمدرات بول طبيعية خفيفة. البطاطا الحلوة توفر كربوهيدرات معتدلة للحفاظ على مخازن الغليكوجين. الديك الرومي يوفر التريبتوفان لإنتاج السيروتونين وجودة النوم [PMID 17513403].",
+          "visualImpact": "medium"
+        },
+        {
+          "id": "d3t9",
           "action": "Sleep 8 hours. Cool room (18 °C). No screens 30 min before bed.",
-          "scienceWhy": "Three days of consistent sleep hygiene has established circadian cortisol patterns. Lower evening cortisol means less cortisol-mediated water retention and less antagonism of the NO pathway, as cortisol directly inhibits eNOS expression [Source: PMID 10484056].",
+          "actionAr": "نم 8 ساعات. غرفة باردة (18°م). بدون شاشات 30 دقيقة قبل النوم.",
+          "category": "sleep",
+          "scienceWhy": "Three days of consistent sleep hygiene has established circadian cortisol patterns. Lower evening cortisol means less cortisol-mediated water retention and less antagonism of the NO pathway, as cortisol directly inhibits eNOS expression [PMID 10484056].",
+          "scienceWhyAr": "ثلاثة أيام من نظافة النوم المتسقة أسست أنماط الكورتيزول اليومية. كورتيزول مسائي أقل يعني احتباس ماء أقل بوساطة الكورتيزول ومعارضة أقل لمسار NO، حيث يثبط الكورتيزول تعبير eNOS مباشرة [PMID 10484056].",
           "visualImpact": "low"
         }
       ]
@@ -283,83 +318,85 @@
     {
       "day": 4,
       "title": "Natural Diuresis & Contrast Therapy",
+      "titleAr": "الإدرار الطبيعي والعلاج بالتباين",
       "theme": "Amplification Phase",
-      "schedule": [
+      "themeAr": "مرحلة التكثيف",
+      "dailyGoal": "Begin natural diuretics and reduce water intake to create negative water balance",
+      "dailyGoalAr": "بدء مدرات البول الطبيعية وتقليل تناول الماء لخلق توازن مائي سلبي",
+      "tasks": [
         {
-          "time": "6:00 AM",
+          "id": "d4t1",
+          "action": "Wake up. Drink 400 mL warm dandelion root tea with lemon.",
+          "actionAr": "استيقظ. اشرب 400 مل شاي جذر الهندباء الدافئ مع ليمون.",
           "category": "wake",
-          "action": "Wake up. Drink 400 mL warm water with dandelion root tea bag steeped 5 min. Add lemon.",
-          "scienceWhy": "Dandelion (Taraxacum officinale) acts as a potassium-sparing diuretic by inhibiting the Na+/K+/2Cl⁻ co-transporter in the loop of Henle, increasing urinary output without depleting potassium. This targets subcutaneous water specifically while preserving intravascular volume needed for venous distension [Source: PMID 19678785].",
-          "visualImpact": "medium"
+          "scienceWhy": "Dandelion (Taraxacum officinale) acts as a potassium-sparing diuretic by inhibiting the Na+/K+/2Cl⁻ co-transporter in the loop of Henle, increasing urinary output without depleting potassium. This targets subcutaneous water specifically while preserving intravascular volume [PMID 19678785].",
+          "scienceWhyAr": "الهندباء (Taraxacum officinale) تعمل كمدر بول موفر للبوتاسيوم عبر تثبيط الناقل المشترك Na+/K+/2Cl⁻ في عروة هنلي، مما يزيد إخراج البول دون استنفاد البوتاسيوم. هذا يستهدف الماء تحت الجلد تحديداً مع الحفاظ على الحجم داخل الأوعية [PMID 19678785].",
+          "visualImpact": "medium",
+          "tips": "Steep dandelion root tea bag for 5 minutes for maximum extraction",
+          "tipsAr": "انقع كيس شاي جذر الهندباء لمدة 5 دقائق للاستخلاص الأقصى"
         },
         {
-          "time": "6:30 AM",
+          "id": "d4t2",
+          "action": "Take 6 g L-Citrulline Malate + 500 mg Vitamin C + 300 mg Grape Seed Extract",
+          "actionAr": "تناول 6 غ L-سيترولين مالات + 500 ملغ فيتامين C + 300 ملغ خلاصة بذور العنب",
           "category": "supplement",
-          "action": "6 g L-Citrulline Malate + 500 mg Vitamin C + 300 mg Grape Seed Extract",
-          "scienceWhy": "Grape seed extract (GSE) contains oligomeric proanthocyanidins (OPCs) that inhibit angiotensin-converting enzyme (ACE). By reducing angiotensin II, GSE decreases aldosterone production and promotes natriuresis while simultaneously improving endothelial NO release [Source: PMID 19678785] [Source: PMID 20499249].",
+          "scienceWhy": "Grape seed extract (GSE) contains oligomeric proanthocyanidins (OPCs) that inhibit angiotensin-converting enzyme (ACE). By reducing angiotensin II, GSE decreases aldosterone production and promotes natriuresis while simultaneously improving endothelial NO release [PMID 19678785] [PMID 20499249].",
+          "scienceWhyAr": "خلاصة بذور العنب تحتوي بروأنثوسيانيدينات قليلة القسيمات (OPCs) التي تثبط إنزيم تحويل الأنجيوتنسين (ACE). بتقليل الأنجيوتنسين II، تقلل GSE إنتاج الألدوستيرون وتعزز طرح الصوديوم مع تحسين إطلاق NO البطاني [PMID 19678785] [PMID 20499249].",
           "visualImpact": "medium"
         },
         {
-          "time": "7:30 AM",
+          "id": "d4t3",
+          "action": "Breakfast: Poached eggs on spinach bed with asparagus spears and avocado. 250 mL beetroot juice. Reduce water to 3 L today with a second dandelion tea.",
+          "actionAr": "الفطور: بيض مسلوق على فرش سبانخ مع أعواد هليون وأفوكادو. 250 مل عصير شمندر. قلل الماء إلى 3 لترات اليوم مع شاي هندباء ثانٍ.",
           "category": "meal",
-          "action": "Breakfast: Poached eggs on spinach bed with steamed asparagus spears and avocado. 250 mL beetroot juice.",
-          "scienceWhy": "Asparagus contains asparagine and racemofuran, compounds that increase glomerular filtration and proximal tubular secretion, producing a gentle diuretic effect. Combined with the spinach nitrate bolus and beetroot NO pathway, this meal simultaneously drives water out and dilates vessels inward [Source: PMID 22248502].",
+          "scienceWhy": "Asparagus contains asparagine and racemofuran that increase glomerular filtration and proximal tubular secretion. The sudden drop from 4 L to 3 L is perceived as sufficient hydration (aldosterone is still suppressed), so kidneys continue excreting at the 4 L rate temporarily, creating negative water balance [PMID 22248502] [PMID 15084272].",
+          "scienceWhyAr": "الهليون يحتوي على الأسباراجين والراسيموفوران اللذين يزيدان الترشيح الكبيبي والإفراز الأنبوبي القريب. الانخفاض المفاجئ من 4 لترات إلى 3 يُعتبر ترطيباً كافياً (الألدوستيرون لا يزال مثبطاً)، فتستمر الكلى بالإخراج بمعدل 4 لترات مؤقتاً، مما يخلق توازناً مائياً سلبياً [PMID 22248502] [PMID 15084272].",
           "visualImpact": "medium"
         },
         {
-          "time": "10:00 AM",
-          "category": "hydration",
-          "action": "Reduce water intake to 3 L today. Drink 400 mL now. Add a second cup of dandelion root tea.",
-          "scienceWhy": "The sudden drop from 4 L to 3 L is perceived by the body as sufficient hydration (aldosterone is still suppressed from 3 days of water loading), so the kidneys continue excreting at the 4 L rate temporarily. This creates a net negative water balance that preferentially draws from subcutaneous extracellular fluid [Source: PMID 15084272].",
-          "visualImpact": "medium"
-        },
-        {
-          "time": "12:00 PM",
+          "id": "d4t4",
+          "action": "Lunch: Tuna steak (200 g) with mixed greens (arugula, watercress, spinach), cucumber, walnut-pomegranate topping. Lemon juice only. 400 mL water with electrolytes (potassium, magnesium — no sodium).",
+          "actionAr": "الغداء: شريحة تونة (200 غ) مع خضروات مشكلة (جرجير، جرجير الماء، سبانخ)، خيار، جوز ورمان. عصير ليمون فقط. 400 مل ماء مع إلكتروليتات (بوتاسيوم، مغنيسيوم — بدون صوديوم).",
           "category": "meal",
-          "action": "Lunch: Tuna steak (200 g) with large mixed green salad (arugula, watercress, spinach), cucumber, and walnut-pomegranate topping. No dressing — lemon juice only.",
-          "scienceWhy": "Watercress provides exceptionally high levels of phenethyl isothiocyanate (PEITC), which activates Nrf2 signaling. Nrf2 upregulates antioxidant response element (ARE) genes, protecting existing NO from superoxide scavenging and extending the biological half-life of circulating NO [Source: PMID 17164053].",
+          "scienceWhy": "Watercress provides PEITC which activates Nrf2 signaling, upregulating antioxidant genes that protect NO from superoxide scavenging. Magnesium acts as a natural calcium channel blocker in vascular smooth muscle, preventing vasoconstriction and supporting vasodilatory tone [PMID 17164053] [PMID 25430610].",
+          "scienceWhyAr": "جرجير الماء يوفر PEITC الذي ينشط إشارات Nrf2، مرفعاً جينات مضادات الأكسدة التي تحمي NO من كسح الأكسيد الفائق. المغنيسيوم يعمل كمانع لقنوات الكالسيوم الطبيعي في العضلات الملساء الوعائية، مانعاً التضيق وداعماً التوتر الموسع [PMID 17164053] [PMID 25430610].",
           "visualImpact": "medium"
         },
         {
-          "time": "2:30 PM",
-          "category": "hydration",
-          "action": "400 mL water with electrolyte drops (potassium, magnesium — no sodium).",
-          "scienceWhy": "Magnesium acts as a natural calcium channel blocker in vascular smooth muscle cells. By inhibiting calcium influx, magnesium prevents vasoconstriction and supports the vasodilatory tone established by the NO protocol. Potassium maintains the electrochemical gradient for Na+/K+-ATPase function [Source: PMID 25430610].",
-          "visualImpact": "low"
-        },
-        {
-          "time": "4:00 PM",
-          "category": "training",
+          "id": "d4t5",
           "action": "High-Intensity Forearm Circuit: 6 × 20 heavy wrist curls (30-sec rest), 4 × 25 hammer curls, 5 × max-rep hand gripper (heavy resistance), 3 × 30-sec dead hangs with towel grip",
-          "scienceWhy": "Increasing training intensity on Day 4 creates greater mechanical tension and metabolic stress in the forearm muscles. The combination of heavy resistance and short rest periods maximizes the exercise-induced hyperemic response, with forearm blood flow increasing up to 30-fold above resting values [Source: PMID 17218556].",
-          "visualImpact": "high"
+          "actionAr": "دائرة ساعد عالية الشدة: 6 × 20 ثني معصم ثقيل (30 ثانية راحة)، 4 × 25 ثني مطرقة، 5 × أقصى تكرار قابض يد (مقاومة ثقيلة)، 3 × 30 ثانية تعلق بقبضة المنشفة",
+          "category": "training",
+          "scienceWhy": "Increasing training intensity creates greater mechanical tension and metabolic stress in the forearm muscles. The combination of heavy resistance and short rest periods maximizes the exercise-induced hyperemic response, with forearm blood flow increasing up to 30-fold above resting values [PMID 17218556].",
+          "scienceWhyAr": "زيادة شدة التدريب تخلق توتراً ميكانيكياً وإجهاداً أيضياً أكبر في عضلات الساعد. الجمع بين المقاومة الثقيلة وفترات الراحة القصيرة يعظم استجابة فرط الدم الناتج عن التمرين، مع زيادة تدفق دم الساعد حتى 30 ضعف القيم الراحة [PMID 17218556].",
+          "visualImpact": "high",
+          "exerciseImage": "/exercises/grip-training.svg"
         },
         {
-          "time": "5:30 PM",
-          "category": "recovery",
+          "id": "d4t6",
           "action": "Contrast Shower Protocol: 2 min hot (40 °C) → 30 sec cold (15 °C) × 5 cycles. Finish on hot. Focus water on forearms and hands.",
-          "scienceWhy": "Contrast hydrotherapy produces alternating vasoconstriction and vasodilation that 'trains' the vascular smooth muscle. The final hot cycle leaves vessels in a dilated state. Studies show contrast therapy increases forearm blood flow by 100% compared to hot water alone, with the effect persisting 30–45 minutes [Source: PMID 29849142].",
+          "actionAr": "بروتوكول الدش المتباين: دقيقتان ساخن (40°م) ← 30 ثانية بارد (15°م) × 5 دورات. انتهِ بالساخن. ركز الماء على الساعدين واليدين.",
+          "category": "recovery",
+          "scienceWhy": "Contrast hydrotherapy produces alternating vasoconstriction and vasodilation that 'trains' vascular smooth muscle. The final hot cycle leaves vessels dilated. Studies show contrast therapy increases forearm blood flow by 100% compared to hot water alone, with effects persisting 30–45 minutes [PMID 29849142].",
+          "scienceWhyAr": "العلاج المائي المتباين ينتج تضيقاً وتوسعاً متناوباً 'يدرب' العضلات الملساء الوعائية. الدورة الساخنة الأخيرة تترك الأوعية متوسعة. تظهر الدراسات أن العلاج المتباين يزيد تدفق دم الساعد 100% مقارنة بالماء الساخن وحده، مع استمرار التأثير 30-45 دقيقة [PMID 29849142].",
           "visualImpact": "high"
         },
         {
-          "time": "7:00 PM",
+          "id": "d4t7",
+          "action": "Dinner: Grilled chicken with roasted beetroot, asparagus, quinoa (100 g). Cup of dandelion root tea. 20 g dark chocolate. Final 400 mL water.",
+          "actionAr": "العشاء: دجاج مشوي مع شمندر محمص وهليون وكينوا (100 غ). كوب شاي جذر الهندباء. 20 غ شوكولاتة داكنة. آخر 400 مل ماء.",
           "category": "meal",
-          "action": "Dinner: Grilled chicken with roasted beetroot, asparagus, and small portion of quinoa (100 g). Cup of dandelion root tea. 20 g dark chocolate.",
-          "scienceWhy": "The third dandelion tea dose of the day maintains steady diuretic effect. Quinoa is kept small as carbohydrate restriction today ensures glycogen stores are partially depleted, setting up a stronger super-compensation response during the Day 6 carb load [Source: PMID 19678785] [Source: PMID 17513403].",
+          "scienceWhy": "The third dandelion tea dose maintains steady diuretic effect. Quinoa is kept small as carbohydrate restriction ensures glycogen stores are partially depleted, setting up a stronger super-compensation response during the Day 6 carb load [PMID 19678785] [PMID 17513403].",
+          "scienceWhyAr": "جرعة شاي الهندباء الثالثة تحافظ على تأثير مدر البول المستقر. الكينوا محدودة لأن تقييد الكربوهيدرات يضمن استنفاد مخازن الغليكوجين جزئياً، مما يهيئ لاستجابة تعويض فائق أقوى أثناء شحن الكربوهيدرات في اليوم السادس [PMID 19678785] [PMID 17513403].",
           "visualImpact": "medium"
         },
         {
-          "time": "9:00 PM",
-          "category": "hydration",
-          "action": "Final 400 mL water. No fluids after this point.",
-          "scienceWhy": "Cutting fluids by 9 PM allows approximately 9 hours of mild dehydration overnight, during which the kidneys continue to excrete water (driven by suppressed ADH from days of high intake). This overnight water loss preferentially thins the subcutaneous compartment [Source: PMID 15084272].",
-          "visualImpact": "low"
-        },
-        {
-          "time": "10:00 PM",
-          "category": "sleep",
+          "id": "d4t8",
           "action": "Sleep in cool room (18 °C). Apply hand moisturizer to maintain skin translucency.",
-          "scienceWhy": "Consistent sleep in a cool environment maximizes GH pulsatility during deep sleep. GH promotes lipolysis of subcutaneous fat, particularly in areas with high beta-2 adrenergic receptor density like the dorsal hand [Source: PMID 10484056].",
+          "actionAr": "نم في غرفة باردة (18°م). ضع مرطب اليدين للحفاظ على شفافية البشرة.",
+          "category": "sleep",
+          "scienceWhy": "Consistent sleep in a cool environment maximizes GH pulsatility during deep sleep. GH promotes lipolysis of subcutaneous fat, particularly in areas with high beta-2 adrenergic receptor density like the dorsal hand [PMID 10484056].",
+          "scienceWhyAr": "النوم المتسق في بيئة باردة يعظم نبضات هرمون النمو خلال النوم العميق. يعزز GH تحلل الدهون تحت الجلد، خاصة في المناطق ذات الكثافة العالية لمستقبلات بيتا-2 الأدرينالية مثل ظهر اليد [PMID 10484056].",
           "visualImpact": "low"
         }
       ]
@@ -367,174 +404,178 @@
     {
       "day": 5,
       "title": "Glycogen Depletion & Vascular Priming",
+      "titleAr": "استنفاد الغليكوجين والتجهيز الوعائي",
       "theme": "Amplification Phase",
-      "schedule": [
+      "themeAr": "مرحلة التكثيف",
+      "dailyGoal": "Deplete glycogen stores through low-carb eating and full-body training for Day 6 super-compensation",
+      "dailyGoalAr": "استنفاد مخازن الغليكوجين عبر أكل منخفض الكربوهيدرات وتدريب كامل الجسم تحضيراً للتعويض الفائق في اليوم السادس",
+      "tasks": [
         {
-          "time": "6:00 AM",
+          "id": "d5t1",
+          "action": "Wake up. Observe improved vein visibility. Drink 400 mL warm dandelion root tea with lemon.",
+          "actionAr": "استيقظ. لاحظ تحسن ظهور العروق. اشرب 400 مل شاي جذر الهندباء الدافئ مع ليمون.",
           "category": "wake",
-          "action": "Wake up. Observe improved vein visibility upon waking. Drink 400 mL warm dandelion root tea with lemon.",
-          "scienceWhy": "By Day 5, cumulative sodium depletion and diuresis have measurably reduced subcutaneous water. Morning observation should reveal improved vein tracing along the dorsal metacarpal veins and the cephalic vein at the anatomical snuffbox [Source: PMID 19678785].",
+          "scienceWhy": "By Day 5, cumulative sodium depletion and diuresis have measurably reduced subcutaneous water. Morning observation should reveal improved vein tracing along the dorsal metacarpal veins and the cephalic vein at the anatomical snuffbox [PMID 19678785].",
+          "scienceWhyAr": "بحلول اليوم الخامس، قلل استنفاد الصوديوم التراكمي والإدرار من الماء تحت الجلد بشكل ملموس. يجب أن تكشف الملاحظة الصباحية عن تحسن في تتبع الأوردة السنعية الظهرية والوريد الرأسي عند المسعط التشريحي [PMID 19678785].",
           "visualImpact": "medium"
         },
         {
-          "time": "6:30 AM",
+          "id": "d5t2",
+          "action": "Take 6 g L-Citrulline Malate + 500 mg Vitamin C + 300 mg Grape Seed Extract + 2 g Taurine",
+          "actionAr": "تناول 6 غ L-سيترولين مالات + 500 ملغ فيتامين C + 300 ملغ خلاصة بذور العنب + 2 غ تورين",
           "category": "supplement",
-          "action": "6 g L-Citrulline Malate + 500 mg Vitamin C + 300 mg Grape Seed Extract + 2 g Taurine",
-          "scienceWhy": "Taurine modulates intracellular calcium in vascular smooth muscle and potentiates the vasodilatory effect of NO by enhancing cGMP signaling. Studies show 2 g taurine combined with NO precursors produces synergistic vasodilation beyond either compound alone [Source: PMID 20499249].",
+          "scienceWhy": "Taurine modulates intracellular calcium in vascular smooth muscle and potentiates the vasodilatory effect of NO by enhancing cGMP signaling. 2 g taurine combined with NO precursors produces synergistic vasodilation beyond either compound alone [PMID 20499249].",
+          "scienceWhyAr": "التورين ينظم الكالسيوم داخل الخلايا في العضلات الملساء الوعائية ويعزز تأثير أكسيد النيتريك الموسع للأوعية عبر تعزيز إشارات cGMP. 2 غ تورين مع سلائف NO ينتج توسعاً وعائياً تآزرياً يتجاوز أي مركب وحده [PMID 20499249].",
           "visualImpact": "medium"
         },
         {
-          "time": "7:30 AM",
+          "id": "d5t3",
+          "action": "Breakfast: 3-egg omelet with spinach, garlic, and mushrooms. Side of watermelon (200 g). No starchy carbs. Cup of green tea.",
+          "actionAr": "الفطور: أومليت من 3 بيضات مع سبانخ وثوم وفطر. بطيخ (200 غ). بدون كربوهيدرات نشوية. كوب شاي أخضر.",
           "category": "meal",
-          "action": "Breakfast: 3-egg omelet with spinach, garlic, and mushrooms. Side of watermelon (200 g). No starchy carbs.",
-          "scienceWhy": "Keeping breakfast low-carbohydrate on Day 5 continues the strategic glycogen depletion. Mushrooms contain ergothioneine, a unique amino acid that accumulates in erythrocytes and protects hemoglobin-bound NO from oxidative destruction during circulation [Source: PMID 22773188].",
+          "scienceWhy": "Keeping breakfast low-carbohydrate continues strategic glycogen depletion. Mushrooms contain ergothioneine, a unique amino acid that accumulates in erythrocytes and protects hemoglobin-bound NO from oxidative destruction. Green tea EGCG enhances lipolysis [PMID 22773188] [PMID 19678785].",
+          "scienceWhyAr": "إبقاء الفطور منخفض الكربوهيدرات يستمر في الاستنفاد الاستراتيجي للغليكوجين. الفطر يحتوي على الإرغوثيونين، حمض أميني فريد يتراكم في كريات الدم الحمراء ويحمي NO المرتبط بالهيموغلوبين من التدمير التأكسدي. EGCG من الشاي الأخضر يعزز تحلل الدهون [PMID 22773188] [PMID 19678785].",
           "visualImpact": "medium"
         },
         {
-          "time": "10:00 AM",
-          "category": "hydration",
-          "action": "Drink 400 mL water. Target remains 3 L today. Cup of green tea (caffeine for mild additional diuresis).",
-          "scienceWhy": "Green tea catechins (EGCG) inhibit catechol-O-methyltransferase (COMT), prolonging norepinephrine signaling that enhances lipolysis. The caffeine provides mild diuretic effect via adenosine receptor antagonism in the proximal tubule, complementing the dandelion tea mechanism [Source: PMID 19678785].",
-          "visualImpact": "low"
-        },
-        {
-          "time": "12:00 PM",
+          "id": "d5t4",
+          "action": "Lunch: Grilled salmon (200 g) with massive spinach-arugula salad, beet slices, walnuts, pomegranate. No bread or rice. 400 mL water with electrolytes and dandelion tea.",
+          "actionAr": "الغداء: سلمون مشوي (200 غ) مع سلطة سبانخ وجرجير ضخمة، شرائح شمندر، جوز، رمان. بدون خبز أو أرز. 400 مل ماء مع إلكتروليتات وشاي هندباء.",
           "category": "meal",
-          "action": "Lunch: Grilled salmon (200 g) with massive spinach-arugula salad, beet slices, walnuts, and pomegranate. Lemon-garlic dressing. No bread or rice.",
-          "scienceWhy": "This NO-maximizing salad provides the highest single-meal nitrate load of the protocol. With glycogen stores partially depleted and minimal carbohydrate intake, the body relies on fat oxidation for energy, further thinning the subcutaneous fat layer over the hands [Source: PMID 22248502] [Source: PMID 16339432].",
+          "scienceWhy": "This NO-maximizing salad provides the highest single-meal nitrate load of the protocol. With glycogen stores partially depleted and minimal carbohydrate intake, the body relies on fat oxidation, further thinning the subcutaneous fat layer over the hands [PMID 22248502] [PMID 16339432].",
+          "scienceWhyAr": "هذه السلطة المعظمة لـ NO توفر أعلى حمل نترات في وجبة واحدة من البروتوكول. مع استنفاد مخازن الغليكوجين جزئياً وتناول كربوهيدرات ضئيل، يعتمد الجسم على أكسدة الدهون، مما يرقق طبقة الدهون تحت الجلد فوق اليدين أكثر [PMID 22248502] [PMID 16339432].",
           "visualImpact": "medium"
         },
         {
-          "time": "2:00 PM",
-          "category": "hydration",
-          "action": "400 mL water with electrolytes (potassium, magnesium). Second cup of dandelion root tea.",
-          "scienceWhy": "Maintaining potassium and magnesium is critical during the diuretic phase to prevent muscle cramping and cardiac rhythm disturbances. These electrolytes also support vascular smooth muscle relaxation, maintaining the dilated venous state [Source: PMID 25430610].",
-          "visualImpact": "low"
-        },
-        {
-          "time": "4:00 PM",
+          "id": "d5t5",
+          "action": "Glycogen Depletion Workout: Full-body circuit — 4 × 15 push-ups, 4 × 20 bodyweight squats, 5 × 25 wrist curls, 4 × 20 hammer curls, 3 × max-rep band pull-aparts. Minimal rest (20 sec).",
+          "actionAr": "تمرين استنفاد الغليكوجين: دائرة كامل الجسم — 4 × 15 ضغط، 4 × 20 قرفصاء بوزن الجسم، 5 × 25 ثني معصم، 4 × 20 ثني مطرقة، 3 × أقصى تكرار سحب بالمطاط. راحة ضئيلة (20 ثانية).",
           "category": "training",
-          "action": "Glycogen Depletion Workout: Full-body circuit — 4 × 15 push-ups, 4 × 20 bodyweight squats, 5 × 25 wrist curls, 4 × 20 hammer curls, 3 × max-rep band pull-aparts. Minimal rest (20 sec between sets).",
-          "scienceWhy": "A full-body glycogen depletion workout empties muscle glycogen stores across all major groups. This systemic depletion upregulates glycogen synthase enzyme activity and GLUT4 transporter expression, priming the muscles for aggressive glycogen super-compensation during tomorrow's carb load [Source: PMID 17218556].",
-          "visualImpact": "high"
+          "scienceWhy": "A full-body glycogen depletion workout empties muscle glycogen stores across all major groups. This systemic depletion upregulates glycogen synthase enzyme activity and GLUT4 transporter expression, priming muscles for aggressive glycogen super-compensation during tomorrow's carb load [PMID 17218556].",
+          "scienceWhyAr": "تمرين استنفاد الغليكوجين لكامل الجسم يُفرغ مخازن الغليكوجين عبر جميع المجموعات العضلية الرئيسية. هذا الاستنفاد الشامل يرفع نشاط إنزيم سينثاز الغليكوجين وتعبير ناقل GLUT4، مهيئاً العضلات للتعويض الفائق العدواني للغليكوجين أثناء شحن الكربوهيدرات غداً [PMID 17218556].",
+          "visualImpact": "high",
+          "exerciseImage": "/exercises/grip-training.svg"
         },
         {
-          "time": "5:30 PM",
-          "category": "recovery",
+          "id": "d5t6",
           "action": "Contrast Shower: 2 min hot → 30 sec cold × 6 cycles. Finish hot. Then 10-min sauna if available.",
-          "scienceWhy": "The increased number of contrast cycles (6 vs 5 yesterday) further trains the vascular reactivity. Adding a sauna finisher ensures maximum peripheral vasodilation going into the evening. The repeated thermal stress has now begun inducing heat shock protein 70 (HSP70), which directly activates eNOS [Source: PMID 29849142].",
+          "actionAr": "دش متباين: دقيقتان ساخن ← 30 ثانية بارد × 6 دورات. انتهِ بالساخن. ثم ساونا 10 دقائق إن توفرت.",
+          "category": "recovery",
+          "scienceWhy": "The increased number of contrast cycles (6 vs 5 yesterday) further trains vascular reactivity. Adding a sauna finisher ensures maximum peripheral vasodilation. Repeated thermal stress has now begun inducing HSP70, which directly activates eNOS [PMID 29849142].",
+          "scienceWhyAr": "زيادة عدد دورات التباين (6 مقابل 5 أمس) يدرب التفاعل الوعائي أكثر. إضافة ساونا ختامية تضمن أقصى توسع للأوعية المحيطية. الإجهاد الحراري المتكرر بدأ الآن بتحفيز HSP70 الذي ينشط eNOS مباشرة [PMID 29849142].",
           "visualImpact": "high"
         },
         {
-          "time": "7:00 PM",
+          "id": "d5t7",
+          "action": "Dinner: Lean turkey breast with steamed broccoli and asparagus. No starch. Cup of dandelion tea. 20 g dark chocolate. Final 400 mL water.",
+          "actionAr": "العشاء: صدر ديك رومي خالي الدهن مع بروكلي وهليون مطهو على البخار. بدون نشويات. كوب شاي هندباء. 20 غ شوكولاتة داكنة. آخر 400 مل ماء.",
           "category": "meal",
-          "action": "Dinner: Lean turkey breast with steamed broccoli and asparagus. No starch. Cup of dandelion tea. 20 g dark chocolate.",
-          "scienceWhy": "The final low-carb dinner ensures glycogen stores reach their nadir by bedtime. Broccoli sulforaphane activates Nrf2, further boosting endogenous antioxidant defenses that protect NO. The asparagus provides a final mild diuretic push overnight [Source: PMID 17513403].",
+          "scienceWhy": "The final low-carb dinner ensures glycogen stores reach their nadir by bedtime. Broccoli sulforaphane activates Nrf2, boosting endogenous antioxidant defenses that protect NO. Asparagus provides a final mild diuretic push overnight [PMID 17513403].",
+          "scienceWhyAr": "العشاء الأخير منخفض الكربوهيدرات يضمن وصول مخازن الغليكوجين لأدنى مستوياتها عند النوم. السلفورافان من البروكلي ينشط Nrf2، معززاً الدفاعات المضادة للأكسدة الذاتية التي تحمي NO. الهليون يوفر دفعة مدرة للبول خفيفة أخيرة ليلاً [PMID 17513403].",
           "visualImpact": "medium"
         },
         {
-          "time": "9:00 PM",
-          "category": "hydration",
-          "action": "Final 400 mL water. Prepare sweet potatoes and rice for tomorrow's carb load.",
-          "scienceWhy": "Preparing food tonight prevents decision fatigue tomorrow and ensures the carb load begins on schedule. The final water intake is slightly less than the 3 L target, creating additional mild dehydration overnight that compounds with the diuretic effects [Source: PMID 15084272].",
-          "visualImpact": "low"
-        },
-        {
-          "time": "10:00 PM",
+          "id": "d5t8",
+          "action": "Early sleep (by 10 PM). Cool room. Prepare sweet potatoes and rice for tomorrow's carb load.",
+          "actionAr": "نوم مبكر (بحلول 10 مساءً). غرفة باردة. حضّر البطاطا الحلوة والأرز لشحن الكربوهيدرات غداً.",
           "category": "sleep",
-          "action": "Early sleep (by 10 PM). Cool room. Glycogen depletion will enhance deep sleep via adenosine accumulation.",
-          "scienceWhy": "Exercise-induced glycogen depletion increases brain adenosine levels, a key sleep-promoting molecule. This ensures deep, restorative slow-wave sleep that maximizes overnight GH release for subcutaneous fat mobilization [Source: PMID 10484056].",
-          "visualImpact": "low"
+          "scienceWhy": "Exercise-induced glycogen depletion increases brain adenosine levels, a key sleep-promoting molecule. This ensures deep, restorative slow-wave sleep that maximizes overnight GH release for subcutaneous fat mobilization [PMID 10484056].",
+          "scienceWhyAr": "استنفاد الغليكوجين الناتج عن التمرين يزيد مستويات الأدينوسين في الدماغ، وهو جزيء رئيسي معزز للنوم. هذا يضمن نوماً عميقاً ترميمياً يعظم إفراز هرمون النمو الليلي لتعبئة الدهون تحت الجلد [PMID 10484056].",
+          "visualImpact": "low",
+          "tips": "Prepare tomorrow's meals tonight to ensure the carb load starts on schedule",
+          "tipsAr": "حضّر وجبات الغد الليلة لضمان بدء شحن الكربوهيدرات في الوقت المحدد"
         }
       ]
     },
     {
       "day": 6,
       "title": "The Carb Load — Glycogen Super-Compensation",
-      "theme": "The Carb Load",
-      "schedule": [
+      "titleAr": "شحن الكربوهيدرات — التعويض الفائق للغليكوجين",
+      "theme": "Carb Load",
+      "themeAr": "شحن الكربوهيدرات",
+      "dailyGoal": "Maximize intramuscular glycogen via aggressive carb loading while restricting water to 2L",
+      "dailyGoalAr": "تعظيم الغليكوجين داخل العضلات عبر شحن كربوهيدراتي مكثف مع تقييد الماء إلى 2 لتر",
+      "tasks": [
         {
-          "time": "6:00 AM",
+          "id": "d6t1",
+          "action": "Wake up. Observe significantly improved vascularity. Drink only 300 mL warm water with lemon.",
+          "actionAr": "استيقظ. لاحظ التحسن الملحوظ في بروز العروق. اشرب 300 مل ماء دافئ مع ليمون فقط.",
           "category": "wake",
-          "action": "Wake up. Observe significantly improved vascularity — veins should be noticeably more visible. Drink only 300 mL warm water with lemon.",
-          "scienceWhy": "After 5 days of NO priming, sodium restriction, and diuresis, the subcutaneous compartment is significantly thinner. Today's reduced water intake (2 L total) combined with aggressive carb loading will drive water INTO muscle cells via glycogen-bound water (each gram of glycogen binds 3 g water), further drying the subcutaneous space [Source: PMID 15084272].",
+          "scienceWhy": "After 5 days of NO priming, sodium restriction, and diuresis, the subcutaneous compartment is significantly thinner. Today's reduced water intake (2 L total) combined with carb loading will drive water INTO muscle cells via glycogen-bound water (each gram binds 3 g water), further drying the subcutaneous space [PMID 15084272].",
+          "scienceWhyAr": "بعد 5 أيام من تجهيز NO وتقييد الصوديوم والإدرار، أصبح الحيز تحت الجلد أنحف بشكل ملحوظ. تناول الماء المنخفض اليوم (2 لتر إجمالاً) مع شحن الكربوهيدرات سيدفع الماء إلى داخل خلايا العضلات عبر الماء المرتبط بالغليكوجين (كل غرام يربط 3 غ ماء)، مما يجفف الحيز تحت الجلد أكثر [PMID 15084272].",
           "visualImpact": "medium"
         },
         {
-          "time": "6:30 AM",
+          "id": "d6t2",
+          "action": "Take 6 g L-Citrulline Malate + 500 mg Vitamin C. No diuretics today — preserve intravascular volume for the pump.",
+          "actionAr": "تناول 6 غ L-سيترولين مالات + 500 ملغ فيتامين C. بدون مدرات بول اليوم — احفظ الحجم داخل الأوعية للضخ.",
           "category": "supplement",
-          "action": "6 g L-Citrulline Malate + 500 mg Vitamin C. No diuretics today — preserve intravascular volume for the pump.",
-          "scienceWhy": "Diuretics are stopped to ensure plasma volume is adequate to fill dilated vessels during today's pump training. The citrulline continues to maintain peak NO levels. Vitamin C is critical today as increased carbohydrate metabolism generates more reactive oxygen species that could scavenge NO [Source: PMID 20499249] [Source: PMID 12424092].",
+          "scienceWhy": "Diuretics are stopped to ensure plasma volume is adequate to fill dilated vessels during pump training. Citrulline maintains peak NO levels. Vitamin C is critical today as increased carbohydrate metabolism generates more reactive oxygen species that could scavenge NO [PMID 20499249] [PMID 12424092].",
+          "scienceWhyAr": "توقف مدرات البول لضمان كفاية حجم البلازما لملء الأوعية المتوسعة أثناء تدريب الضخ. السيترولين يحافظ على ذروة مستويات NO. فيتامين C حرج اليوم لأن زيادة أيض الكربوهيدرات تولد المزيد من أنواع الأكسجين التفاعلية التي يمكن أن تزيل NO [PMID 20499249] [PMID 12424092].",
           "visualImpact": "medium"
         },
         {
-          "time": "7:00 AM",
-          "category": "meal",
+          "id": "d6t3",
           "action": "Carb Load Meal 1: 300 g cooked sweet potato, 2 whole eggs, 1 tbsp honey, pinch of cinnamon. 250 mL beetroot juice.",
-          "scienceWhy": "Sweet potato provides complex carbohydrates with a moderate glycemic index (63), allowing steady insulin release that activates GLUT4 translocation and glycogen synthase. Each gram of glycogen stored binds approximately 2.7 g of intracellular water, causing muscles to swell and push veins toward the skin surface [Source: PMID 17218556].",
-          "visualImpact": "high"
-        },
-        {
-          "time": "9:30 AM",
+          "actionAr": "وجبة الشحن 1: 300 غ بطاطا حلوة مطبوخة، 2 بيضة كاملة، 1 ملعقة عسل، رشة قرفة. 250 مل عصير شمندر.",
           "category": "meal",
-          "action": "Carb Load Meal 2: Large bowl of white rice (250 g cooked) with grilled chicken, spinach, and garlic. Small banana.",
-          "scienceWhy": "White rice has a higher glycemic index (73) than sweet potato, producing a sharper insulin spike that accelerates glycogen storage. The insulin surge also activates eNOS via the PI3K/Akt pathway, creating an insulin-mediated vasodilation that adds to the citrulline and nitrate-driven NO production [Source: PMID 22248502].",
+          "scienceWhy": "Sweet potato provides complex carbohydrates with moderate glycemic index (63), allowing steady insulin release that activates GLUT4 translocation and glycogen synthase. Each gram of glycogen stored binds approximately 2.7 g of intracellular water, causing muscles to swell and push veins toward the skin [PMID 17218556].",
+          "scienceWhyAr": "البطاطا الحلوة توفر كربوهيدرات معقدة بمؤشر سكري معتدل (63)، مما يسمح بإفراز أنسولين مستقر ينشط نقل GLUT4 وسينثاز الغليكوجين. كل غرام غليكوجين مخزن يربط حوالي 2.7 غ ماء داخل الخلايا، مما يُنفخ العضلات ويدفع العروق نحو البشرة [PMID 17218556].",
           "visualImpact": "high"
         },
         {
-          "time": "11:30 AM",
-          "category": "hydration",
-          "action": "Sip 300 mL water only. Total target: 2 L today — just enough to support metabolic functions.",
-          "scienceWhy": "Restricted water intake while carb loading creates a preferential fluid shift: water follows glycogen INTO the intracellular space (muscle cells) via osmotic gradient, while the extracellular/subcutaneous compartment continues to lose water. This is the key mechanism that makes veins 'pop' during bodybuilding peak week [Source: PMID 15084272].",
-          "visualImpact": "high"
-        },
-        {
-          "time": "1:00 PM",
+          "id": "d6t4",
+          "action": "Carb Load Meal 2: Large bowl of white rice (250 g cooked) with grilled chicken, spinach, and garlic. Small banana. Sip 300 mL water only.",
+          "actionAr": "وجبة الشحن 2: طبق كبير أرز أبيض (250 غ مطبوخ) مع دجاج مشوي وسبانخ وثوم. موزة صغيرة. رشف 300 مل ماء فقط.",
           "category": "meal",
-          "action": "Carb Load Meal 3: Sweet potato and rice bowl (200 g each cooked) with salmon, avocado, and pomegranate seeds.",
-          "scienceWhy": "The third carb meal pushes glycogen stores toward super-compensation — above the pre-depletion baseline by 20–40%. Salmon omega-3s maintain eNOS activity despite the high insulin levels. Pomegranate protects the NO pool from the increased oxidative stress of high carbohydrate metabolism [Source: PMID 16339432] [Source: PMID 17164053].",
+          "scienceWhy": "White rice has a higher glycemic index (73) than sweet potato, producing a sharper insulin spike that accelerates glycogen storage. Insulin also activates eNOS via the PI3K/Akt pathway, creating insulin-mediated vasodilation that adds to citrulline and nitrate-driven NO production [PMID 22248502].",
+          "scienceWhyAr": "الأرز الأبيض له مؤشر سكري أعلى (73) من البطاطا الحلوة، منتجاً ارتفاعاً أنسولينياً أحد يسرع تخزين الغليكوجين. الأنسولين أيضاً ينشط eNOS عبر مسار PI3K/Akt، مما يخلق توسعاً وعائياً بوساطة الأنسولين يضاف إلى إنتاج NO بوساطة السيترولين والنترات [PMID 22248502].",
           "visualImpact": "high"
         },
         {
-          "time": "3:30 PM",
-          "category": "hydration",
-          "action": "Sip 300 mL water. Eat 30 g dark chocolate.",
-          "scienceWhy": "Dark chocolate epicatechin enhances insulin sensitivity via AMPK activation, ensuring the remaining carbohydrate from earlier meals is efficiently stored as glycogen rather than converted to fat. The restricted water further emphasizes the intracellular water shift [Source: PMID 17513403].",
-          "visualImpact": "medium"
+          "id": "d6t5",
+          "action": "Carb Load Meal 3: Sweet potato and rice bowl (200 g each cooked) with salmon, avocado, pomegranate seeds. 30 g dark chocolate. Sip 300 mL water.",
+          "actionAr": "وجبة الشحن 3: طبق بطاطا حلوة وأرز (200 غ لكل منهما مطبوخ) مع سلمون وأفوكادو وبذور رمان. 30 غ شوكولاتة داكنة. رشف 300 مل ماء.",
+          "category": "meal",
+          "scienceWhy": "The third carb meal pushes glycogen stores toward super-compensation — above pre-depletion baseline by 20–40%. Salmon omega-3s maintain eNOS activity despite high insulin. Dark chocolate epicatechin enhances insulin sensitivity via AMPK activation for efficient glycogen storage [PMID 16339432] [PMID 17513403].",
+          "scienceWhyAr": "وجبة الكربوهيدرات الثالثة تدفع مخازن الغليكوجين نحو التعويض الفائق — أعلى من خط الأساس قبل الاستنفاد بـ 20-40%. أوميغا-3 من السلمون تحافظ على نشاط eNOS رغم ارتفاع الأنسولين. إبيكاتيكين الشوكولاتة الداكنة يعزز حساسية الأنسولين عبر تنشيط AMPK لتخزين غليكوجين فعال [PMID 16339432] [PMID 17513403].",
+          "visualImpact": "high"
         },
         {
-          "time": "4:30 PM",
-          "category": "training",
+          "id": "d6t6",
           "action": "Pump Training: 5 × 30 light wrist curls (continuous, no lockout), 4 × 25 reverse curls, 3 × 50 hand gripper squeezes (light resistance), 4 × 15 push-ups (slow tempo). All with 20-sec rest.",
-          "scienceWhy": "High-rep, low-resistance 'pump' training with glycogen-loaded muscles produces maximum sarcoplasmic swelling. The continuous time under tension creates sustained occlusion of venous outflow while arterial inflow continues, literally inflating the forearm musculature against the superficial venous network [Source: PMID 17218556].",
-          "visualImpact": "high"
+          "actionAr": "تدريب الضخ: 5 × 30 ثني معصم خفيف (مستمر، بدون قفل)، 4 × 25 ثني عكسي، 3 × 50 ضغط قابض يد (مقاومة خفيفة)، 4 × 15 ضغط (إيقاع بطيء). الكل بـ 20 ثانية راحة.",
+          "category": "training",
+          "scienceWhy": "High-rep, low-resistance 'pump' training with glycogen-loaded muscles produces maximum sarcoplasmic swelling. Continuous time under tension creates sustained occlusion of venous outflow while arterial inflow continues, literally inflating the forearm musculature against the superficial venous network [PMID 17218556].",
+          "scienceWhyAr": "تدريب 'الضخ' بتكرارات عالية ومقاومة منخفضة مع عضلات محملة بالغليكوجين ينتج أقصى تورم ساركوبلازمي. الزمن المستمر تحت التوتر يخلق انسداداً مستداماً للتدفق الوريدي بينما يستمر التدفق الشرياني، منفخاً عضلات الساعد حرفياً ضد الشبكة الوريدية السطحية [PMID 17218556].",
+          "visualImpact": "high",
+          "exerciseImage": "/exercises/grip-training.svg"
         },
         {
-          "time": "6:00 PM",
+          "id": "d6t7",
+          "action": "10-minute sauna session. Observe vascularity in the heat — preview of tomorrow's peak result.",
+          "actionAr": "جلسة ساونا 10 دقائق. راقب بروز العروق في الحرارة — معاينة لنتيجة ذروة الغد.",
           "category": "recovery",
-          "action": "10-minute sauna session. Observe vascularity in the heat — this is a preview of tomorrow's peak result.",
-          "scienceWhy": "Heat exposure on glycogen-loaded, dehydrated muscles produces the most dramatic vascularity effect of the entire protocol. The combination of thermal vasodilation + muscle swelling + reduced subcutaneous water creates maximum vein-to-skin proximity [Source: PMID 29849142].",
+          "scienceWhy": "Heat exposure on glycogen-loaded, dehydrated muscles produces the most dramatic vascularity effect of the entire protocol. The combination of thermal vasodilation + muscle swelling + reduced subcutaneous water creates maximum vein-to-skin proximity [PMID 29849142].",
+          "scienceWhyAr": "التعرض للحرارة على عضلات محملة بالغليكوجين ومنزوعة الماء ينتج أكثر تأثير بروز عروق دراماتيكي في البروتوكول بأكمله. الجمع بين التوسع الوعائي الحراري + تورم العضلات + تقليل الماء تحت الجلد يخلق أقصى قرب بين العروق والبشرة [PMID 29849142].",
           "visualImpact": "high"
         },
         {
-          "time": "7:00 PM",
+          "id": "d6t8",
+          "action": "Carb Load Meal 4: Final carb meal — 200 g sweet potato with cinnamon, 150 g white rice, lean protein (chicken or fish). Final sips only — 200 mL maximum.",
+          "actionAr": "وجبة الشحن 4: وجبة كربوهيدرات أخيرة — 200 غ بطاطا حلوة بالقرفة، 150 غ أرز أبيض، بروتين خالي الدهن (دجاج أو سمك). رشفات أخيرة فقط — 200 مل كحد أقصى.",
           "category": "meal",
-          "action": "Carb Load Meal 4: Final carb meal — 200 g sweet potato with cinnamon, 150 g white rice, lean protein (chicken or fish). Small handful of walnuts.",
-          "scienceWhy": "This final carb bolus tops off glycogen stores overnight. Cinnamon contains methylhydroxychalcone polymer (MHCP), which potentiates insulin receptor signaling and enhances GLUT4-mediated glucose uptake, maximizing the efficiency of this last glycogen loading window [Source: PMID 17218556].",
+          "scienceWhy": "This final carb bolus tops off glycogen stores overnight. Cinnamon contains MHCP which potentiates insulin receptor signaling and enhances GLUT4-mediated glucose uptake. Minimal evening water allows overnight water redistribution to complete [PMID 17218556] [PMID 15084272].",
+          "scienceWhyAr": "هذه الجرعة الكربوهيدراتية الأخيرة تملأ مخازن الغليكوجين ليلاً. القرفة تحتوي MHCP الذي يعزز إشارات مستقبل الأنسولين ويحسن امتصاص الجلوكوز بوساطة GLUT4. الحد الأدنى من الماء مساءً يسمح بإتمام إعادة توزيع الماء ليلاً [PMID 17218556] [PMID 15084272].",
           "visualImpact": "high"
         },
         {
-          "time": "9:00 PM",
-          "category": "hydration",
-          "action": "Final sips only — 200 mL maximum. Prepare mentally for Peak Day tomorrow.",
-          "scienceWhy": "Minimal evening water intake allows overnight water redistribution to complete. By morning, intracellular (muscle) water will be at its maximum while extracellular (subcutaneous) water will be at its minimum — creating the optimal conditions for peak vascularity [Source: PMID 15084272].",
-          "visualImpact": "medium"
-        },
-        {
-          "time": "10:00 PM",
-          "category": "sleep",
+          "id": "d6t9",
           "action": "Sleep in warm room tonight (21–22 °C) to maintain peripheral vasodilation overnight.",
-          "scienceWhy": "Sleeping slightly warmer than previous nights maintains mild peripheral vasodilation, keeping veins in a dilated state as glycogen super-compensation completes. This prevents overnight vasoconstriction that could make veins appear less prominent upon waking [Source: PMID 29849142].",
+          "actionAr": "نم في غرفة دافئة الليلة (21-22°م) للحفاظ على توسع الأوعية المحيطية ليلاً.",
+          "category": "sleep",
+          "scienceWhy": "Sleeping slightly warmer maintains mild peripheral vasodilation, keeping veins dilated as glycogen super-compensation completes. This prevents overnight vasoconstriction that could make veins appear less prominent upon waking [PMID 29849142].",
+          "scienceWhyAr": "النوم في حرارة أعلى قليلاً يحافظ على توسع أوعية محيطي خفيف، مبقياً العروق متوسعة مع اكتمال التعويض الفائق للغليكوجين. هذا يمنع التضيق الوعائي الليلي الذي قد يجعل العروق أقل بروزاً عند الاستيقاظ [PMID 29849142].",
           "visualImpact": "medium"
         }
       ]
@@ -542,83 +583,103 @@
     {
       "day": 7,
       "title": "Peak Day — Maximum Vascularity",
+      "titleAr": "يوم الذروة — أقصى بروز للعروق",
       "theme": "Peak Day",
-      "schedule": [
+      "themeAr": "يوم الذروة",
+      "dailyGoal": "Achieve peak vascularity through final pump session and heat exposure, then document results",
+      "dailyGoalAr": "تحقيق ذروة بروز العروق من خلال جلسة الضخ الأخيرة والتعرض للحرارة، ثم توثيق النتائج",
+      "tasks": [
         {
-          "time": "6:00 AM",
-          "category": "wake",
+          "id": "d7t1",
           "action": "Wake up. Immediately observe hands — vascularity should be significantly enhanced. Take comparison photos with Day 1 baseline. Sip only 100 mL warm water.",
-          "scienceWhy": "After 6 days of systematic NO enhancement, sodium depletion, diuresis, and glycogen super-compensation, all three vascularity factors are optimized simultaneously: maximum venous diameter (NO), minimum subcutaneous water, and maximum muscle volume. Morning observation in warm conditions reveals the peak result [Source: PMID 20499249] [Source: PMID 15084272].",
+          "actionAr": "استيقظ. راقب يديك فوراً — يجب أن يكون بروز العروق محسناً بشكل ملحوظ. التقط صور مقارنة مع خط أساس اليوم الأول. ارشف 100 مل ماء دافئ فقط.",
+          "category": "wake",
+          "scienceWhy": "After 6 days of systematic NO enhancement, sodium depletion, diuresis, and glycogen super-compensation, all three vascularity factors are optimized simultaneously: maximum venous diameter (NO), minimum subcutaneous water, and maximum muscle volume [PMID 20499249] [PMID 15084272].",
+          "scienceWhyAr": "بعد 6 أيام من تعزيز NO المنهجي، واستنفاد الصوديوم، والإدرار، والتعويض الفائق للغليكوجين، تم تحسين عوامل بروز العروق الثلاثة في وقت واحد: أقصى قطر وريدي (NO)، أدنى ماء تحت الجلد، وأقصى حجم عضلي [PMID 20499249] [PMID 15084272].",
           "visualImpact": "high"
         },
         {
-          "time": "7:00 AM",
+          "id": "d7t2",
+          "action": "Take 6 g L-Citrulline Malate + 500 mg Vitamin C. Small espresso (30 mL).",
+          "actionAr": "تناول 6 غ L-سيترولين مالات + 500 ملغ فيتامين C. إسبريسو صغير (30 مل).",
           "category": "supplement",
-          "action": "6 g L-Citrulline Malate + 500 mg Vitamin C. Small espresso (30 mL).",
-          "scienceWhy": "Caffeine acts as an adenosine receptor antagonist that increases sympathetic nervous system activity, but at low doses (50–100 mg) it paradoxically enhances exercise-induced vasodilation by increasing calcium sensitivity in the endothelium. The espresso provides this dose without significant fluid volume [Source: PMID 20499249].",
+          "scienceWhy": "Caffeine at low doses (50–100 mg) paradoxically enhances exercise-induced vasodilation by increasing calcium sensitivity in the endothelium. The espresso provides this dose without significant fluid volume [PMID 20499249].",
+          "scienceWhyAr": "الكافيين بجرعات منخفضة (50-100 ملغ) يعزز بشكل متناقض التوسع الوعائي الناتج عن التمرين عبر زيادة حساسية الكالسيوم في البطانة. الإسبريسو يوفر هذه الجرعة دون حجم سوائل كبير [PMID 20499249].",
           "visualImpact": "medium"
         },
         {
-          "time": "7:30 AM",
-          "category": "meal",
+          "id": "d7t3",
           "action": "Light breakfast: 2 eggs, small sweet potato (100 g), handful of spinach. Minimal water — sips only.",
-          "scienceWhy": "A small carb-containing meal tops off any glycogen that was metabolized during sleep without adding significant water. The eggs provide phosphatidylcholine which supports cell membrane fluidity in endothelial cells, maintaining NO signaling efficiency [Source: PMID 22248502].",
-          "visualImpact": "medium"
-        },
-        {
-          "time": "9:00 AM",
-          "category": "training",
-          "action": "Pre-Peak Pump Session: 3 × 40 light wrist curls (continuous), 3 × 30 reverse curls, 3 × 50 rapid hand gripper squeezes, 2 × 30 push-ups. 15-sec rest between sets. Focus on maintaining the pump.",
-          "scienceWhy": "This is the final pump session designed to maximally engorge the forearm musculature with blood. With glycogen-loaded muscles, the sarcoplasmic volume is at its peak, and exercise-induced blood flow creates maximum venous distension. The 'pump' effect will persist for 30–60 minutes post-exercise [Source: PMID 17218556].",
-          "visualImpact": "high"
-        },
-        {
-          "time": "10:00 AM",
-          "category": "recovery",
-          "action": "15-minute sauna or hot bath (40 °C). Keep hands submerged in warm water or exposed to heat. This is the peak vascularity window.",
-          "scienceWhy": "Combining exercise-induced reactive hyperemia with passive thermal vasodilation produces the maximum possible venous dilation. Surface temperature of the hand dorsum reaches 35–37 °C, at which point venous compliance is maximized and veins are at their most visually prominent state [Source: PMID 29849142].",
-          "visualImpact": "high"
-        },
-        {
-          "time": "10:30 AM",
-          "category": "recovery",
-          "action": "PEAK WINDOW: Take photos/video of vascularity results. Compare with Day 1 baseline. Hands should show dramatically enhanced dorsal venous network visibility.",
-          "scienceWhy": "The convergence of all protocol factors — elevated NO bioavailability (6 days of citrulline + nitrate), reduced subcutaneous water (sodium restriction + diuresis + water cut), and maximized muscle volume (glycogen super-compensation + pump training) — creates a window of peak vascularity lasting approximately 60–90 minutes [Source: PMID 20499249] [Source: PMID 15084272] [Source: PMID 17218556].",
-          "visualImpact": "high"
-        },
-        {
-          "time": "12:00 PM",
+          "actionAr": "فطور خفيف: 2 بيضة، بطاطا حلوة صغيرة (100 غ)، حفنة سبانخ. ماء ضئيل — رشفات فقط.",
           "category": "meal",
-          "action": "Post-Peak Meal: Resume normal hydration gradually. Balanced meal of salmon, sweet potato (200 g), mixed greens, and avocado. Begin drinking water normally.",
-          "scienceWhy": "Gradual rehydration prevents rapid fluid shifts that could cause headaches or dizziness. The balanced meal provides carbohydrates to maintain glycogen stores, protein for recovery, and healthy fats. Resume normal sodium intake slowly over the next 24–48 hours [Source: PMID 15084272].",
+          "scienceWhy": "A small carb-containing meal tops off any glycogen metabolized during sleep without adding significant water. Eggs provide phosphatidylcholine which supports cell membrane fluidity in endothelial cells, maintaining NO signaling efficiency [PMID 22248502].",
+          "scienceWhyAr": "وجبة صغيرة تحتوي كربوهيدرات تعوض أي غليكوجين استُقلب أثناء النوم دون إضافة ماء كبير. البيض يوفر الفوسفاتيديل كولين الذي يدعم مرونة أغشية الخلايا البطانية، محافظاً على كفاءة إشارات NO [PMID 22248502].",
           "visualImpact": "medium"
         },
         {
-          "time": "2:00 PM",
+          "id": "d7t4",
+          "action": "Pre-Peak Pump Session: 3 × 40 light wrist curls (continuous), 3 × 30 reverse curls, 3 × 50 rapid hand gripper squeezes, 2 × 30 push-ups. 15-sec rest between sets.",
+          "actionAr": "جلسة ضخ ما قبل الذروة: 3 × 40 ثني معصم خفيف (مستمر)، 3 × 30 ثني عكسي، 3 × 50 ضغط قابض يد سريع، 2 × 30 ضغط. 15 ثانية راحة بين المجموعات.",
+          "category": "training",
+          "scienceWhy": "This final pump session maximally engorges forearm musculature with blood. With glycogen-loaded muscles, sarcoplasmic volume is at its peak, and exercise-induced blood flow creates maximum venous distension. The 'pump' persists for 30–60 minutes post-exercise [PMID 17218556].",
+          "scienceWhyAr": "جلسة الضخ الأخيرة تملأ عضلات الساعد بالدم لأقصى حد. مع عضلات محملة بالغليكوجين، الحجم الساركوبلازمي في ذروته، وتدفق الدم الناتج عن التمرين يخلق أقصى تمدد وريدي. 'الضخ' يستمر 30-60 دقيقة بعد التمرين [PMID 17218556].",
+          "visualImpact": "high",
+          "exerciseImage": "/exercises/grip-training.svg"
+        },
+        {
+          "id": "d7t5",
+          "action": "15-minute sauna or hot bath (40 °C). Keep hands submerged in warm water or exposed to heat. This is the peak vascularity window.",
+          "actionAr": "ساونا أو حمام ساخن 15 دقيقة (40°م). أبقِ اليدين مغمورتين في ماء دافئ أو معرضتين للحرارة. هذه نافذة ذروة بروز العروق.",
+          "category": "recovery",
+          "scienceWhy": "Combining exercise-induced reactive hyperemia with passive thermal vasodilation produces maximum venous dilation. Hand dorsum surface temperature reaches 35–37 °C, at which point venous compliance is maximized and veins are at their most visually prominent state [PMID 29849142].",
+          "scienceWhyAr": "الجمع بين فرط الدم التفاعلي الناتج عن التمرين والتوسع الوعائي الحراري السلبي ينتج أقصى توسع وريدي. درجة حرارة سطح ظهر اليد تصل 35-37°م، حيث يبلغ الامتثال الوريدي أقصاه وتكون العروق في أكثر حالاتها بروزاً [PMID 29849142].",
+          "visualImpact": "high"
+        },
+        {
+          "id": "d7t6",
+          "action": "PEAK WINDOW: Take photos/video of vascularity results. Compare with Day 1 baseline. Hands should show dramatically enhanced dorsal venous network visibility.",
+          "actionAr": "نافذة الذروة: التقط صور/فيديو لنتائج بروز العروق. قارن مع خط أساس اليوم الأول. يجب أن تظهر اليدان تحسناً دراماتيكياً في ظهور الشبكة الوريدية الظهرية.",
+          "category": "recovery",
+          "scienceWhy": "The convergence of all protocol factors — elevated NO bioavailability (6 days of citrulline + nitrate), reduced subcutaneous water (sodium restriction + diuresis + water cut), and maximized muscle volume (glycogen super-compensation + pump training) — creates a window of peak vascularity lasting approximately 60–90 minutes [PMID 20499249] [PMID 15084272] [PMID 17218556].",
+          "scienceWhyAr": "تقارب جميع عوامل البروتوكول — ارتفاع التوافر الحيوي لـ NO (6 أيام سيترولين + نترات)، وتقليل الماء تحت الجلد (تقييد صوديوم + إدرار + قطع ماء)، وتعظيم حجم العضلات (تعويض فائق للغليكوجين + تدريب ضخ) — يخلق نافذة ذروة بروز عروق تستمر حوالي 60-90 دقيقة [PMID 20499249] [PMID 15084272] [PMID 17218556].",
+          "visualImpact": "high",
+          "tips": "Use good lighting and warm conditions for best photo results",
+          "tipsAr": "استخدم إضاءة جيدة وظروف دافئة لأفضل نتائج التصوير"
+        },
+        {
+          "id": "d7t7",
+          "action": "Post-Peak Meal: Resume normal hydration gradually. Balanced meal of salmon, sweet potato (200 g), mixed greens, and avocado. Begin drinking water normally.",
+          "actionAr": "وجبة ما بعد الذروة: استأنف الترطيب الطبيعي تدريجياً. وجبة متوازنة من السلمون والبطاطا الحلوة (200 غ) والخضروات المشكلة والأفوكادو. ابدأ بشرب الماء بشكل طبيعي.",
+          "category": "meal",
+          "scienceWhy": "Gradual rehydration prevents rapid fluid shifts that could cause headaches or dizziness. The balanced meal provides carbohydrates to maintain glycogen, protein for recovery, and healthy fats. Resume normal sodium intake slowly over 24–48 hours [PMID 15084272].",
+          "scienceWhyAr": "الترطيب التدريجي يمنع التحولات السريعة للسوائل التي قد تسبب صداعاً أو دوخة. الوجبة المتوازنة توفر كربوهيدرات للحفاظ على الغليكوجين، وبروتين للتعافي، ودهون صحية. استأنف تناول الصوديوم الطبيعي ببطء خلال 24-48 ساعة [PMID 15084272].",
+          "visualImpact": "medium"
+        },
+        {
+          "id": "d7t8",
+          "action": "Resume normal water intake (500 mL with electrolytes). Optional: Light forearm pump session if maintaining vascularity for an event.",
+          "actionAr": "استأنف تناول الماء الطبيعي (500 مل مع إلكتروليتات). اختياري: جلسة ضخ ساعد خفيفة إذا كنت تحافظ على بروز العروق لمناسبة.",
           "category": "hydration",
-          "action": "Drink 500 mL water with electrolytes (sodium, potassium, magnesium). Continue rehydrating.",
-          "scienceWhy": "Reintroducing sodium gradually with electrolyte balance prevents aldosterone rebound, which could cause rapid water retention and loss of the vascularity achieved. Magnesium and potassium help maintain vascular tone during the transition [Source: PMID 25430610].",
+          "scienceWhy": "Reintroducing sodium gradually with electrolyte balance prevents aldosterone rebound which could cause rapid water retention. An optional pump session can reactivate reactive hyperemia if needed for evening events [PMID 25430610] [PMID 17218556].",
+          "scienceWhyAr": "إعادة إدخال الصوديوم تدريجياً مع توازن الإلكتروليتات يمنع ارتداد الألدوستيرون الذي قد يسبب احتباس ماء سريع. جلسة ضخ اختيارية يمكن أن تعيد تنشيط فرط الدم التفاعلي إذا لزم لمناسبات مسائية [PMID 25430610] [PMID 17218556].",
           "visualImpact": "low"
         },
         {
-          "time": "4:00 PM",
-          "category": "training",
-          "action": "Optional: Light forearm pump session if maintaining vascularity for an event. Otherwise, rest and enjoy results.",
-          "scienceWhy": "An optional late-afternoon pump session can reactivate the reactive hyperemia effect if needed for evening events. The glycogen stores should still be elevated, allowing another pump window. However, recovery is now the priority [Source: PMID 17218556].",
-          "visualImpact": "medium"
-        },
-        {
-          "time": "7:00 PM",
+          "id": "d7t9",
+          "action": "Dinner: Normal balanced meal. Resume regular eating. Continue beetroot juice and dark chocolate as daily habits for maintained vascularity. Protocol complete.",
+          "actionAr": "العشاء: وجبة متوازنة طبيعية. استأنف الأكل المعتاد. استمر بعصير الشمندر والشوكولاتة الداكنة كعادات يومية للحفاظ على بروز العروق. اكتمل البروتوكول.",
           "category": "meal",
-          "action": "Dinner: Normal balanced meal. Resume regular eating. Celebrate results. Continue beetroot juice and dark chocolate as daily habits for maintained vascularity.",
-          "scienceWhy": "The acute protocol is complete, but long-term vascularity can be maintained by continuing daily NO-boosting habits: 250 mL beetroot juice, 6 g citrulline, regular forearm training, and 30 g dark chocolate. These maintain elevated baseline NO levels that keep veins more visible permanently [Source: PMID 22248502] [Source: PMID 17513403].",
+          "scienceWhy": "The acute protocol is complete, but long-term vascularity can be maintained by continuing daily NO-boosting habits: 250 mL beetroot juice, 6 g citrulline, regular forearm training, and 30 g dark chocolate. These maintain elevated baseline NO levels permanently [PMID 22248502] [PMID 17513403].",
+          "scienceWhyAr": "اكتمل البروتوكول الحاد، لكن يمكن الحفاظ على بروز العروق طويل الأمد بالاستمرار في عادات تعزيز NO اليومية: 250 مل عصير شمندر، 6 غ سيترولين، تدريب ساعد منتظم، و30 غ شوكولاتة داكنة. هذه تحافظ على مستويات NO الأساسية المرتفعة بشكل دائم [PMID 22248502] [PMID 17513403].",
           "visualImpact": "medium"
         },
         {
-          "time": "10:00 PM",
+          "id": "d7t10",
+          "action": "Resume normal sleep schedule and room temperature. Vascular adaptations from heat acclimation will persist for 7–14 days.",
+          "actionAr": "استأنف جدول النوم الطبيعي ودرجة حرارة الغرفة. تكيفات الأوعية من التأقلم الحراري ستستمر 7-14 يوماً.",
           "category": "sleep",
-          "action": "Resume normal sleep schedule and room temperature. Protocol complete.",
-          "scienceWhy": "Returning to normal sleep conditions allows homeostatic recovery. The vascular adaptations from heat acclimation (increased plasma volume, improved endothelial function) will persist for 7–14 days, meaning some vascularity improvement is retained beyond the peak day [Source: PMID 29849142] [Source: PMID 10484056].",
+          "scienceWhy": "Returning to normal sleep conditions allows homeostatic recovery. The vascular adaptations from heat acclimation (increased plasma volume, improved endothelial function) persist for 7–14 days, meaning some vascularity improvement is retained beyond peak day [PMID 29849142] [PMID 10484056].",
+          "scienceWhyAr": "العودة لظروف النوم الطبيعية تسمح بالتعافي التوازني. تكيفات الأوعية من التأقلم الحراري (زيادة حجم البلازما، تحسن وظيفة البطانة) تستمر 7-14 يوماً، مما يعني الحفاظ على بعض تحسن بروز العروق بعد يوم الذروة [PMID 29849142] [PMID 10484056].",
           "visualImpact": "low"
         }
       ]
