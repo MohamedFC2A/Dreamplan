@@ -1,11 +1,22 @@
+export type TaskCategory =
+  | "wake"
+  | "meal"
+  | "supplement"
+  | "training"
+  | "recovery"
+  | "hydration"
+  | "sleep";
+
+export type VisualImpact = "low" | "medium" | "high";
+
 export interface TaskPoint {
   id: string;
   action: string;
   actionAr: string;
-  category: "wake" | "meal" | "supplement" | "training" | "recovery" | "hydration" | "sleep";
+  category: TaskCategory;
   scienceWhy: string;
   scienceWhyAr: string;
-  visualImpact: "low" | "medium" | "high";
+  visualImpact: VisualImpact;
   tips?: string;
   tipsAr?: string;
   exerciseImage?: string;
@@ -22,6 +33,24 @@ export interface DayPlan {
   tasks: TaskPoint[];
 }
 
+export interface WeekTask extends Omit<TaskPoint, "exerciseImage"> {
+  frequency: string;
+  frequencyAr: string;
+}
+
+export interface WeekPlan {
+  week: number;
+  title: string;
+  titleAr: string;
+  weeklyGoal: string;
+  weeklyGoalAr: string;
+  tasks: WeekTask[];
+  checkpoints: string[];
+  checkpointsAr: string[];
+  safetyNotes: string[];
+  safetyNotesAr: string[];
+}
+
 export interface ProgressPoint {
   day: number;
   impact: number;
@@ -29,6 +58,9 @@ export interface ProgressPoint {
 
 export interface Protocol {
   id: string;
+  planMode?: "daily" | "weekly";
+  durationDays?: number;
+  durationWeeks?: number;
   title: string;
   titleAr: string;
   subtitle: string;
@@ -37,8 +69,16 @@ export interface Protocol {
   focusAr: string[];
   scienceOverview: string;
   scienceOverviewAr: string;
+  profileFitSummary?: string;
+  profileFitSummaryAr?: string;
+  priorityActions?: string[];
+  priorityActionsAr?: string[];
+  safetyNotesGlobal?: string[];
+  safetyNotesGlobalAr?: string[];
+  qaSummary?: string[];
   progressData: ProgressPoint[];
-  days: DayPlan[];
+  days?: DayPlan[];
+  weeks?: WeekPlan[];
 }
 
 import handVeinsData from "@/data/hand-veins.json";

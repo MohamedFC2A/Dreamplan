@@ -7,3 +7,9 @@ out/
 .env.development.local
 *.tsbuildinfo
 next-env.d.ts
+.config/
+.local/
+dev.log
+dev.err
+start.out.log
+start.err.log

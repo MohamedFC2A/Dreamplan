@@ -1,14 +1,54 @@
 "use client";
 
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useLanguage } from "@/lib/LanguageContext";
 import { t } from "@/lib/i18n";
-import { PenLine, Bot, TrendingUp, Droplets, Skull, Zap, Crown, ArrowDown, ChevronDown, ArrowLeft, Sparkles, X, Calendar, Search, BookOpen, ListChecks, FileText, CheckCircle, Trash2 } from "lucide-react";
+import {
+  PenLine,
+  Bot,
+  TrendingUp,
+  Droplets,
+  Skull,
+  Zap,
+  Crown,
+  ArrowDown,
+  ChevronDown,
+  ArrowLeft,
+  Sparkles,
+  Search,
+  BookOpen,
+  ListChecks,
+  FileText,
+  CheckCircle,
+  Trash2,
+  SlidersHorizontal,
+  Clock3,
+  PencilLine,
+  Save,
+  ClipboardList,
+} from "lucide-react";
 import Navbar from "@/components/Navbar";
+import {
+  PrivateProtocolEntry,
+  createPrivateProtocolEntry,
+  deletePrivateProtocol,
+  getPrivateProtocols,
+  migrateLegacySavedProtocols,
+  openPrivateProtocolEntry,
+  renamePrivateProtocol,
+  upsertPrivateProtocol,
+  clearPrivateProtocols,
+} from "@/lib/protocol-storage";
+import { PlannerAnswer, PlannerQuestion, UserProfile } from "@/lib/planner-types";
+import {
+  createDefaultProfile,
+  readStoredProfile,
+  validateProfile,
+} from "@/lib/profile-storage";
 
 const EXAMPLES_AR = [
   "أريد عروق بارزة في يدي وساعدي",
@@ -29,6 +69,97 @@ const EXAMPLES_EN = [
   "Bulk up my arms significantly",
   "Sharp jawline and sculpted face",
 ];
+
+type FlowState = "goal_input" | "duration_confirm" | "plan_qa" | "generating";
+type SortMode = "newest" | "oldest";
+type GoalType = "quick_visual" | "fat_loss" | "muscle_gain" | "posture_definition" | "general";
+
+interface DurationSuggestion {
+  suggestedDays: number;
+  minDays: number;
+  maxDays: number;
+  planModeHint?: "daily" | "weekly";
+  rationale: string;
+  question: string;
+  goalType: GoalType;
+}
+
+interface PlannerAskResponse {
+  status: "ask";
+  nextQuestion: PlannerQuestion;
+  progress: number;
+  reasoningHint: string;
+}
+
+interface PlannerReadyResponse {
+  status: "ready";
+  progress: number;
+  planBrief: string;
+  keyConstraints: string[];
+  profileFitSummary: string;
+}
+
+function normalizeDurationSuggestion(payload: any): DurationSuggestion | null {
+  if (!payload || typeof payload !== "object") return null;
+
+  const goalType =
+    payload.goalType === "quick_visual" ||
+    payload.goalType === "fat_loss" ||
+    payload.goalType === "muscle_gain" ||
+    payload.goalType === "posture_definition" ||
+    payload.goalType === "general"
+      ? payload.goalType
+      : null;
+
+  const suggestedDays = Number.isFinite(payload.suggestedDays) ? Math.round(payload.suggestedDays) : NaN;
+  const minDays = Number.isFinite(payload.minDays) ? Math.round(payload.minDays) : NaN;
+  const maxDays = Number.isFinite(payload.maxDays) ? Math.round(payload.maxDays) : NaN;
+
+  if (!goalType || !Number.isFinite(suggestedDays) || !Number.isFinite(minDays) || !Number.isFinite(maxDays)) {
+    return null;
+  }
+  if (minDays > maxDays || minDays < 7 || maxDays > 90) return null;
+
+  return {
+    goalType,
+    suggestedDays: Math.max(minDays, Math.min(maxDays, suggestedDays)),
+    minDays,
+    maxDays,
+    planModeHint: payload.planModeHint === "weekly" ? "weekly" : "daily",
+    rationale: typeof payload.rationale === "string" ? payload.rationale : "",
+    question: typeof payload.question === "string" ? payload.question : "",
+  };
+}
+
+function mapGenerateError(locale: "ar" | "en", code?: string, fallback?: string): string {
+  if (code === "AI_TIMEOUT") return t(locale, "errorTimeout");
+  if (code === "AI_PROVIDER_ERROR") return t(locale, "errorProvider");
+  if (code === "AI_MALFORMED_RESPONSE") return t(locale, "errorMalformed");
+  if (code === "INVALID_DURATION") return t(locale, "errorInvalidDuration");
+  if (code === "MISSING_PROFILE") return t(locale, "profileValidationSummary");
+  return fallback || t(locale, "errorDesc");
+}
+
+function mapPlannerError(locale: "ar" | "en", code?: string, fallback?: string): string {
+  if (code === "MISSING_PROFILE") return t(locale, "profileRequiredBeforePlan");
+  if (code === "INVALID_DURATION") return t(locale, "errorInvalidDuration");
+  if (code === "MISSING_QUERY") return locale === "ar" ? "اكتب الهدف أولًا." : "Please enter your goal first.";
+  return fallback || t(locale, "errorDesc");
+}
+
+function formatDateByLocale(iso: string, locale: "ar" | "en"): string {
+  try {
+    return new Date(iso).toLocaleDateString(locale === "ar" ? "ar-EG" : "en-US", {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+    });
+  } catch {
+    return iso;
+  }
+}
+
+const PLANNER_QA_KEY = "planner-qa.v1";
 
 
 function useTypewriter(
@@ -263,86 +394,381 @@ export default function Home() {
   const [query, setQuery] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
-  const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const [planModeEnabled, setPlanModeEnabled] = useState(true);
+  const [flowState, setFlowState] = useState<FlowState>("goal_input");
+  const [durationSuggestion, setDurationSuggestion] = useState<DurationSuggestion | null>(null);
+  const [selectedDuration, setSelectedDuration] = useState<number>(14);
+  const [profile, setProfile] = useState<UserProfile>(createDefaultProfile(""));
+  const [qaHistory, setQaHistory] = useState<PlannerAnswer[]>([]);
+  const [plannerQuestion, setPlannerQuestion] = useState<PlannerQuestion | null>(null);
+  const [plannerProgress, setPlannerProgress] = useState(0);
+  const [plannerReasoningHint, setPlannerReasoningHint] = useState("");
+  const [plannerReady, setPlannerReady] = useState<PlannerReadyResponse | null>(null);
+  const [plannerAnswerValue, setPlannerAnswerValue] = useState("");
 
-  const [showPlanning, setShowPlanning] = useState(false);
-  const [savedProtocols, setSavedProtocols] = useState<any[]>([]);
+  const [privateProtocols, setPrivateProtocols] = useState<PrivateProtocolEntry[]>([]);
+  const [privateSearch, setPrivateSearch] = useState("");
+  const [privateSort, setPrivateSort] = useState<SortMode>("newest");
+  const [renameId, setRenameId] = useState<string | null>(null);
+  const [renameValue, setRenameValue] = useState("");
+
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   const examples = locale === "ar" ? EXAMPLES_AR : EXAMPLES_EN;
 
   const typewriter = useTypewriter(examples);
 
   useEffect(() => {
-    try {
-      const saved = JSON.parse(localStorage.getItem("saved-protocols") || "[]");
-      setSavedProtocols(saved);
-    } catch {
-      setSavedProtocols([]);
-    }
+    const migrated = migrateLegacySavedProtocols();
+    setPrivateProtocols(migrated.length > 0 ? migrated : getPrivateProtocols());
   }, []);
 
-  const loadSavedProtocol = (entry: any) => {
-    sessionStorage.setItem("ai-protocol", JSON.stringify(entry.protocol));
+  useEffect(() => {
+    try {
+      const stored = readStoredProfile();
+      if (stored) setProfile(stored);
+      const rawQa = localStorage.getItem(PLANNER_QA_KEY);
+      if (rawQa) {
+        const parsed = JSON.parse(rawQa);
+        if (Array.isArray(parsed?.qaHistory)) {
+          setQaHistory(
+            parsed.qaHistory
+              .map((entry: any) => ({
+                questionId: typeof entry?.questionId === "string" ? entry.questionId : "",
+                value: typeof entry?.value === "string" ? entry.value : "",
+                label: typeof entry?.label === "string" ? entry.label : undefined,
+              }))
+              .filter((entry: PlannerAnswer) => entry.questionId && entry.value)
+          );
+        }
+      }
+    } catch {}
+  }, []);
+
+  useEffect(() => {
+    const syncProfile = () => {
+      const latest = readStoredProfile();
+      if (latest) setProfile(latest);
+    };
+    window.addEventListener("focus", syncProfile);
+    return () => window.removeEventListener("focus", syncProfile);
+  }, []);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem(
+        PLANNER_QA_KEY,
+        JSON.stringify({ query: query.trim(), durationDays: selectedDuration, qaHistory })
+      );
+    } catch {}
+  }, [qaHistory, selectedDuration, query]);
+
+  const filteredPrivateProtocols = useMemo(() => {
+    const needle = privateSearch.trim().toLowerCase();
+    const list = [...privateProtocols];
+
+    const filtered = needle
+      ? list.filter((entry) => {
+          const fields = [
+            entry.customName || "",
+            entry.title || "",
+            entry.titleAr || "",
+            entry.subtitle || "",
+            entry.subtitleAr || "",
+          ]
+            .join(" ")
+            .toLowerCase();
+          return fields.includes(needle);
+        })
+      : list;
+
+    filtered.sort((a, b) => {
+      const aTime = new Date(a.updatedAt || a.createdAt).getTime();
+      const bTime = new Date(b.updatedAt || b.createdAt).getTime();
+      return privateSort === "newest" ? bTime - aTime : aTime - bTime;
+    });
+
+    return filtered;
+  }, [privateProtocols, privateSearch, privateSort]);
+  const profileValidationErrors = useMemo(() => validateProfile(profile, locale), [profile, locale]);
+  const canStartPlanQuestions = profileValidationErrors.length === 0;
+
+  const loadPrivateProtocol = (entry: PrivateProtocolEntry) => {
+    openPrivateProtocolEntry(entry);
     router.push("/protocol/ai-generated");
   };
 
-  const deleteSavedProtocol = (id: string) => {
-    const updated = savedProtocols.filter(p => p.id !== id);
-    setSavedProtocols(updated);
-    localStorage.setItem("saved-protocols", JSON.stringify(updated));
+  const removePrivateProtocol = (id: string) => {
+    const updated = deletePrivateProtocol(id);
+    setPrivateProtocols(updated);
+    if (renameId === id) {
+      setRenameId(null);
+      setRenameValue("");
+    }
   };
 
-  const callApi = async (finalQuery: string) => {
+  const clearAllPrivate = () => {
+    if (!window.confirm(t(locale, "privateDeleteAllConfirm"))) return;
+    const updated = clearPrivateProtocols();
+    setPrivateProtocols(updated);
+    setRenameId(null);
+    setRenameValue("");
+  };
+
+  const saveCustomProtocolName = (id: string) => {
+    const updated = renamePrivateProtocol(id, renameValue);
+    setPrivateProtocols(updated);
+    setRenameId(null);
+    setRenameValue("");
+  };
+
+  const requestDurationSuggestion = async (finalQuery: string) => {
     setIsLoading(true);
-    setShowPlanning(true);
     setError("");
+    setPlannerQuestion(null);
+    setPlannerReady(null);
+    setPlannerReasoningHint("");
+    setPlannerProgress(0);
+    setQaHistory([]);
 
     try {
-      const res = await fetch("/api/generate", {
+      const res = await fetch("/api/suggest-duration", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ query: finalQuery.trim(), locale }),
       });
 
       if (!res.ok) {
-        throw new Error("Failed to generate protocol");
+        let serverError = "";
+        try {
+          const payload = await res.json();
+          serverError = payload?.error || "";
+        } catch {}
+        throw new Error(serverError || t(locale, "errorSuggestDuration"));
       }
 
-      const protocol = await res.json();
-      if (protocol.error) throw new Error(protocol.error);
+      const payload = await res.json();
+      const suggestion = normalizeDurationSuggestion(payload);
+      if (!suggestion) {
+        throw new Error(t(locale, "errorSuggestDuration"));
+      }
 
-      sessionStorage.setItem("ai-protocol", JSON.stringify(protocol));
-
-      const saved = JSON.parse(localStorage.getItem("saved-protocols") || "[]");
-      const newEntry = {
-        id: Date.now().toString(),
-        title: protocol.title,
-        titleAr: protocol.titleAr,
-        subtitle: protocol.subtitle,
-        subtitleAr: protocol.subtitleAr,
-        daysCount: protocol.days?.length || 0,
-        totalDays: protocol.progressData?.length || protocol.days?.length || 0,
-        createdAt: new Date().toISOString(),
-        protocol: protocol,
-      };
-      saved.unshift(newEntry);
-      if (saved.length > 10) saved.pop();
-      localStorage.setItem("saved-protocols", JSON.stringify(saved));
-      setSavedProtocols(saved);
-
-      router.push("/protocol/ai-generated");
+      setDurationSuggestion(suggestion);
+      setSelectedDuration(suggestion.suggestedDays);
+      const latest = readStoredProfile();
+      if (latest) setProfile(latest);
+      setFlowState("duration_confirm");
     } catch (err: any) {
-      setShowPlanning(false);
-      setError(err.message || t(locale, "errorDesc"));
+      setError(err?.message || t(locale, "errorSuggestDuration"));
     } finally {
       setIsLoading(false);
     }
   };
 
+  const runGeneration = async (durationDays: number, generationProfile: UserProfile, answers: PlannerAnswer[]) => {
+    const clampedDuration = durationSuggestion
+      ? Math.max(durationSuggestion.minDays, Math.min(durationSuggestion.maxDays, durationDays))
+      : durationDays;
+
+    setIsLoading(true);
+    setError("");
+    setFlowState("generating");
+
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 70000);
+
+    try {
+      const res = await fetch("/api/generate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        signal: controller.signal,
+        body: JSON.stringify({
+          query: query.trim(),
+          locale,
+          durationDays: clampedDuration,
+          planModeEnabled,
+          profile: generationProfile,
+          qaHistory: answers,
+        }),
+      });
+
+      const payload = await res.json().catch(() => ({}));
+      if (!res.ok || payload?.error) {
+        const message = mapGenerateError(locale, payload?.code, payload?.error);
+        throw new Error(message);
+      }
+
+      const protocol = payload;
+      const entry = createPrivateProtocolEntry(protocol, {
+        profileSnapshot: generationProfile,
+        qaHistory: answers,
+        qaSummary: plannerReady?.keyConstraints || [],
+      });
+      const updated = upsertPrivateProtocol(entry);
+      setPrivateProtocols(updated);
+      localStorage.removeItem(PLANNER_QA_KEY);
+
+      openPrivateProtocolEntry(entry);
+      router.push("/protocol/ai-generated");
+    } catch (err: any) {
+      const isAbort = err?.name === "AbortError";
+      setFlowState(planModeEnabled ? "plan_qa" : "goal_input");
+      setError(isAbort ? t(locale, "errorTimeout") : err?.message || t(locale, "errorDesc"));
+    } finally {
+      clearTimeout(timeout);
+      setIsLoading(false);
+    }
+  };
+
+  const requestPlannerStep = async (history: PlannerAnswer[], profileSnapshot?: UserProfile) => {
+    if (!durationSuggestion) return;
+    const activeProfile = profileSnapshot || profile;
+    setIsLoading(true);
+    setError("");
+    try {
+      const res = await fetch("/api/planner/questions", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          query: query.trim(),
+          locale,
+          durationDays: selectedDuration,
+          profile: activeProfile,
+          qaHistory: history,
+        }),
+      });
+      const payload = await res.json().catch(() => ({}));
+      if (!res.ok || payload?.error) {
+        throw new Error(mapPlannerError(locale, payload?.code, payload?.error));
+      }
+      if ((payload as PlannerAskResponse).status === "ask") {
+        const ask = payload as PlannerAskResponse;
+        setPlannerQuestion(ask.nextQuestion);
+        setPlannerReasoningHint(ask.reasoningHint || "");
+        setPlannerProgress(ask.progress || 0);
+        setPlannerReady(null);
+        setPlannerAnswerValue("");
+        setFlowState("plan_qa");
+      } else {
+        const ready = payload as PlannerReadyResponse;
+        setPlannerQuestion(null);
+        setPlannerReady(ready);
+        setPlannerProgress(ready.progress || 100);
+        setPlannerReasoningHint("");
+        setFlowState("plan_qa");
+      }
+    } catch (err: any) {
+      setError(err?.message || t(locale, "errorDesc"));
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleStartPlannerQuestions = async () => {
+    const latestProfile = readStoredProfile();
+    if (!latestProfile) {
+      setError(t(locale, "profileRequiredBeforePlan"));
+      return;
+    }
+    const errors = validateProfile(latestProfile, locale);
+    if (errors.length > 0) {
+      setError(errors[0] || t(locale, "profileValidationSummary"));
+      return;
+    }
+    setQaHistory([]);
+    setPlannerQuestion(null);
+    setPlannerReady(null);
+    setPlannerReasoningHint("");
+    setPlannerProgress(0);
+    setPlannerAnswerValue("");
+    setProfile(latestProfile);
+    setFlowState("plan_qa");
+    await requestPlannerStep([], latestProfile);
+  };
+
+  const handlePlannerAnswerSubmit = async () => {
+    if (!plannerQuestion) return;
+    if (plannerQuestion.required && !plannerAnswerValue.trim()) {
+      setError(locale === "ar" ? "هذا السؤال مطلوب." : "This question is required.");
+      return;
+    }
+    const selectedOption = plannerQuestion.options?.find((item) => item.value === plannerAnswerValue);
+    const answer: PlannerAnswer = {
+      questionId: plannerQuestion.id,
+      value: plannerAnswerValue.trim() || "skipped",
+      label: selectedOption ? (locale === "ar" ? selectedOption.labelAr : selectedOption.label) : undefined,
+    };
+    const nextHistory = [...qaHistory, answer];
+    setQaHistory(nextHistory);
+    await requestPlannerStep(nextHistory, profile);
+  };
+
+  const handleFastGenerate = async () => {
+    if (!query.trim()) return;
+    const suggestion = await (async () => {
+      setIsLoading(true);
+      setError("");
+      try {
+        const res = await fetch("/api/suggest-duration", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ query: query.trim(), locale }),
+        });
+        const payload = await res.json().catch(() => ({}));
+        if (!res.ok) throw new Error(payload?.error || t(locale, "errorSuggestDuration"));
+        const normalized = normalizeDurationSuggestion(payload);
+        if (!normalized) throw new Error(t(locale, "errorSuggestDuration"));
+        setDurationSuggestion(normalized);
+        setSelectedDuration(normalized.suggestedDays);
+        return normalized;
+      } finally {
+        setIsLoading(false);
+      }
+    })();
+    if (!suggestion) return;
+    const quickProfile = createDefaultProfile(query.trim());
+    await runGeneration(suggestion.suggestedDays, quickProfile, []);
+  };
+
+  const generateProtocol = async () => {
+    if (!durationSuggestion) return;
+    await runGeneration(selectedDuration, profile, qaHistory);
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!query.trim()) return;
-    await callApi(query);
+    if (planModeEnabled) {
+      await requestDurationSuggestion(query);
+    } else {
+      await handleFastGenerate();
+    }
+  };
+
+  const handleDurationInput = (value: number) => {
+    if (!durationSuggestion || !Number.isFinite(value)) return;
+    const clamped = Math.max(durationSuggestion.minDays, Math.min(durationSuggestion.maxDays, Math.round(value)));
+    setSelectedDuration(clamped);
+  };
+
+  const handleBackToGoal = () => {
+    setFlowState("goal_input");
+    setError("");
+  };
+
+  const handleTogglePlanMode = () => {
+    setPlanModeEnabled((prev) => !prev);
+    setFlowState("goal_input");
+    setDurationSuggestion(null);
+    setSelectedDuration(14);
+    const latest = readStoredProfile();
+    if (latest) setProfile(latest);
+    setPlannerQuestion(null);
+    setPlannerReady(null);
+    setPlannerReasoningHint("");
+    setPlannerProgress(0);
+    setQaHistory([]);
+    setError("");
   };
 
   const handleFocus = () => {
@@ -447,6 +873,12 @@ export default function Home() {
                   <Crown className="w-4 h-4" />
                   {locale === "ar" ? "عرض الخطط" : "View Plans"}
                 </Link>
+                <Link
+                  href="/profile"
+                  className="inline-flex items-center gap-2 border border-dark-border text-gray-300 hover:text-gold-400 hover:border-gold-500/40 px-6 py-3 rounded-xl transition-all uppercase text-sm active:scale-[0.98]"
+                >
+                  {locale === "ar" ? "الملف الشخصي" : "Profile"}
+                </Link>
               </div>
             </div>
           </div>
@@ -470,8 +902,156 @@ export default function Home() {
           className="animated-border-wrapper mb-16"
         >
           <div className="animated-border-inner p-8 md:p-10">
-            {showPlanning ? (
+            {/* Plan Mode toggle lives inside the "Design Your Protocol" block, near the main CTA. */}
+
+            {flowState === "generating" ? (
               <InlinePlanningProgress locale={locale} userGoal={query} />
+            ) : flowState === "plan_qa" && durationSuggestion ? (
+              <div className="max-w-2xl mx-auto space-y-4">
+                <div className="flex items-center justify-between">
+                  <h3 className="font-heading text-lg text-white">{t(locale, "aiQuestionsTitle")}</h3>
+                  <span className="text-xs text-gold-400">{plannerProgress}%</span>
+                </div>
+                {plannerQuestion ? (
+                  <div className="space-y-3">
+                    <p className="text-sm text-gray-200">
+                      {locale === "ar" ? plannerQuestion.questionAr : plannerQuestion.question}
+                    </p>
+                    {plannerQuestion.options && plannerQuestion.options.length > 0 ? (
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                        {plannerQuestion.options.map((option) => (
+                          <button
+                            type="button"
+                            key={option.value}
+                            onClick={() => setPlannerAnswerValue(option.value)}
+                            className={`text-start px-3 py-2 rounded-lg border text-sm ${
+                              plannerAnswerValue === option.value
+                                ? "border-gold-500/60 bg-gold-500/10 text-gold-300"
+                                : "border-dark-border text-gray-300"
+                            }`}
+                          >
+                            {locale === "ar" ? option.labelAr : option.label}
+                          </button>
+                        ))}
+                      </div>
+                    ) : (
+                      <textarea
+                        rows={2}
+                        value={plannerAnswerValue}
+                        onChange={(event) => setPlannerAnswerValue(event.target.value)}
+                        className="w-full bg-black border border-dark-border rounded-lg px-3 py-2 text-gray-100"
+                        placeholder={locale === "ar" ? "اكتب إجابتك..." : "Write your answer..."}
+                      />
+                    )}
+                    {plannerReasoningHint ? <p className="text-xs text-gray-500">{plannerReasoningHint}</p> : null}
+                    <button
+                      type="button"
+                      onClick={handlePlannerAnswerSubmit}
+                      className="inline-flex items-center justify-center gap-2 bg-gold-500 hover:bg-gold-600 text-black font-heading font-bold tracking-wider px-6 py-3 rounded-xl uppercase text-xs"
+                    >
+                      {locale === "ar" ? "التالي" : "Next"}
+                    </button>
+                  </div>
+                ) : plannerReady ? (
+                  <div className="space-y-3">
+                    <p className="text-sm text-gray-200">{plannerReady.planBrief}</p>
+                    <div className="p-3 rounded-lg border border-dark-border bg-black/30">
+                      <p className="text-xs text-gray-400 mb-2">{t(locale, "profileFitPanel")}</p>
+                      <p className="text-sm text-gray-300">{plannerReady.profileFitSummary}</p>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={generateProtocol}
+                      className="inline-flex items-center justify-center gap-2 bg-gold-500 hover:bg-gold-600 text-black font-heading font-bold tracking-wider px-6 py-3 rounded-xl uppercase text-xs"
+                    >
+                      <Sparkles className="w-4 h-4" />
+                      {t(locale, "confirmGenerate")}
+                    </button>
+                  </div>
+                ) : null}
+              </div>
+            ) : flowState === "duration_confirm" && durationSuggestion ? (
+              <div className="max-w-2xl mx-auto">
+                <div className="flex items-center justify-center gap-3 mb-2">
+                  <div className="w-8 h-8 rounded-full bg-gold-500/10 flex items-center justify-center">
+                    <SlidersHorizontal className="w-4 h-4 text-gold-400" />
+                  </div>
+                  <h2 className="font-heading text-2xl md:text-3xl font-bold text-white text-center tracking-wide">
+                    {t(locale, "durationConfirmTitle")}
+                  </h2>
+                </div>
+                <div className="p-4 rounded-xl border border-dark-border bg-black/30 mb-3">
+                  <p className="text-sm text-gray-200 mb-1">{durationSuggestion.question}</p>
+                  <p className="text-xs text-gray-500">{durationSuggestion.rationale}</p>
+                </div>
+                <div className="mb-2">
+                  <label className="text-xs text-gray-400">{t(locale, "selectedDurationLabel")}</label>
+                  <p className="text-gold-400 font-heading text-base mt-1">
+                    {selectedDuration} {locale === "ar" ? "يوم" : "days"}
+                  </p>
+                </div>
+                <div className="mb-4">
+                  <input
+                    type="range"
+                    min={durationSuggestion.minDays}
+                    max={durationSuggestion.maxDays}
+                    value={selectedDuration}
+                    onChange={(event) => handleDurationInput(Number(event.target.value))}
+                    className="w-full accent-gold-500"
+                  />
+                </div>
+                {planModeEnabled ? (
+                  <div className="p-4 rounded-xl border border-dark-border bg-black/30 mb-4">
+                    <p className="text-xs uppercase tracking-widest text-gray-400 mb-2">{t(locale, "aiQuestionsTitle")}</p>
+                    <p className="text-sm text-gray-300">
+                      {locale === "ar"
+                        ? "بعد تأكيد المدة، سيبدأ AI مرحلة أسئلة مخصصة (3-6 أسئلة) ثم يبني الخطة النهائية."
+                        : "After confirming duration, AI will run a dedicated 3-6 question phase, then build your final plan."}
+                    </p>
+                    <p className={`text-xs mt-2 ${canStartPlanQuestions ? "text-green-400" : "text-amber-400"}`}>
+                      {canStartPlanQuestions ? t(locale, "profileReady") : t(locale, "profileRequiredBeforePlan")}
+                    </p>
+                  </div>
+                ) : null}
+                <div className="flex flex-wrap gap-3">
+                  {planModeEnabled ? (
+                    <>
+                      <button
+                        type="button"
+                        onClick={handleStartPlannerQuestions}
+                        disabled={isLoading || !canStartPlanQuestions}
+                        className="inline-flex items-center justify-center gap-2 bg-gold-500 hover:bg-gold-600 disabled:opacity-50 disabled:cursor-not-allowed text-black font-heading font-bold tracking-wider px-8 py-4 rounded-xl uppercase text-sm"
+                      >
+                        <ClipboardList className="w-4 h-4" />
+                        {t(locale, "startAiQuestions")}
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => router.push("/profile?returnTo=/")}
+                        className="inline-flex items-center justify-center gap-2 border border-gold-500/40 text-gold-300 hover:bg-gold-500/10 font-heading font-bold tracking-wider px-6 py-4 rounded-xl uppercase text-xs"
+                      >
+                        {t(locale, "openProfilePage")}
+                      </button>
+                    </>
+                  ) : (
+                    <button
+                      type="button"
+                      onClick={generateProtocol}
+                      className="inline-flex items-center justify-center gap-2 bg-gold-500 hover:bg-gold-600 text-black font-heading font-bold tracking-wider px-8 py-4 rounded-xl uppercase text-sm"
+                    >
+                      <Sparkles className="w-4 h-4" />
+                      {t(locale, "confirmGenerate")}
+                    </button>
+                  )}
+                  <button
+                    type="button"
+                    onClick={handleBackToGoal}
+                    className="inline-flex items-center justify-center gap-2 border border-dark-border text-gray-300 px-6 py-4 rounded-xl text-sm uppercase"
+                  >
+                    {t(locale, "editGoal")}
+                  </button>
+                </div>
+              </div>
             ) : (
               <>
                 <div className="flex items-center justify-center gap-3 mb-2">
@@ -482,10 +1062,7 @@ export default function Home() {
                     {t(locale, "designProtocol")}
                   </h2>
                 </div>
-                <p className="text-gray-500 text-center mb-8 text-sm">
-                  {t(locale, "designProtocolDesc")}
-                </p>
-
+                <p className="text-gray-500 text-center mb-8 text-sm">{t(locale, "designProtocolDesc")}</p>
                 <form onSubmit={handleSubmit} className="max-w-2xl mx-auto">
                   <div className="flex flex-col gap-3">
                     <div className="relative">
@@ -511,40 +1088,61 @@ export default function Home() {
                         </div>
                       )}
                     </div>
-
-                    <button
-                      type="submit"
-                      disabled={isLoading || !query.trim()}
-                      className="inline-flex items-center justify-center gap-2 bg-gold-500 hover:bg-gold-600 disabled:opacity-50 disabled:cursor-not-allowed text-black font-heading font-bold tracking-wider px-8 py-4 rounded-xl transition-all uppercase text-sm"
-                    >
-                      {isLoading ? (
-                        <span className="flex items-center justify-center gap-2">
-                          <svg className="animate-spin w-5 h-5" viewBox="0 0 24 24" fill="none">
-                            <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="3" className="opacity-25" />
-                            <path d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" fill="currentColor" className="opacity-75" />
-                          </svg>
-                          {t(locale, "loading")}
+                    <div className="flex flex-col sm:flex-row sm:items-center gap-3">
+                      <button
+                        type="button"
+                        onClick={handleTogglePlanMode}
+                        aria-pressed={planModeEnabled}
+                        title="Plan mode PRO"
+                        className={`inline-flex items-center justify-center rounded-full px-4 py-2 text-[11px] font-heading font-bold tracking-wider uppercase border transition-colors active:scale-[0.99] ${
+                          planModeEnabled
+                            ? "text-black bg-gold-500 border-gold-500 hover:bg-gold-600"
+                            : "text-gray-300 bg-black/40 border-dark-border hover:border-gold-500/30 hover:text-gray-200"
+                        }`}
+                      >
+                        <span className="inline-flex items-center gap-2">
+                          {planModeEnabled ? (
+                            <ClipboardList className="w-3.5 h-3.5" />
+                          ) : (
+                            <Zap className="w-3.5 h-3.5" />
+                          )}
+                          <span>{planModeEnabled ? "PLAN PRO" : "FAST"}</span>
                         </span>
-                      ) : (
-                        <>
-                          <Sparkles className="w-4 h-4" />
-                          {t(locale, "generateBtn")}
-                        </>
-                      )}
-                    </button>
+                      </button>
+                      <button
+                        type="submit"
+                        disabled={isLoading || !query.trim()}
+                        className="flex-1 inline-flex items-center justify-center gap-2 bg-gold-500 hover:bg-gold-600 disabled:opacity-50 disabled:cursor-not-allowed text-black font-heading font-bold tracking-wider px-8 py-4 rounded-xl transition-all uppercase text-sm"
+                      >
+                        {isLoading ? (
+                          <span className="flex items-center justify-center gap-2">
+                            <svg className="animate-spin w-5 h-5" viewBox="0 0 24 24" fill="none">
+                              <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="3" className="opacity-25" />
+                              <path d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" fill="currentColor" className="opacity-75" />
+                            </svg>
+                            {planModeEnabled ? t(locale, "analyzeGoalBtn") : t(locale, "fastGenerateBtn")}
+                          </span>
+                        ) : (
+                          <>
+                            <Sparkles className="w-4 h-4" />
+                            {planModeEnabled ? t(locale, "analyzeGoalBtn") : t(locale, "fastGenerateBtn")}
+                          </>
+                        )}
+                      </button>
+                    </div>
                   </div>
-
-                  {error && (
-                    <motion.div
-                      initial={{ opacity: 0, y: -10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      className="mt-4 p-3 rounded-lg bg-red-500/10 border border-red-500/30 text-red-400 text-sm"
-                    >
-                      {error}
-                    </motion.div>
-                  )}
                 </form>
               </>
+            )}
+
+            {error && (
+              <motion.div
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="mt-4 p-3 rounded-lg bg-red-500/10 border border-red-500/30 text-red-400 text-sm"
+              >
+                {error}
+              </motion.div>
             )}
           </div>
         </motion.div>
@@ -582,62 +1180,166 @@ export default function Home() {
           </div>
         </motion.div>
 
-        {savedProtocols.length > 0 && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="mb-16"
-          >
-            <h2 className="font-heading text-2xl md:text-3xl font-bold text-gray-200 text-center mb-8 tracking-wide">
-              {locale === "ar" ? "بروتوكولاتي" : "My Protocols"}
+        <motion.div
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+          className="mb-16"
+        >
+          <div className="text-center mb-6">
+            <h2 className="font-heading text-2xl md:text-3xl font-bold text-gray-200 tracking-wide">
+              {t(locale, "privateProtocolsTitle")}
             </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {savedProtocols.map((entry) => (
-                <motion.div
-                  key={entry.id}
-                  initial={{ opacity: 0, y: 10 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  className="bg-dark-card border border-dark-border rounded-xl p-5 hover:border-gold-500/30 transition-all group"
+            <p className="text-gray-500 text-sm mt-2">{t(locale, "privateLocalOnly")}</p>
+          </div>
+
+          <div className="bg-dark-card border border-dark-border rounded-xl p-4 mb-5">
+            <div className="flex flex-col md:flex-row md:items-center gap-3">
+              <div className="relative flex-1">
+                <Search className="w-4 h-4 text-gray-600 absolute ltr:left-3 rtl:right-3 top-1/2 -translate-y-1/2" />
+                <input
+                  value={privateSearch}
+                  onChange={(event) => setPrivateSearch(event.target.value)}
+                  placeholder={t(locale, "privateSearchPlaceholder")}
+                  className="w-full bg-black border border-dark-border rounded-lg ltr:pl-9 ltr:pr-3 rtl:pr-9 rtl:pl-3 py-2.5 text-sm text-gray-100 focus:outline-none focus:border-gold-500"
+                />
+              </div>
+
+              <div className="flex items-center gap-2">
+                <Clock3 className="w-4 h-4 text-gray-600" />
+                <select
+                  value={privateSort}
+                  onChange={(event) => setPrivateSort(event.target.value as SortMode)}
+                  className="bg-black border border-dark-border rounded-lg px-3 py-2.5 text-sm text-gray-200 focus:outline-none focus:border-gold-500"
                 >
-                  <div className="flex items-start justify-between gap-3 mb-3">
-                    <div className="flex-1 min-w-0">
-                      <h3 className="font-heading text-sm font-bold text-gray-100 truncate">
-                        {locale === "ar" ? entry.titleAr : entry.title}
-                      </h3>
-                      <p className="text-gray-500 text-xs mt-1 truncate">
-                        {locale === "ar" ? entry.subtitleAr : entry.subtitle}
-                      </p>
-                    </div>
-                    <button
-                      onClick={(e) => { e.stopPropagation(); deleteSavedProtocol(entry.id); }}
-                      className="text-gray-700 hover:text-red-400 transition-colors shrink-0"
-                    >
-                      <Trash2 className="w-3.5 h-3.5" />
-                    </button>
-                  </div>
-                  <div className="flex items-center gap-3 mb-4">
-                    <span className="text-[10px] px-2 py-0.5 rounded-full bg-gold-500/10 text-gold-400 border border-gold-500/20">
-                      {entry.totalDays} {locale === "ar" ? "يوم" : "days"}
-                    </span>
-                    <span className="text-[10px] px-2 py-0.5 rounded-full bg-gold-500/5 text-gray-500 border border-dark-border">
-                      {entry.daysCount} {locale === "ar" ? "يوم مفصل" : "detailed days"}
-                    </span>
-                  </div>
-                  <button
-                    onClick={() => loadSavedProtocol(entry)}
-                    className="w-full flex items-center justify-center gap-2 bg-gold-500/10 hover:bg-gold-500/20 text-gold-400 font-heading font-bold tracking-wider px-4 py-2.5 rounded-lg transition-all text-xs uppercase"
-                  >
-                    <ArrowLeft className="w-3 h-3 rtl:rotate-180" />
-                    {locale === "ar" ? "عرض البروتوكول" : "View Protocol"}
-                  </button>
-                </motion.div>
-              ))}
+                  <option value="newest">{t(locale, "privateSortNewest")}</option>
+                  <option value="oldest">{t(locale, "privateSortOldest")}</option>
+                </select>
+              </div>
+
+              {privateProtocols.length > 0 && (
+                <button
+                  type="button"
+                  onClick={clearAllPrivate}
+                  className="inline-flex items-center justify-center gap-2 border border-red-500/40 text-red-400 hover:bg-red-500/10 px-3 py-2.5 rounded-lg text-xs font-bold uppercase tracking-wider"
+                >
+                  <Trash2 className="w-3.5 h-3.5" />
+                  {t(locale, "privateDeleteAll")}
+                </button>
+              )}
             </div>
-          </motion.div>
-        )}
+          </div>
+
+          {filteredPrivateProtocols.length === 0 ? (
+            <div className="rounded-xl border border-dark-border bg-dark-card p-6 text-center text-gray-500 text-sm">
+              {t(locale, "privateNoProtocols")}
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {filteredPrivateProtocols.map((entry) => {
+                const displayTitle = entry.customName || (locale === "ar" ? entry.titleAr : entry.title);
+                const subtitle = locale === "ar" ? entry.subtitleAr : entry.subtitle;
+                const isRenaming = renameId === entry.id;
+
+                return (
+                  <motion.div
+                    key={entry.id}
+                    initial={{ opacity: 0, y: 10 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    className="bg-dark-card border border-dark-border rounded-xl p-5 hover:border-gold-500/30 transition-all"
+                  >
+                    <div className="mb-3">
+                      {isRenaming ? (
+                        <div className="space-y-2">
+                          <input
+                            value={renameValue}
+                            onChange={(event) => setRenameValue(event.target.value)}
+                            placeholder={t(locale, "privateNamePlaceholder")}
+                            className="w-full bg-black border border-dark-border rounded-lg px-3 py-2 text-sm text-gray-100 focus:outline-none focus:border-gold-500"
+                          />
+                          <div className="flex items-center gap-2">
+                            <button
+                              type="button"
+                              onClick={() => saveCustomProtocolName(entry.id)}
+                              className="inline-flex items-center gap-1 text-xs px-2.5 py-1.5 rounded-lg bg-gold-500/15 text-gold-400 border border-gold-500/30"
+                            >
+                              <Save className="w-3 h-3" />
+                              {t(locale, "privateSaveName")}
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => {
+                                setRenameId(null);
+                                setRenameValue("");
+                              }}
+                              className="text-xs px-2.5 py-1.5 rounded-lg border border-dark-border text-gray-400 hover:text-gray-300"
+                            >
+                              {t(locale, "privateCancelRename")}
+                            </button>
+                          </div>
+                        </div>
+                      ) : (
+                        <>
+                          <h3 className="font-heading text-sm font-bold text-gray-100 truncate">{displayTitle}</h3>
+                          <p className="text-gray-500 text-xs mt-1 line-clamp-2 min-h-[2rem]">{subtitle}</p>
+                        </>
+                      )}
+                    </div>
+
+                    <div className="flex flex-wrap items-center gap-2 mb-3">
+                      <span className="text-[10px] px-2 py-0.5 rounded-full bg-gold-500/10 text-gold-400 border border-gold-500/20">
+                        {t(locale, "privateTotalDays")}: {entry.totalDays} {locale === "ar" ? "يوم" : "days"}
+                      </span>
+                      <span className="text-[10px] px-2 py-0.5 rounded-full bg-gold-500/5 text-gray-500 border border-dark-border">
+                        {t(locale, "privateDetailedDays")}: {entry.detailedDays}
+                      </span>
+                    </div>
+
+                    <p className="text-[11px] text-gray-500 mb-4">
+                      {t(locale, "privateCreatedAt")}: {formatDateByLocale(entry.createdAt, locale)}
+                    </p>
+
+                    <div className="flex items-center gap-2">
+                      <button
+                        type="button"
+                        onClick={() => loadPrivateProtocol(entry)}
+                        className="flex-1 flex items-center justify-center gap-2 bg-gold-500/10 hover:bg-gold-500/20 text-gold-400 font-heading font-bold tracking-wider px-4 py-2.5 rounded-lg transition-all text-xs uppercase"
+                      >
+                        <ArrowLeft className="w-3 h-3 rtl:rotate-180" />
+                        {t(locale, "privateOpenProtocol")}
+                      </button>
+
+                      {!isRenaming && (
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setRenameId(entry.id);
+                            setRenameValue(entry.customName || "");
+                          }}
+                          className="inline-flex items-center justify-center w-9 h-9 rounded-lg border border-dark-border text-gray-400 hover:text-gold-400 hover:border-gold-500/30"
+                          title={t(locale, "privateRename")}
+                        >
+                          <PencilLine className="w-4 h-4" />
+                        </button>
+                      )}
+
+                      <button
+                        type="button"
+                        onClick={() => removePrivateProtocol(entry.id)}
+                        className="inline-flex items-center justify-center w-9 h-9 rounded-lg border border-dark-border text-gray-500 hover:text-red-400 hover:border-red-500/30"
+                        title={t(locale, "privateDelete")}
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                    </div>
+                  </motion.div>
+                );
+              })}
+            </div>
+          )}
+        </motion.div>
 
         <motion.div
           initial={{ opacity: 0 }}

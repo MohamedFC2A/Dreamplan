@@ -11,6 +11,7 @@ export default function Navbar() {
   const links = [
     { href: "/", label: locale === "ar" ? "الرئيسية" : "Home" },
     { href: "/cr7-fba", label: "CR7 FBA" },
+    { href: "/profile", label: locale === "ar" ? "الملف الشخصي" : "Profile" },
     { href: "/plans", label: locale === "ar" ? "الاشتراكات" : "Plans" },
   ];
 

@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
 import { Protocol } from "@/lib/protocols";
 import ProtocolDashboard from "@/components/ProtocolDashboard";
 import { useLanguage } from "@/lib/LanguageContext";
@@ -9,12 +8,17 @@ import { t } from "@/lib/i18n";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { XCircle } from "lucide-react";
+import {
+  findPrivateProtocolById,
+  getLastOpenedPrivateProtocolId,
+  getPrivateProtocols,
+  openPrivateProtocolEntry,
+} from "@/lib/protocol-storage";
 
 export default function AiProtocolLoader() {
   const [protocol, setProtocol] = useState<Protocol | null>(null);
   const [error, setError] = useState(false);
   const { locale } = useLanguage();
-  const router = useRouter();
 
   useEffect(() => {
     try {
@@ -22,9 +26,20 @@ export default function AiProtocolLoader() {
       if (stored) {
         const parsed = JSON.parse(stored);
         setProtocol(parsed);
-      } else {
-        setError(true);
+        return;
       }
+
+      const lastOpenedId = getLastOpenedPrivateProtocolId();
+      const fallbackEntry =
+        (lastOpenedId ? findPrivateProtocolById(lastOpenedId) : null) || getPrivateProtocols()[0] || null;
+
+      if (fallbackEntry?.protocol) {
+        openPrivateProtocolEntry(fallbackEntry);
+        setProtocol(fallbackEntry.protocol);
+        return;
+      }
+
+      setError(true);
     } catch {
       setError(true);
     }
