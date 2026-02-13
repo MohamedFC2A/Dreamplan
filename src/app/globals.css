@@ -5,10 +5,10 @@
 @tailwind utilities;
 
 :root {
-  --dark-bg: #0a0a0f;
-  --dark-card: #12121a;
-  --dark-border: #1e1e2e;
-  --dark-accent: #00f0ff;
+  --dark-bg: #000000;
+  --dark-card: #0a0a0a;
+  --dark-border: #1a1a1a;
+  --dark-accent: #D4AF37;
   --text-primary: #f1f5f9;
   --text-secondary: #94a3b8;
 }
@@ -18,7 +18,7 @@ html {
 }
 
 body {
-  background-color: #0a0a0f;
+  background-color: #000000;
   color: #f1f5f9;
   font-family: 'Inter', sans-serif;
 }
@@ -34,7 +34,7 @@ body {
 
 * {
   scrollbar-width: thin;
-  scrollbar-color: #1e1e2e #0a0a0f;
+  scrollbar-color: #1a1a1a #000000;
 }
 
 *::-webkit-scrollbar {
@@ -42,48 +42,10 @@ body {
 }
 
 *::-webkit-scrollbar-track {
-  background: #0a0a0f;
+  background: #000000;
 }
 
 *::-webkit-scrollbar-thumb {
-  background-color: #1e1e2e;
+  background-color: #1a1a1a;
   border-radius: 3px;
-}
-
-@layer utilities {
-  .text-glow {
-    text-shadow: 0 0 10px rgba(0, 240, 255, 0.5), 0 0 20px rgba(0, 240, 255, 0.3), 0 0 40px rgba(0, 240, 255, 0.1);
-  }
-
-  .text-glow-sm {
-    text-shadow: 0 0 5px rgba(0, 240, 255, 0.4), 0 0 10px rgba(0, 240, 255, 0.2);
-  }
-
-  .box-glow {
-    box-shadow: 0 0 15px rgba(0, 240, 255, 0.15), 0 0 30px rgba(0, 240, 255, 0.05);
-  }
-
-  .box-glow-strong {
-    box-shadow: 0 0 20px rgba(0, 240, 255, 0.25), 0 0 40px rgba(0, 240, 255, 0.1);
-  }
-}
-
-@keyframes pulse-glow {
-  0%, 100% { box-shadow: 0 0 15px rgba(0, 240, 255, 0.15); }
-  50% { box-shadow: 0 0 25px rgba(0, 240, 255, 0.3); }
-}
-
-.animate-pulse-glow {
-  animation: pulse-glow 2s ease-in-out infinite;
-}
-
-@keyframes shimmer {
-  0% { background-position: -200% 0; }
-  100% { background-position: 200% 0; }
-}
-
-.animate-shimmer {
-  background: linear-gradient(90deg, transparent 0%, rgba(0, 240, 255, 0.05) 50%, transparent 100%);
-  background-size: 200% 100%;
-  animation: shimmer 2s ease-in-out infinite;
 }

@@ -86,7 +86,7 @@ export default function ExercisePopover({ exerciseName, exerciseNameAr, tips, ti
       <button
         type="button"
         onClick={() => setIsOpen(!isOpen)}
-        className="text-[10px] px-2 py-0.5 rounded border border-emerald-500/30 text-emerald-400 bg-emerald-500/10 hover:bg-emerald-500/20 transition-colors cursor-pointer"
+        className="text-[10px] px-2 py-0.5 rounded border border-gold-500/30 text-gold-400 bg-gold-500/10 hover:bg-gold-500/20 transition-colors cursor-pointer"
       >
         {t(locale, "viewExercise")} 💪
       </button>
@@ -99,9 +99,9 @@ export default function ExercisePopover({ exerciseName, exerciseNameAr, tips, ti
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: -8, scale: 0.95 }}
               transition={{ duration: 0.2 }}
-              className="absolute z-50 w-72 p-4 rounded-xl bg-dark-card border border-emerald-500/30 shadow-2xl ltr:left-0 rtl:right-0 top-8"
+              className="absolute z-50 w-72 p-4 rounded-xl bg-dark-card border border-gold-500/30 shadow-xl shadow-black/30 ltr:left-0 rtl:right-0 top-8"
             >
-              <h4 className="font-heading text-sm font-bold text-emerald-400 mb-3 tracking-wide">
+              <h4 className="font-heading text-sm font-bold text-gold-400 mb-3 tracking-wide">
                 {locale === "ar" ? exerciseNameAr : exerciseName}
               </h4>
 
@@ -109,7 +109,7 @@ export default function ExercisePopover({ exerciseName, exerciseNameAr, tips, ti
                 <ol className="space-y-2 mb-3">
                   {steps.map((step, i) => (
                     <li key={i} className="flex gap-2 text-xs text-gray-300">
-                      <span className="shrink-0 w-5 h-5 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-[10px] font-bold">
+                      <span className="shrink-0 w-5 h-5 rounded-full bg-gold-500/20 text-gold-400 flex items-center justify-center text-[10px] font-bold">
                         {i + 1}
                       </span>
                       <span className="leading-relaxed">{step}</span>

@@ -50,9 +50,6 @@ export default function Home() {
       <LanguageToggle />
 
       <section className="flex-1 flex flex-col items-center justify-center px-4 py-20 relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-b from-cyber-500/5 via-transparent to-transparent pointer-events-none" />
-        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-cyber-500/5 rounded-full blur-3xl pointer-events-none" />
-
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
@@ -63,17 +60,17 @@ export default function Home() {
             initial={{ scale: 0.9, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             transition={{ delay: 0.1, duration: 0.5 }}
-            className="mb-6 inline-flex items-center gap-2 px-4 py-2 rounded-full bg-cyber-500/10 border border-cyber-500/20"
+            className="mb-6 inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gold-500/10 border border-gold-500/20"
           >
-            <span className="w-2 h-2 rounded-full bg-cyber-500 animate-pulse" />
-            <span className="text-xs text-cyber-400 font-bold tracking-wider uppercase">
+            <span className="w-2 h-2 rounded-full bg-gold-500 animate-pulse" />
+            <span className="text-xs text-gold-400 font-bold tracking-wider uppercase">
               {t(locale, "aiPowered")}
             </span>
           </motion.div>
 
           {locale === "ar" ? (
             <>
-              <h1 className="font-heading text-5xl md:text-7xl lg:text-8xl font-bold text-glow text-cyber-500 tracking-wider mb-2">
+              <h1 className="font-heading text-5xl md:text-7xl lg:text-8xl font-bold text-gold-500 tracking-wider mb-2">
                 ذروة الرجولة
               </h1>
               <p className="font-heading text-lg md:text-xl text-gray-500 tracking-wide mb-2">
@@ -81,7 +78,7 @@ export default function Home() {
               </p>
             </>
           ) : (
-            <h1 className="font-heading text-5xl md:text-7xl lg:text-8xl font-bold text-glow text-cyber-500 tracking-wider mb-4">
+            <h1 className="font-heading text-5xl md:text-7xl lg:text-8xl font-bold text-gold-500 tracking-wider mb-4">
               MASCULINE PEAK
             </h1>
           )}
@@ -118,14 +115,14 @@ export default function Home() {
                   onChange={(e) => setQuery(e.target.value)}
                   placeholder={t(locale, "searchPlaceholder")}
                   rows={3}
-                  className="w-full bg-dark-card border border-dark-border rounded-xl px-5 py-4 text-gray-100 placeholder-gray-600 focus:outline-none focus:border-cyber-500 focus:ring-1 focus:ring-cyber-500 transition-colors resize-none text-base"
+                  className="w-full bg-dark-card border border-dark-border rounded-xl px-5 py-4 text-gray-100 placeholder-gray-600 focus:outline-none focus:border-gold-500 focus:ring-1 focus:ring-gold-500 transition-colors resize-none text-base"
                   disabled={isLoading}
                 />
               </div>
               <button
                 type="submit"
                 disabled={isLoading || !query.trim()}
-                className="bg-cyber-500 hover:bg-cyber-600 disabled:opacity-50 disabled:cursor-not-allowed text-dark-bg font-heading font-bold tracking-wider px-8 py-4 rounded-xl transition-all uppercase text-sm animate-pulse-glow"
+                className="bg-gold-500 hover:bg-gold-600 disabled:opacity-50 disabled:cursor-not-allowed text-black font-heading font-bold tracking-wider px-8 py-4 rounded-xl transition-all uppercase text-sm"
               >
                 {isLoading ? (
                   <span className="flex items-center justify-center gap-2">
@@ -179,7 +176,7 @@ export default function Home() {
                 className="bg-dark-card border border-dark-border rounded-xl p-6 text-center"
               >
                 <div className="text-4xl mb-4">{step.icon}</div>
-                <span className="text-cyber-500 font-heading text-sm font-bold">{step.num}</span>
+                <span className="text-gold-500 font-heading text-sm font-bold">{step.num}</span>
                 <h3 className="font-heading text-lg font-bold text-gray-100 mt-1 mb-2">{step.title}</h3>
                 <p className="text-gray-500 text-sm leading-relaxed">{step.desc}</p>
               </motion.div>
@@ -200,7 +197,7 @@ export default function Home() {
             <Link href="/protocol/hand-veins" className="group">
               <motion.div
                 whileHover={{ scale: 1.02 }}
-                className="bg-dark-card border border-dark-border rounded-xl p-6 hover:border-cyber-500 transition-all duration-300 group-hover:box-glow h-full"
+                className="bg-dark-card border border-dark-border rounded-xl p-6 hover:border-gold-500/50 transition-all duration-300 h-full"
               >
                 <div className="flex items-start gap-4">
                   <span className="text-4xl">🩸</span>
@@ -213,7 +210,7 @@ export default function Home() {
                     </p>
                     <div className="flex flex-wrap gap-2">
                       {[t(locale, "vasodilation"), t(locale, "noBoost"), t(locale, "forearmPump")].map((tag) => (
-                        <span key={tag} className="text-xs px-2.5 py-1 rounded-full bg-cyber-500/10 text-cyber-400 border border-cyber-500/20">
+                        <span key={tag} className="text-xs px-2.5 py-1 rounded-full bg-gold-500/10 text-gold-400 border border-gold-500/20">
                           {tag}
                         </span>
                       ))}
@@ -226,7 +223,7 @@ export default function Home() {
             <Link href="/protocol/ronaldo-neck" className="group">
               <motion.div
                 whileHover={{ scale: 1.02 }}
-                className="bg-dark-card border border-dark-border rounded-xl p-6 hover:border-cyber-500 transition-all duration-300 group-hover:box-glow h-full"
+                className="bg-dark-card border border-dark-border rounded-xl p-6 hover:border-gold-500/50 transition-all duration-300 h-full"
               >
                 <div className="flex items-start gap-4">
                   <span className="text-4xl">🗿</span>
@@ -239,7 +236,7 @@ export default function Home() {
                     </p>
                     <div className="flex flex-wrap gap-2">
                       {[t(locale, "scmGrowth"), t(locale, "postureFix"), t(locale, "jawline")].map((tag) => (
-                        <span key={tag} className="text-xs px-2.5 py-1 rounded-full bg-cyber-500/10 text-cyber-400 border border-cyber-500/20">
+                        <span key={tag} className="text-xs px-2.5 py-1 rounded-full bg-gold-500/10 text-gold-400 border border-gold-500/20">
                           {tag}
                         </span>
                       ))}

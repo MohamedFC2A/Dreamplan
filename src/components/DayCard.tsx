@@ -75,20 +75,20 @@ export default function DayCard({
         className="w-full flex items-center gap-4 p-5 text-start hover:bg-dark-border/20 transition-colors"
         aria-expanded={expanded}
       >
-        <span className="font-heading text-3xl font-bold text-cyber-500 shrink-0 w-12 text-center">
+        <span className="font-heading text-3xl font-bold text-gold-500 shrink-0 w-12 text-center">
           {String(day.day).padStart(2, "0")}
         </span>
         <div className="flex-1 min-w-0">
           <h3 className="font-heading text-xl font-bold text-gray-100 tracking-wide">
             {dayTitle}
           </h3>
-          <span className="text-xs text-cyber-400 uppercase tracking-widest">
+          <span className="text-xs text-gold-400 uppercase tracking-widest">
             {dayTheme}
           </span>
           <div className="mt-2 flex items-center gap-3">
             <div className="flex-1 h-2 rounded-full bg-dark-border overflow-hidden max-w-[200px]">
               <motion.div
-                className="h-full rounded-full bg-gradient-to-r from-cyber-500 to-cyber-400"
+                className="h-full rounded-full bg-gradient-to-r from-gold-500 to-gold-400"
                 initial={{ width: 0 }}
                 animate={{ width: `${progressPercent}%` }}
                 transition={{ duration: 0.5 }}
@@ -129,8 +129,8 @@ export default function DayCard({
           >
             <div className="px-5 pb-5">
               {dailyGoal && (
-                <div className="mb-4 p-3 rounded-lg bg-cyber-500/5 border border-cyber-500/20">
-                  <span className="text-[10px] text-cyber-400 font-bold uppercase tracking-wider">
+                <div className="mb-4 p-3 rounded-lg bg-gold-500/5 border border-gold-500/20">
+                  <span className="text-[10px] text-gold-400 font-bold uppercase tracking-wider">
                     {t(locale, "dailyGoal")} 🎯
                   </span>
                   <p className="text-sm text-gray-300 mt-1">{dailyGoal}</p>
@@ -152,7 +152,7 @@ export default function DayCard({
                       transition={{ delay: i * 0.05 }}
                       className={`flex gap-3 p-3 rounded-lg border transition-all duration-300 ${
                         isCompleted
-                          ? "bg-cyber-500/5 border-cyber-500/30"
+                          ? "bg-gold-500/5 border-gold-500/30"
                           : "bg-dark-bg/50 border-dark-border/50"
                       }`}
                     >
@@ -161,8 +161,8 @@ export default function DayCard({
                         onClick={() => toggleTask(task.id)}
                         className={`shrink-0 w-6 h-6 rounded-full border-2 flex items-center justify-center transition-all mt-0.5 ${
                           isCompleted
-                            ? "border-cyber-500 bg-cyber-500 text-dark-bg"
-                            : "border-gray-600 hover:border-cyber-500/50"
+                            ? "border-gold-500 bg-gold-500 text-black"
+                            : "border-gray-600 hover:border-gold-500/50"
                         }`}
                       >
                         {isCompleted && (
@@ -188,7 +188,7 @@ export default function DayCard({
                           <Popover
                             title={t(locale, "scienceExplanation")}
                             trigger={
-                              <span className="text-[10px] px-2 py-0.5 rounded border border-cyber-500/30 text-cyber-400 bg-cyber-500/10 hover:bg-cyber-500/20 transition-colors cursor-pointer">
+                              <span className="text-[10px] px-2 py-0.5 rounded border border-gold-500/30 text-gold-400 bg-gold-500/10 hover:bg-gold-500/20 transition-colors cursor-pointer">
                                 {t(locale, "whyThis")} 🔬
                               </span>
                             }

@@ -10,23 +10,23 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        cyber: {
-          50: "#e0fffe",
-          100: "#b3fffc",
-          200: "#80fff9",
-          300: "#4dfff6",
-          400: "#26fff3",
-          500: "#00f0ff",
-          600: "#00c4cc",
-          700: "#009399",
-          800: "#006366",
-          900: "#003233",
+        gold: {
+          50: "#fef9e7",
+          100: "#fcefc0",
+          200: "#f9df8c",
+          300: "#f5cf58",
+          400: "#f0bf30",
+          500: "#D4AF37",
+          600: "#b8962e",
+          700: "#8c7223",
+          800: "#604e18",
+          900: "#342a0d",
         },
         dark: {
-          bg: "#0a0a0f",
-          card: "#12121a",
-          border: "#1e1e2e",
-          accent: "#00f0ff",
+          bg: "#000000",
+          card: "#0a0a0a",
+          border: "#1a1a1a",
+          accent: "#D4AF37",
         },
       },
       fontFamily: {

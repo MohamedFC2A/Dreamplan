@@ -10,7 +10,7 @@ export default function LanguageToggle() {
     <button
       type="button"
       onClick={() => setLocale(locale === "ar" ? "en" : "ar")}
-      className="fixed top-4 z-50 bg-dark-card border border-dark-border rounded-full px-4 py-2 text-sm text-cyber-400 hover:text-cyber-300 hover:border-cyber-500 transition-all duration-300 hover:box-glow ltr:right-4 rtl:left-4"
+      className="fixed top-4 z-50 bg-dark-card border border-dark-border rounded-full px-4 py-2 text-sm text-gold-400 hover:text-gold-300 hover:border-gold-500 transition-all duration-300 ltr:right-4 rtl:left-4"
     >
       {t(locale, "language")}
     </button>

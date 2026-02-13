@@ -25,7 +25,7 @@ export default async function ProtocolPage({
         </p>
         <Link
           href="/"
-          className="bg-cyber-500 hover:bg-cyber-600 text-dark-bg font-heading font-bold tracking-wider px-6 py-3 rounded-lg transition-colors uppercase text-sm"
+          className="bg-gold-500 hover:bg-gold-600 text-black font-heading font-bold tracking-wider px-6 py-3 rounded-lg transition-colors uppercase text-sm"
         >
           Back to Home
         </Link>

@@ -43,14 +43,14 @@ export default function ProgressTracker({ data }: { data: ProgressPoint[] }) {
       <svg viewBox={`0 0 ${CHART_WIDTH} ${CHART_HEIGHT}`} className="w-full h-auto" preserveAspectRatio="xMidYMid meet">
         <defs>
           <linearGradient id="areaGradient" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="#00f0ff" stopOpacity="0.3" />
-            <stop offset="100%" stopColor="#00f0ff" stopOpacity="0" />
+            <stop offset="0%" stopColor="#D4AF37" stopOpacity="0.3" />
+            <stop offset="100%" stopColor="#D4AF37" stopOpacity="0" />
           </linearGradient>
         </defs>
 
         {yTicks.map((val) => (
           <g key={val}>
-            <line x1={PADDING.left} y1={getY(val)} x2={PADDING.left + PLOT_WIDTH} y2={getY(val)} stroke="#1e1e2e" strokeWidth="1" />
+            <line x1={PADDING.left} y1={getY(val)} x2={PADDING.left + PLOT_WIDTH} y2={getY(val)} stroke="#1a1a1a" strokeWidth="1" />
             <text x={PADDING.left - 8} y={getY(val) + 4} textAnchor="end" fill="#64748b" fontSize="9" fontFamily="Inter, sans-serif">
               {val}%
             </text>
@@ -68,7 +68,7 @@ export default function ProgressTracker({ data }: { data: ProgressPoint[] }) {
         <motion.path
           d={linePath}
           fill="none"
-          stroke="#00f0ff"
+          stroke="#D4AF37"
           strokeWidth="2.5"
           strokeLinecap="round"
           strokeLinejoin="round"
@@ -79,8 +79,8 @@ export default function ProgressTracker({ data }: { data: ProgressPoint[] }) {
 
         {sorted.map((p, i) => (
           <motion.g key={p.day} initial={{ opacity: 0, scale: 0 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.2 * i + 0.5, duration: 0.3 }}>
-            <circle cx={getX(p.day)} cy={getY(p.impact)} r="4" fill="#0a0a0f" stroke="#00f0ff" strokeWidth="2" />
-            <text x={getX(p.day)} y={getY(p.impact) - 10} textAnchor="middle" fill="#00f0ff" fontSize="9" fontWeight="bold" fontFamily="Inter">
+            <circle cx={getX(p.day)} cy={getY(p.impact)} r="4" fill="#000000" stroke="#D4AF37" strokeWidth="2" />
+            <text x={getX(p.day)} y={getY(p.impact) - 10} textAnchor="middle" fill="#D4AF37" fontSize="9" fontWeight="bold" fontFamily="Inter">
               {p.impact}%
             </text>
           </motion.g>

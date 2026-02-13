@@ -44,10 +44,10 @@ export default function Popover({ trigger, children, title, className = "" }: Po
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -8, scale: 0.95 }}
             transition={{ duration: 0.2 }}
-            className="absolute z-50 w-72 md:w-80 p-4 rounded-xl bg-dark-card border border-cyber-500/30 shadow-2xl shadow-cyber-500/10 ltr:left-0 rtl:right-0 top-8"
+            className="absolute z-50 w-72 md:w-80 p-4 rounded-xl bg-dark-card border border-gold-500/30 shadow-2xl shadow-black/20 ltr:left-0 rtl:right-0 top-8"
           >
             {title && (
-              <h4 className="font-heading text-sm font-bold text-cyber-400 mb-2 tracking-wide uppercase">
+              <h4 className="font-heading text-sm font-bold text-gold-400 mb-2 tracking-wide uppercase">
                 {title}
               </h4>
             )}

@@ -44,7 +44,7 @@ export default function AiProtocolLoader() {
           <p className="text-gray-500 mb-8">{t(locale, "protocolNotFoundDesc")}</p>
           <Link
             href="/"
-            className="bg-cyber-500 hover:bg-cyber-600 text-dark-bg font-heading font-bold tracking-wider px-6 py-3 rounded-xl transition-colors uppercase text-sm"
+            className="bg-gold-500 hover:bg-gold-600 text-black font-heading font-bold tracking-wider px-6 py-3 rounded-xl transition-colors uppercase text-sm"
           >
             {t(locale, "backToHome")}
           </Link>
@@ -61,7 +61,7 @@ export default function AiProtocolLoader() {
           animate={{ opacity: 1 }}
           className="text-center"
         >
-          <div className="w-16 h-16 border-4 border-cyber-500/30 border-t-cyber-500 rounded-full animate-spin mx-auto mb-6" />
+          <div className="w-16 h-16 border-4 border-gold-500/30 border-t-gold-500 rounded-full animate-spin mx-auto mb-6" />
           <h2 className="font-heading text-xl text-gray-200 mb-2">
             {t(locale, "loading")}
           </h2>

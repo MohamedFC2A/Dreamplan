@@ -27,18 +27,18 @@ export default function ProtocolDashboard({ protocol }: { protocol: Protocol }) 
       >
         <Link
           href="/"
-          className="text-cyber-400 hover:text-cyber-300 text-sm font-medium mb-8 inline-flex items-center gap-1 transition-colors"
+          className="text-gold-400 hover:text-gold-300 text-sm font-medium mb-8 inline-flex items-center gap-1 transition-colors"
         >
           {locale === "ar" ? "→" : "←"} {t(locale, "backToHome")}
         </Link>
 
-        <div className="mb-2 inline-block px-3 py-1 rounded-full bg-cyber-500/10 border border-cyber-500/20">
-          <span className="text-[10px] text-cyber-400 font-bold uppercase tracking-widest">
+        <div className="mb-2 inline-block px-3 py-1 rounded-full bg-gold-500/10 border border-gold-500/20">
+          <span className="text-[10px] text-gold-400 font-bold uppercase tracking-widest">
             {t(locale, "aiPowered")} ⚡
           </span>
         </div>
 
-        <h1 className="font-heading text-3xl md:text-5xl font-bold text-gray-100 mb-2 tracking-wide text-glow-sm">
+        <h1 className="font-heading text-3xl md:text-5xl font-bold text-gray-100 mb-2 tracking-wide">
           {title}
         </h1>
         <p className="text-gray-500 text-lg mb-8">{subtitle}</p>
@@ -47,7 +47,7 @@ export default function ProtocolDashboard({ protocol }: { protocol: Protocol }) 
           {focus.map((f) => (
             <span
               key={f}
-              className="text-xs px-3 py-1.5 rounded-full bg-cyber-500/10 text-cyber-400 border border-cyber-500/20"
+              className="text-xs px-3 py-1.5 rounded-full bg-gold-500/10 text-gold-400 border border-gold-500/20"
             >
               {f}
             </span>
