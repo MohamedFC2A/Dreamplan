@@ -16,20 +16,22 @@ A bilingual (Arabic/English) web platform that generates scientifically-grounded
 src/
 ├── app/
 │   ├── layout.tsx              # Root layout with dark theme, LanguageProvider
-│   ├── page.tsx                # Landing page with AI form + featured protocols
+│   ├── page.tsx                # Landing page with nav, hero, AI form, featured protocols
 │   ├── globals.css             # Global styles, custom scrollbar
 │   ├── api/
 │   │   └── generate/
 │   │       └── route.ts        # DeepSeek AI protocol generation endpoint
+│   ├── plans/
+│   │   └── page.tsx            # Pricing page with FREE and PRO tiers
 │   └── protocol/
 │       └── [slug]/
 │           └── page.tsx        # Dynamic protocol dashboard page
 ├── components/
 │   ├── ProtocolDashboard.tsx    # Main protocol view with all sub-components
 │   ├── ProgressTracker.tsx     # SVG line chart for visual impact projection
-│   ├── DayCard.tsx             # Expandable day card with task checkboxes
+│   ├── DayCard.tsx             # Expandable day card with task checkboxes (lucide icons)
 │   ├── Popover.tsx             # Click-to-open popover for science explanations
-│   ├── ExercisePopover.tsx     # Exercise guide popover with steps
+│   ├── ExercisePopover.tsx     # Exercise guide popover with steps (lucide icons)
 │   ├── AiProtocolLoader.tsx    # Loads AI-generated protocol from sessionStorage
 │   ├── LanguageToggle.tsx      # Arabic/English language switcher
 │   └── DirectionSetter.tsx     # Sets HTML dir/lang attributes reactively
@@ -38,7 +40,7 @@ src/
 │   └── ronaldo-neck.json       # "Ronaldo Neck" 7-day protocol (bilingual)
 └── lib/
     ├── protocols.ts            # TypeScript types, protocol registry, search logic
-    ├── LanguageContext.tsx      # React context for language state (ar/en)
+    ├── LanguageContext.tsx      # React context for language state (ar/en, isRTL)
     └── i18n.ts                 # Translation strings for Arabic and English
 ```
 
@@ -50,6 +52,10 @@ src/
 - Science explanation popovers with PMID citations
 - Exercise guide popovers with step-by-step instructions
 - Expandable/collapsible day cards
+- Plans/Pricing page with FREE and PRO subscription tiers
+- Sticky navigation bar with site logo and page links
+- Professional lucide-react icons throughout (NO emojis)
+- Cristiano Ronaldo in Al-Nassr jersey as hero image
 
 ## Design
 - **Theme:** Dark black (#000000) with gold (#D4AF37) accent
