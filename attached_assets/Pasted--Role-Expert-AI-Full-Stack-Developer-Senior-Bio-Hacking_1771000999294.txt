@@ -1,0 +1,72 @@
+# Role: Expert AI Full-Stack Developer & Senior Bio-Hacking Research Scientist
+
+## **Project:** "Masculine Peak: The 7-Day Transformation Protocol"
+
+**Objective:** Build a high-performance web platform that takes a user's specific aesthetic "dream" (e.g., "Cristiano Ronaldo's Adam's Apple," "Pop-out Veins/Vascularity," "Hunter Eyes") and generates a highly detailed, scientifically grounded 7-day executable protocol to achieve maximum visual results (aiming for ~30% visible improvement via physiological optimization).
+
+## **Core Philosophy & Constraints:**
+
+1. **Scientific Realism:** You must act as an autonomous research agent. Do not hallucinate. Use real physiological mechanisms (e.g., Nitric Oxide maximization for veins, body fat percentage reduction for definition, hypertrophy for neck thickness).
+2. **The "Impossible" Pivot:** If a user asks for something biologically impossible in a week (e.g., "Grow bone"), you must immediately pivot to the **closest scientific visual alternative**.
+* *Example:* User wants "Bigger Adam's Apple." **Reality:** Cartilage doesn't grow fast. **Solution:** Create a protocol for "Neck Leanness (Submental fat reduction)" + "Neck Hypertrophy (Sternocleidomastoid training)" + "Posture Correction" to make the existing Adam's apple appear significantly more prominent.
+
+
+3. **Speed (The 1-Week Sprint):** Focus on "Bio-Hacks" that yield fast visual changes: water retention manipulation, inflammation reduction, glycogen loading, and pump-inducing nutrition.
+
+## **System Architecture (Tech Stack):**
+
+* **Frontend:** Next.js 14 (App Router), React, Tailwind CSS, Framer Motion (for high-end interactions).
+* **UI/UX:** Dark Mode, "Cyber-Physical" aesthetic, masculine typography (Oswald/Inter), data-heavy dashboard visualization.
+* **Backend/Logic:** Python (FastAPI) or Server Actions to process "Research Logic."
+
+## **Required Deliverables (Step-by-Step Plan):**
+
+### Phase 1: The Research Logic Engine (The Brain)
+
+Create a structured prompt/logic flow that the backend uses to process a user request.
+
+* **Input:** "I want veins like a bodybuilder on my hands."
+* **Search Protocol:**
+1. *Anatomy:* Surface anatomy of the dorsal venous network.
+2. *Physiology:* Vasodilation mechanisms (Nitric Oxide pathway), Diuretics (natural), Sodium/Potassium balance.
+3. *Action Plan:*
+* **Diet:** Beetroot juice (Nitrates), L-Citrulline supplementation, low sodium intake for days 1-5.
+* **Training:** Grip training (Forearm flexors/extensors) high reps for blood flow.
+* **Environment:** Heat exposure (Sauna effect) to dilate vessels.
+
+
+
+
+
+### Phase 2: The User Interface (The Dashboard)
+
+Design the code for a "7-Day Protocol Dashboard" containing:
+
+1. **The Daily Schedule:** Hour-by-hour breakdown (Wake up, specific meal, specific supplement, specific workout, sleep).
+2. **The "Science Why":** A tooltip explaining *why* eating this specific food helps achieve the dream (referencing studies).
+3. **Progress Tracker:** A visual graph predicting the "Visual Impact" over 7 days.
+
+### Phase 3: Content Generation (Sample Scenarios)
+
+Generate the actual JSON data content for these two specific user dreams to test the system:
+
+**Scenario A: "The Ronaldo Neck (Prominent Adam's Apple)"**
+
+* *Protocol Focus:* Neck posture, fat loss, and muscle definition.
+* *Diet:* Anti-inflammatory (reduce face bloat).
+* *Exercise:* Neck curls, jaw clenches (Mewing mechanics explanation).
+
+**Scenario B: "Ultimate Vascularity (Hand Veins)"**
+
+* *Protocol Focus:* Vasodilation and skin thinning (subcutaneous water loss).
+* *Diet:* High Arginine/Citrulline foods (Watermelon, Spinach).
+* *Trick:* The "Carb Load" effect on Day 6 to pop veins.
+
+## **Execution Instructions:**
+
+1. **Initialize the Project:** Set up the Next.js directory structure.
+2. **Build the Component:** Create the `ProtocolGenerator.tsx` component that takes user input and renders the plan.
+3. **Write the Content:** detailed, hour-by-hour plan for "Scenario B" (Veins) as a proof of concept, formatted as a clean, ready-to-use JSON object.
+4. **Citations:** Ensure every claim (e.g., "Eat Spinach") is tagged with a generic placeholder for a citation [Source: PMID xxxxx] to maintain authority.
+
+**Start by generating the complete Project Structure and the detailed JSON content for the "Hand Veins" protocol.**
