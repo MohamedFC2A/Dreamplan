@@ -16,7 +16,7 @@ A bilingual (Arabic/English) web platform that generates scientifically-grounded
 src/
 ├── app/
 │   ├── layout.tsx              # Root layout with dark theme, LanguageProvider
-│   ├── page.tsx                # Landing page with nav, hero, AI form (typewriter + duration modal), featured protocols
+│   ├── page.tsx                # Landing page with nav, hero, AI form (typewriter + duration modal + AI plan preview), featured protocols
 │   ├── globals.css             # Global styles, custom scrollbar
 │   ├── api/
 │   │   └── generate/
@@ -54,7 +54,8 @@ src/
 - Duration detection from user input (Arabic/English patterns)
 - Duration picker modal when not specified (7/14/21/30/60/90 days)
 - Duration validation (min 7, max 90 days)
-- Quick suggestion chips for common goals
+- AI Plan Preview phase with 5 numbered steps and animated progress bar before protocol generation
+- Animated rotating gold border (conic-gradient) around the design form
 - Full Arabic/English bilingual support with RTL layout
 - Task-based points system with checkboxes and progress bars (8-10 tasks/day)
 - SVG progress tracker chart (gold theme)

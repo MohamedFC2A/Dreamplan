@@ -77,6 +77,45 @@ a {
   transition: color 0.2s ease;
 }
 
+@keyframes rotate-border {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.animated-border-wrapper {
+  position: relative;
+  border-radius: 1rem;
+  padding: 2px;
+  overflow: hidden;
+}
+
+.animated-border-wrapper::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: conic-gradient(
+    from 0deg,
+    transparent 0deg,
+    transparent 60deg,
+    #D4AF37 120deg,
+    rgba(212, 175, 55, 0.6) 180deg,
+    transparent 240deg,
+    transparent 300deg,
+    rgba(212, 175, 55, 0.3) 360deg
+  );
+  animation: rotate-border 8s linear infinite;
+}
+
+.animated-border-inner {
+  position: relative;
+  background: #0a0a0a;
+  border-radius: calc(1rem - 2px);
+  z-index: 1;
+}
+
 @layer utilities {
   .text-balance {
     text-wrap: balance;

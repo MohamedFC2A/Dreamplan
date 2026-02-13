@@ -7,7 +7,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useLanguage } from "@/lib/LanguageContext";
 import { t } from "@/lib/i18n";
-import { PenLine, Bot, TrendingUp, Droplets, Skull, Zap, Crown, ArrowDown, ChevronDown, ArrowLeft, Sparkles, Clock, X, Calendar } from "lucide-react";
+import { PenLine, Bot, TrendingUp, Droplets, Skull, Zap, Crown, ArrowDown, ChevronDown, ArrowLeft, Sparkles, Clock, X, Calendar, Search, BookOpen, ListChecks, FileText, CheckCircle } from "lucide-react";
 import Navbar from "@/components/Navbar";
 
 const EXAMPLES_AR = [
@@ -30,23 +30,6 @@ const EXAMPLES_EN = [
   "Sharp jawline and sculpted face in 21 days",
 ];
 
-const CHIPS_AR = [
-  { label: "عروق بارزة", prompt: "أريد عروق بارزة في يدي وساعدي خلال 14 يوم" },
-  { label: "رقبة رونالدو", prompt: "أريد رقبة قوية مثل كريستيانو رونالدو في 7 أيام" },
-  { label: "سكس باك", prompt: "أريد عضلات بطن مقسمة سكس باك خلال 21 يوم" },
-  { label: "شكل V", prompt: "أريد أكتاف عريضة وشكل V في 14 يوم" },
-  { label: "فك حاد", prompt: "أريد فك حاد ووجه منحوت خلال 21 يوم" },
-  { label: "تضخيم الذراعين", prompt: "خطة تضخيم الذراعين في 30 يوم" },
-];
-
-const CHIPS_EN = [
-  { label: "Hand veins", prompt: "I want visible hand and forearm veins in 14 days" },
-  { label: "Ronaldo neck", prompt: "Build a strong Ronaldo-like neck in 7 days" },
-  { label: "Six pack", prompt: "Get shredded six pack abs in 21 days" },
-  { label: "V-taper", prompt: "Wide shoulders and V-taper in 14 days" },
-  { label: "Jawline", prompt: "Sharp jawline and sculpted face in 21 days" },
-  { label: "Arm bulk", prompt: "Bulk up my arms in 30 days" },
-];
 
 function useTypewriter(
   examples: string[],
@@ -258,6 +241,171 @@ function DurationModal({
   );
 }
 
+interface AiPlanningOverlayProps {
+  isVisible: boolean;
+  locale: "ar" | "en";
+  userGoal: string;
+}
+
+const PLAN_STEPS = [
+  { key: "planStep1" as const, icon: Search, duration: 1500 },
+  { key: "planStep2" as const, icon: BookOpen, duration: 2000 },
+  { key: "planStep3" as const, icon: ListChecks, duration: 2000 },
+  { key: "planStep4" as const, icon: FileText, duration: 1500 },
+  { key: "planStep5" as const, icon: CheckCircle, duration: 1000 },
+];
+
+function AiPlanningOverlay({ isVisible, locale, userGoal }: AiPlanningOverlayProps) {
+  const [currentStep, setCurrentStep] = useState(-1);
+  const [progress, setProgress] = useState(0);
+
+  useEffect(() => {
+    if (!isVisible) {
+      setCurrentStep(-1);
+      setProgress(0);
+      return;
+    }
+
+    let stepIndex = 0;
+    let cancelled = false;
+    const totalDuration = PLAN_STEPS.reduce((sum, s) => sum + s.duration, 0);
+    let elapsed = 0;
+    const timers: NodeJS.Timeout[] = [];
+
+    const advanceStep = () => {
+      if (cancelled || stepIndex >= PLAN_STEPS.length) return;
+      setCurrentStep(stepIndex);
+      const stepDuration = PLAN_STEPS[stepIndex].duration;
+      elapsed += stepDuration;
+      setProgress(Math.min((elapsed / totalDuration) * 100, 100));
+      stepIndex++;
+      if (stepIndex < PLAN_STEPS.length) {
+        timers.push(setTimeout(advanceStep, stepDuration));
+      }
+    };
+
+    timers.push(setTimeout(advanceStep, 300));
+    return () => {
+      cancelled = true;
+      timers.forEach(clearTimeout);
+    };
+  }, [isVisible]);
+
+  return (
+    <AnimatePresence>
+      {isVisible && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className="fixed inset-0 z-[100] flex items-center justify-center p-4"
+        >
+          <div className="absolute inset-0 bg-black/90 backdrop-blur-md" />
+
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9, y: 30 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.9, y: 30 }}
+            transition={{ type: "spring", damping: 25, stiffness: 300 }}
+            className="relative bg-[#0a0a0a] border border-gold-500/30 rounded-2xl p-8 md:p-10 max-w-lg w-full"
+          >
+            <div className="flex items-center justify-center gap-3 mb-6">
+              <Bot className="w-6 h-6 text-gold-400" />
+              <h3 className="font-heading text-xl md:text-2xl font-bold text-white tracking-wide">
+                {t(locale, "planningTitle")}
+              </h3>
+            </div>
+
+            <div className="mb-6 p-4 rounded-xl bg-gold-500/5 border border-gold-500/20">
+              <div className="text-xs text-gold-400 font-bold uppercase tracking-wider mb-1">
+                {t(locale, "planningYourGoal")}
+              </div>
+              <p className="text-gray-300 text-sm leading-relaxed">{userGoal}</p>
+            </div>
+
+            <div className="mb-6">
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-xs text-gray-500 uppercase tracking-wider font-bold">
+                  {t(locale, "planningProgress")}
+                </span>
+                <span className="text-xs text-gold-400 font-bold">{Math.round(progress)}%</span>
+              </div>
+              <div className="w-full h-1.5 bg-dark-border rounded-full overflow-hidden">
+                <motion.div
+                  className="h-full bg-gold-500 rounded-full"
+                  initial={{ width: "0%" }}
+                  animate={{ width: `${progress}%` }}
+                  transition={{ duration: 0.5, ease: "easeOut" }}
+                />
+              </div>
+            </div>
+
+            <div className="space-y-3">
+              {PLAN_STEPS.map((step, index) => {
+                const Icon = step.icon;
+                const isCompleted = currentStep > index;
+                const isActive = currentStep === index;
+                const isPending = currentStep < index;
+
+                return (
+                  <motion.div
+                    key={step.key}
+                    initial={{ opacity: 0, x: locale === "ar" ? 20 : -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.1 * index }}
+                    className={`flex items-center gap-4 p-3 rounded-xl transition-all duration-300 ${
+                      isActive
+                        ? "bg-gold-500/10 border border-gold-500/30"
+                        : isCompleted
+                        ? "bg-gold-500/5 border border-transparent"
+                        : "border border-transparent"
+                    }`}
+                  >
+                    <div className={`w-10 h-10 rounded-full flex items-center justify-center shrink-0 transition-all duration-300 ${
+                      isCompleted
+                        ? "bg-gold-500/20"
+                        : isActive
+                        ? "bg-gold-500/15"
+                        : "bg-dark-border/50"
+                    }`}>
+                      {isCompleted ? (
+                        <CheckCircle className="w-5 h-5 text-gold-400" />
+                      ) : (
+                        <Icon className={`w-5 h-5 transition-colors duration-300 ${
+                          isActive ? "text-gold-400" : "text-gray-600"
+                        }`} />
+                      )}
+                    </div>
+
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2">
+                        <span className={`text-xs font-bold transition-colors duration-300 ${
+                          isCompleted || isActive ? "text-gold-400" : "text-gray-600"
+                        }`}>
+                          {String(index + 1).padStart(2, "0")}
+                        </span>
+                        <span className={`text-sm font-medium transition-colors duration-300 ${
+                          isCompleted ? "text-gray-300" : isActive ? "text-white" : "text-gray-600"
+                        }`}>
+                          {t(locale, step.key)}
+                        </span>
+                      </div>
+                    </div>
+
+                    {isActive && (
+                      <span className="w-2 h-2 rounded-full bg-gold-500 animate-pulse shrink-0" />
+                    )}
+                  </motion.div>
+                );
+              })}
+            </div>
+          </motion.div>
+        </motion.div>
+      )}
+    </AnimatePresence>
+  );
+}
+
 export default function Home() {
   const { locale } = useLanguage();
   const router = useRouter();
@@ -269,13 +417,15 @@ export default function Home() {
   const [pendingQuery, setPendingQuery] = useState("");
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
+  const [showPlanning, setShowPlanning] = useState(false);
+
   const examples = locale === "ar" ? EXAMPLES_AR : EXAMPLES_EN;
-  const chips = locale === "ar" ? CHIPS_AR : CHIPS_EN;
 
   const typewriter = useTypewriter(examples);
 
   const callApi = async (finalQuery: string) => {
     setIsLoading(true);
+    setShowPlanning(true);
     setError("");
     setShowDurationModal(false);
 
@@ -296,6 +446,7 @@ export default function Home() {
       sessionStorage.setItem("ai-protocol", JSON.stringify(protocol));
       router.push("/protocol/ai-generated");
     } catch (err: any) {
+      setShowPlanning(false);
       setError(err.message || t(locale, "errorDesc"));
     } finally {
       setIsLoading(false);
@@ -346,12 +497,6 @@ export default function Home() {
     setQuery(finalQuery);
     setShowDurationModal(false);
     await callApi(finalQuery);
-  };
-
-  const handleChipClick = (prompt: string) => {
-    setQuery(prompt);
-    typewriter.pause();
-    textareaRef.current?.focus();
   };
 
   const handleFocus = () => {
@@ -476,110 +621,80 @@ export default function Home() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="relative bg-dark-card rounded-2xl p-8 md:p-10 mb-16 overflow-hidden"
-          style={{
-            border: "1px solid transparent",
-            backgroundClip: "padding-box",
-          }}
+          className="animated-border-wrapper mb-16"
         >
-          <div className="absolute inset-0 rounded-2xl" style={{
-            background: "linear-gradient(135deg, rgba(212,175,55,0.3), rgba(212,175,55,0.05) 50%, rgba(212,175,55,0.3))",
-            mask: "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
-            maskComposite: "xor",
-            WebkitMaskComposite: "xor",
-            padding: "1px",
-            borderRadius: "1rem",
-            pointerEvents: "none",
-          }} />
-
-          <div className="absolute -top-20 -right-20 w-60 h-60 bg-gold-500/5 rounded-full blur-3xl pointer-events-none" />
-          <div className="absolute -bottom-20 -left-20 w-60 h-60 bg-gold-500/5 rounded-full blur-3xl pointer-events-none" />
-
-          <div className="flex items-center justify-center gap-3 mb-2">
-            <div className="w-8 h-8 rounded-full bg-gold-500/10 flex items-center justify-center">
-              <Bot className="w-4 h-4 text-gold-400" />
+          <div className="animated-border-inner p-8 md:p-10">
+            <div className="flex items-center justify-center gap-3 mb-2">
+              <div className="w-8 h-8 rounded-full bg-gold-500/10 flex items-center justify-center">
+                <Bot className="w-4 h-4 text-gold-400" />
+              </div>
+              <h2 className="font-heading text-2xl md:text-3xl font-bold text-white text-center tracking-wide">
+                {t(locale, "designProtocol")}
+              </h2>
             </div>
-            <h2 className="font-heading text-2xl md:text-3xl font-bold text-white text-center tracking-wide">
-              {t(locale, "designProtocol")}
-            </h2>
+            <p className="text-gray-500 text-center mb-8 text-sm">
+              {t(locale, "designProtocolDesc")}
+            </p>
+
+            <form onSubmit={handleSubmit} className="max-w-2xl mx-auto">
+              <div className="flex flex-col gap-3">
+                <div className="relative">
+                  <textarea
+                    ref={textareaRef}
+                    value={query}
+                    onChange={(e) => setQuery(e.target.value)}
+                    onFocus={handleFocus}
+                    onBlur={handleBlur}
+                    rows={3}
+                    className="w-full bg-black border border-dark-border rounded-xl px-5 py-4 text-gray-100 focus:outline-none focus:border-gold-500 focus:ring-1 focus:ring-gold-500 transition-colors resize-none text-base placeholder-transparent"
+                    disabled={isLoading}
+                  />
+                  {!query && typewriter.isActive && (
+                    <div className="absolute top-0 left-0 right-0 px-5 py-4 pointer-events-none text-gray-600 text-base">
+                      {typewriter.text}
+                      <span className="inline-block w-[2px] h-[1.1em] bg-gold-500/60 align-middle animate-pulse ml-[1px]" />
+                    </div>
+                  )}
+                  {!query && !typewriter.isActive && (
+                    <div className="absolute top-0 left-0 right-0 px-5 py-4 pointer-events-none text-gray-600 text-base">
+                      {t(locale, "searchPlaceholder")}
+                    </div>
+                  )}
+                </div>
+
+                <button
+                  type="submit"
+                  disabled={isLoading || !query.trim()}
+                  className="inline-flex items-center justify-center gap-2 bg-gold-500 hover:bg-gold-600 disabled:opacity-50 disabled:cursor-not-allowed text-black font-heading font-bold tracking-wider px-8 py-4 rounded-xl transition-all uppercase text-sm"
+                >
+                  {isLoading ? (
+                    <span className="flex items-center justify-center gap-2">
+                      <svg className="animate-spin w-5 h-5" viewBox="0 0 24 24" fill="none">
+                        <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="3" className="opacity-25" />
+                        <path d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" fill="currentColor" className="opacity-75" />
+                      </svg>
+                      {t(locale, "loading")}
+                    </span>
+                  ) : (
+                    <>
+                      <Sparkles className="w-4 h-4" />
+                      {t(locale, "generateBtn")}
+                    </>
+                  )}
+                </button>
+              </div>
+
+              {error && (
+                <motion.div
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="mt-4 p-3 rounded-lg bg-red-500/10 border border-red-500/30 text-red-400 text-sm"
+                >
+                  {error}
+                </motion.div>
+              )}
+            </form>
           </div>
-          <p className="text-gray-500 text-center mb-8 text-sm">
-            {t(locale, "designProtocolDesc")}
-          </p>
-
-          <form onSubmit={handleSubmit} className="max-w-2xl mx-auto">
-            <div className="flex flex-col gap-3">
-              <div className="relative">
-                <textarea
-                  ref={textareaRef}
-                  value={query}
-                  onChange={(e) => setQuery(e.target.value)}
-                  onFocus={handleFocus}
-                  onBlur={handleBlur}
-                  rows={3}
-                  className="w-full bg-black border border-dark-border rounded-xl px-5 py-4 text-gray-100 focus:outline-none focus:border-gold-500 focus:ring-1 focus:ring-gold-500 transition-colors resize-none text-base placeholder-transparent"
-                  disabled={isLoading}
-                />
-                {!query && typewriter.isActive && (
-                  <div className="absolute top-0 left-0 right-0 px-5 py-4 pointer-events-none text-gray-600 text-base">
-                    {typewriter.text}
-                    <span className="inline-block w-[2px] h-[1.1em] bg-gold-500/60 align-middle animate-pulse ml-[1px]" />
-                  </div>
-                )}
-                {!query && !typewriter.isActive && (
-                  <div className="absolute top-0 left-0 right-0 px-5 py-4 pointer-events-none text-gray-600 text-base">
-                    {t(locale, "searchPlaceholder")}
-                  </div>
-                )}
-              </div>
-
-              <div className="flex flex-wrap gap-2">
-                {chips.map((chip) => (
-                  <motion.button
-                    key={chip.label}
-                    type="button"
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    onClick={() => handleChipClick(chip.prompt)}
-                    className="text-xs px-3 py-1.5 rounded-full bg-gold-500/10 text-gold-400 border border-gold-500/20 hover:bg-gold-500/20 hover:border-gold-500/40 transition-all cursor-pointer"
-                  >
-                    {chip.label}
-                  </motion.button>
-                ))}
-              </div>
-
-              <button
-                type="submit"
-                disabled={isLoading || !query.trim()}
-                className="inline-flex items-center justify-center gap-2 bg-gold-500 hover:bg-gold-600 disabled:opacity-50 disabled:cursor-not-allowed text-black font-heading font-bold tracking-wider px-8 py-4 rounded-xl transition-all uppercase text-sm"
-              >
-                {isLoading ? (
-                  <span className="flex items-center justify-center gap-2">
-                    <svg className="animate-spin w-5 h-5" viewBox="0 0 24 24" fill="none">
-                      <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="3" className="opacity-25" />
-                      <path d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" fill="currentColor" className="opacity-75" />
-                    </svg>
-                    {t(locale, "loading")}
-                  </span>
-                ) : (
-                  <>
-                    <Sparkles className="w-4 h-4" />
-                    {t(locale, "generateBtn")}
-                  </>
-                )}
-              </button>
-            </div>
-
-            {error && (
-              <motion.div
-                initial={{ opacity: 0, y: -10 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="mt-4 p-3 rounded-lg bg-red-500/10 border border-red-500/30 text-red-400 text-sm"
-              >
-                {error}
-              </motion.div>
-            )}
-          </form>
         </motion.div>
 
         <motion.div
@@ -748,6 +863,12 @@ export default function Home() {
         onClose={() => setShowDurationModal(false)}
         locale={locale}
         errorMessage={durationError}
+      />
+
+      <AiPlanningOverlay
+        isVisible={showPlanning}
+        locale={locale}
+        userGoal={query}
       />
     </main>
   );
