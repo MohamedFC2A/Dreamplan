@@ -8,6 +8,7 @@ import DayCard from "@/components/DayCard";
 import LanguageToggle from "@/components/LanguageToggle";
 import { useLanguage } from "@/lib/LanguageContext";
 import { t } from "@/lib/i18n";
+import { Zap, FlaskConical } from "lucide-react";
 
 export default function ProtocolDashboard({ protocol }: { protocol: Protocol }) {
   const { locale } = useLanguage();
@@ -34,7 +35,7 @@ export default function ProtocolDashboard({ protocol }: { protocol: Protocol }) 
 
         <div className="mb-2 inline-block px-3 py-1 rounded-full bg-gold-500/10 border border-gold-500/20">
           <span className="text-[10px] text-gold-400 font-bold uppercase tracking-widest">
-            {t(locale, "aiPowered")} ⚡
+            {t(locale, "aiPowered")} <Zap className="w-3 h-3 text-gold-400 inline" />
           </span>
         </div>
 
@@ -56,7 +57,7 @@ export default function ProtocolDashboard({ protocol }: { protocol: Protocol }) 
 
         <div className="bg-dark-card border border-dark-border rounded-xl p-6 mb-8">
           <h2 className="font-heading text-lg font-bold text-gray-200 mb-3 tracking-wide uppercase">
-            {t(locale, "scienceOverview")} 🔬
+            {t(locale, "scienceOverview")} <FlaskConical className="w-4 h-4 text-gray-200 inline" />
           </h2>
           <p className="text-gray-400 text-sm leading-relaxed">
             {overview}

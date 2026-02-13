@@ -1,21 +1,22 @@
 "use client";
 
-import { useState } from "react";
+import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { DayPlan } from "@/lib/protocols";
 import { useLanguage } from "@/lib/LanguageContext";
 import { t } from "@/lib/i18n";
 import Popover from "@/components/Popover";
 import ExercisePopover from "@/components/ExercisePopover";
+import { Sunrise, UtensilsCrossed, Pill, Dumbbell, Heart, Droplets, Moon, Target, FlaskConical, Lightbulb } from "lucide-react";
 
-const categoryConfig: Record<string, { color: string; icon: string; labelEn: string; labelAr: string }> = {
-  wake: { color: "text-purple-400 bg-purple-500/10 border-purple-500/20", icon: "🌅", labelEn: "Wake", labelAr: "استيقاظ" },
-  meal: { color: "text-orange-400 bg-orange-500/10 border-orange-500/20", icon: "🍽️", labelEn: "Meal", labelAr: "وجبة" },
-  supplement: { color: "text-pink-400 bg-pink-500/10 border-pink-500/20", icon: "💊", labelEn: "Supplement", labelAr: "مكمل" },
-  training: { color: "text-red-400 bg-red-500/10 border-red-500/20", icon: "🏋️", labelEn: "Training", labelAr: "تمرين" },
-  recovery: { color: "text-blue-400 bg-blue-500/10 border-blue-500/20", icon: "🧊", labelEn: "Recovery", labelAr: "تعافي" },
-  hydration: { color: "text-cyan-400 bg-cyan-500/10 border-cyan-500/20", icon: "💧", labelEn: "Hydration", labelAr: "ترطيب" },
-  sleep: { color: "text-indigo-400 bg-indigo-500/10 border-indigo-500/20", icon: "🌙", labelEn: "Sleep", labelAr: "نوم" },
+const categoryConfig: Record<string, { color: string; icon: React.ReactNode; labelEn: string; labelAr: string }> = {
+  wake: { color: "text-purple-400 bg-purple-500/10 border-purple-500/20", icon: <Sunrise className="w-3.5 h-3.5" />, labelEn: "Wake", labelAr: "استيقاظ" },
+  meal: { color: "text-orange-400 bg-orange-500/10 border-orange-500/20", icon: <UtensilsCrossed className="w-3.5 h-3.5" />, labelEn: "Meal", labelAr: "وجبة" },
+  supplement: { color: "text-pink-400 bg-pink-500/10 border-pink-500/20", icon: <Pill className="w-3.5 h-3.5" />, labelEn: "Supplement", labelAr: "مكمل" },
+  training: { color: "text-red-400 bg-red-500/10 border-red-500/20", icon: <Dumbbell className="w-3.5 h-3.5" />, labelEn: "Training", labelAr: "تمرين" },
+  recovery: { color: "text-blue-400 bg-blue-500/10 border-blue-500/20", icon: <Heart className="w-3.5 h-3.5" />, labelEn: "Recovery", labelAr: "تعافي" },
+  hydration: { color: "text-cyan-400 bg-cyan-500/10 border-cyan-500/20", icon: <Droplets className="w-3.5 h-3.5" />, labelEn: "Hydration", labelAr: "ترطيب" },
+  sleep: { color: "text-indigo-400 bg-indigo-500/10 border-indigo-500/20", icon: <Moon className="w-3.5 h-3.5" />, labelEn: "Sleep", labelAr: "نوم" },
 };
 
 function ImpactBar({ level, locale }: { level: "low" | "medium" | "high"; locale: string }) {
@@ -131,7 +132,7 @@ export default function DayCard({
               {dailyGoal && (
                 <div className="mb-4 p-3 rounded-lg bg-gold-500/5 border border-gold-500/20">
                   <span className="text-[10px] text-gold-400 font-bold uppercase tracking-wider">
-                    {t(locale, "dailyGoal")} 🎯
+                    {t(locale, "dailyGoal")} <Target className="w-3 h-3 text-gold-400 inline" />
                   </span>
                   <p className="text-sm text-gray-300 mt-1">{dailyGoal}</p>
                 </div>
@@ -189,7 +190,7 @@ export default function DayCard({
                             title={t(locale, "scienceExplanation")}
                             trigger={
                               <span className="text-[10px] px-2 py-0.5 rounded border border-gold-500/30 text-gold-400 bg-gold-500/10 hover:bg-gold-500/20 transition-colors cursor-pointer">
-                                {t(locale, "whyThis")} 🔬
+                                {t(locale, "whyThis")} <FlaskConical className="w-3 h-3 text-gold-400 inline" />
                               </span>
                             }
                           >
@@ -210,7 +211,7 @@ export default function DayCard({
                               title={t(locale, "tips")}
                               trigger={
                                 <span className="text-[10px] px-2 py-0.5 rounded border border-yellow-500/30 text-yellow-400 bg-yellow-500/10 hover:bg-yellow-500/20 transition-colors cursor-pointer">
-                                  {t(locale, "tips")} 💡
+                                  {t(locale, "tips")} <Lightbulb className="w-3 h-3 text-yellow-400 inline" />
                                 </span>
                               }
                             >

@@ -5,12 +5,12 @@ import { motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import LanguageToggle from "@/components/LanguageToggle";
 import { useLanguage } from "@/lib/LanguageContext";
 import { t } from "@/lib/i18n";
+import { PenLine, Bot, TrendingUp, Droplets, Skull, Zap, Crown, ArrowDown } from "lucide-react";
 
 export default function Home() {
-  const { locale } = useLanguage();
+  const { locale, setLocale, isRTL } = useLanguage();
   const router = useRouter();
   const [query, setQuery] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -48,7 +48,28 @@ export default function Home() {
 
   return (
     <main className="min-h-screen flex flex-col">
-      <LanguageToggle />
+      <nav className="fixed top-0 left-0 right-0 z-50 bg-black/80 backdrop-blur-sm border-b border-dark-border">
+        <div className="max-w-6xl mx-auto px-6 md:px-8 flex items-center justify-between h-14">
+          <Link href="/" className="font-heading text-lg font-bold text-white tracking-widest">
+            MASCULINE <span className="text-gold-500">PEAK</span>
+          </Link>
+          <div className="flex items-center gap-6">
+            <Link href="/" className="text-sm text-gray-400 hover:text-gold-400 transition-colors">
+              {locale === "ar" ? "الرئيسية" : "Home"}
+            </Link>
+            <Link href="/plans" className="text-sm text-gray-400 hover:text-gold-400 transition-colors">
+              {locale === "ar" ? "الاشتراكات" : "Plans"}
+            </Link>
+            <button
+              type="button"
+              onClick={() => setLocale(locale === "ar" ? "en" : "ar")}
+              className="bg-dark-card border border-dark-border rounded-full px-4 py-1.5 text-sm text-gold-400 hover:text-gold-300 hover:border-gold-500 transition-all duration-300"
+            >
+              {locale === "ar" ? "English" : "العربية"}
+            </button>
+          </div>
+        </div>
+      </nav>
 
       <section className="relative min-h-screen flex items-center overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-b from-black via-black/95 to-black z-0" />
@@ -107,7 +128,7 @@ export default function Home() {
                 {t(locale, "heroDescription")}
               </p>
 
-              <div className="flex items-center gap-6 mb-6">
+              <div className="flex items-center gap-6 mb-8">
                 {[
                   { value: "7", label: locale === "ar" ? "أيام" : "Days" },
                   { value: "70+", label: locale === "ar" ? "مهمة" : "Tasks" },
@@ -119,12 +140,29 @@ export default function Home() {
                   </div>
                 ))}
               </div>
+
+              <div className="flex items-center gap-4">
+                <button
+                  onClick={() => document.getElementById("protocol-form")?.scrollIntoView({ behavior: "smooth" })}
+                  className="inline-flex items-center gap-2 bg-gold-500 hover:bg-gold-600 text-black font-heading font-bold tracking-wider px-6 py-3 rounded-xl transition-all uppercase text-sm"
+                >
+                  <ArrowDown className="w-4 h-4" />
+                  {locale === "ar" ? "ابدأ الآن" : "Start Now"}
+                </button>
+                <Link
+                  href="/plans"
+                  className="inline-flex items-center gap-2 border border-gold-500/50 text-gold-400 hover:bg-gold-500/10 font-heading font-bold tracking-wider px-6 py-3 rounded-xl transition-all uppercase text-sm"
+                >
+                  <Crown className="w-4 h-4" />
+                  {locale === "ar" ? "عرض الخطط" : "View Plans"}
+                </Link>
+              </div>
             </div>
           </div>
         </div>
       </section>
 
-      <section className="relative z-10 px-4 py-16 max-w-5xl mx-auto w-full -mt-20">
+      <section id="protocol-form" className="relative z-10 px-4 py-16 max-w-5xl mx-auto w-full -mt-20">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -189,11 +227,12 @@ export default function Home() {
           <h2 className="font-heading text-2xl md:text-3xl font-bold text-gray-200 text-center mb-4 tracking-wide">
             {t(locale, "howItWorks")}
           </h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16 relative">
+            <div className="hidden md:block absolute top-7 left-[20%] right-[20%] h-px bg-gradient-to-r from-transparent via-gold-500/30 to-transparent" />
             {[
-              { num: "01", title: t(locale, "step1Title"), desc: t(locale, "step1Desc"), icon: "✍️" },
-              { num: "02", title: t(locale, "step2Title"), desc: t(locale, "step2Desc"), icon: "🤖" },
-              { num: "03", title: t(locale, "step3Title"), desc: t(locale, "step3Desc"), icon: "📈" },
+              { num: "01", title: t(locale, "step1Title"), desc: t(locale, "step1Desc"), icon: <PenLine className="w-6 h-6 text-gold-400" /> },
+              { num: "02", title: t(locale, "step2Title"), desc: t(locale, "step2Desc"), icon: <Bot className="w-6 h-6 text-gold-400" /> },
+              { num: "03", title: t(locale, "step3Title"), desc: t(locale, "step3Desc"), icon: <TrendingUp className="w-6 h-6 text-gold-400" /> },
             ].map((step, i) => (
               <motion.div
                 key={step.num}
@@ -201,9 +240,9 @@ export default function Home() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.15 }}
-                className="bg-dark-card border border-dark-border rounded-xl p-6 text-center"
+                className="bg-dark-card border border-dark-border rounded-xl p-6 text-center relative z-10"
               >
-                <div className="text-4xl mb-4">{step.icon}</div>
+                <div className="w-14 h-14 rounded-full bg-gold-500/10 flex items-center justify-center mx-auto mb-4">{step.icon}</div>
                 <span className="text-gold-500 font-heading text-sm font-bold">{step.num}</span>
                 <h3 className="font-heading text-lg font-bold text-gray-100 mt-1 mb-2">{step.title}</h3>
                 <p className="text-gray-500 text-sm leading-relaxed">{step.desc}</p>
@@ -228,7 +267,7 @@ export default function Home() {
                 className="bg-dark-card border border-dark-border rounded-xl p-6 hover:border-gold-500/50 transition-all duration-300 h-full"
               >
                 <div className="flex items-start gap-4">
-                  <span className="text-4xl">🩸</span>
+                  <Droplets className="w-8 h-8 text-red-400 shrink-0 mt-1" />
                   <div>
                     <h3 className="font-heading text-xl font-bold text-gray-100 mb-2 tracking-wide">
                       {t(locale, "vascularity")}
@@ -254,7 +293,7 @@ export default function Home() {
                 className="bg-dark-card border border-dark-border rounded-xl p-6 hover:border-gold-500/50 transition-all duration-300 h-full"
               >
                 <div className="flex items-start gap-4">
-                  <span className="text-4xl">🗿</span>
+                  <Skull className="w-8 h-8 text-gray-400 shrink-0 mt-1" />
                   <div>
                     <h3 className="font-heading text-xl font-bold text-gray-100 mb-2 tracking-wide">
                       {t(locale, "ronaldoNeck")}
@@ -277,12 +316,58 @@ export default function Home() {
         </motion.div>
       </section>
 
-      <footer className="py-8 text-center border-t border-dark-border">
-        <p className="text-gray-600 text-xs">
-          {locale === "ar"
-            ? "⚡ مدعوم بالذكاء الاصطناعي DeepSeek — جميع البروتوكولات مبنية على أسس علمية"
-            : "⚡ Powered by DeepSeek AI — All protocols are scientifically grounded"}
-        </p>
+      <section className="px-4 py-12 max-w-5xl mx-auto w-full">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+          className="bg-dark-card border border-gold-500/30 rounded-2xl p-8 md:p-10 text-center"
+        >
+          <Crown className="w-10 h-10 text-gold-500 mx-auto mb-4" />
+          <h2 className="font-heading text-2xl md:text-3xl font-bold text-white mb-3 tracking-wide">
+            {locale === "ar" ? "اكتشف خطة PRO للوصول غير المحدود" : "Unlock unlimited access with PRO"}
+          </h2>
+          <p className="text-gray-400 text-sm mb-6 max-w-lg mx-auto">
+            {locale === "ar" ? "احصل على بروتوكولات حصرية ودعم متقدم بالذكاء الاصطناعي" : "Get exclusive protocols and advanced AI support"}
+          </p>
+          <Link
+            href="/plans"
+            className="inline-flex items-center gap-2 bg-gold-500 hover:bg-gold-600 text-black font-heading font-bold tracking-wider px-8 py-3 rounded-xl transition-all uppercase text-sm"
+          >
+            <Crown className="w-4 h-4" />
+            {locale === "ar" ? "عرض الخطط" : "View Plans"}
+          </Link>
+        </motion.div>
+      </section>
+
+      <footer className="py-8 border-t border-dark-border">
+        <div className="max-w-5xl mx-auto px-4">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-4 mb-6">
+            <Link href="/" className="font-heading text-sm font-bold text-white tracking-widest">
+              MASCULINE <span className="text-gold-500">PEAK</span>
+            </Link>
+            <div className="flex items-center gap-6">
+              <Link href="/" className="text-sm text-gray-500 hover:text-gold-400 transition-colors">
+                {locale === "ar" ? "الرئيسية" : "Home"}
+              </Link>
+              <Link href="/plans" className="text-sm text-gray-500 hover:text-gold-400 transition-colors">
+                {locale === "ar" ? "الاشتراكات" : "Plans"}
+              </Link>
+            </div>
+          </div>
+          <div className="flex flex-col md:flex-row items-center justify-between gap-2">
+            <p className="text-gray-600 text-xs flex items-center gap-1">
+              <Zap className="w-3.5 h-3.5 text-gold-400 inline" />
+              {locale === "ar"
+                ? "مدعوم بالذكاء الاصطناعي DeepSeek — جميع البروتوكولات مبنية على أسس علمية"
+                : "Powered by DeepSeek AI — All protocols are scientifically grounded"}
+            </p>
+            <p className="text-gray-600 text-xs">
+              {locale === "ar" ? "جميع الحقوق محفوظة" : "All rights reserved"} &copy; {new Date().getFullYear()} Masculine Peak
+            </p>
+          </div>
+        </div>
       </footer>
     </main>
   );

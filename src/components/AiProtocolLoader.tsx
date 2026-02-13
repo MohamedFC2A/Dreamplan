@@ -8,6 +8,7 @@ import { useLanguage } from "@/lib/LanguageContext";
 import { t } from "@/lib/i18n";
 import { motion } from "framer-motion";
 import Link from "next/link";
+import { XCircle } from "lucide-react";
 
 export default function AiProtocolLoader() {
   const [protocol, setProtocol] = useState<Protocol | null>(null);
@@ -37,7 +38,7 @@ export default function AiProtocolLoader() {
           animate={{ opacity: 1, y: 0 }}
           className="text-center"
         >
-          <div className="text-5xl mb-6">❌</div>
+          <div className="mb-6"><XCircle className="w-16 h-16 text-red-500 mx-auto" /></div>
           <h1 className="font-heading text-3xl font-bold text-gray-100 mb-4">
             {t(locale, "protocolNotFound")}
           </h1>

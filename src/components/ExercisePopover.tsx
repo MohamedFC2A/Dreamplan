@@ -4,6 +4,7 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useLanguage } from "@/lib/LanguageContext";
 import { t } from "@/lib/i18n";
+import { Dumbbell, Lightbulb } from "lucide-react";
 
 interface ExercisePopoverProps {
   exerciseName: string;
@@ -88,7 +89,7 @@ export default function ExercisePopover({ exerciseName, exerciseNameAr, tips, ti
         onClick={() => setIsOpen(!isOpen)}
         className="text-[10px] px-2 py-0.5 rounded border border-gold-500/30 text-gold-400 bg-gold-500/10 hover:bg-gold-500/20 transition-colors cursor-pointer"
       >
-        {t(locale, "viewExercise")} 💪
+        {t(locale, "viewExercise")} <Dumbbell className="w-3 h-3 text-gold-400 inline" />
       </button>
       <AnimatePresence>
         {isOpen && (
@@ -121,7 +122,7 @@ export default function ExercisePopover({ exerciseName, exerciseNameAr, tips, ti
               {currentTips && (
                 <div className="mt-2 p-2 rounded-lg bg-dark-bg/50 border border-dark-border/50">
                   <span className="text-[10px] text-yellow-400 font-bold uppercase">
-                    {t(locale, "tips")} 💡
+                    {t(locale, "tips")} <Lightbulb className="w-3 h-3 text-yellow-400 inline" />
                   </span>
                   <p className="text-xs text-gray-400 mt-1">{currentTips}</p>
                 </div>
