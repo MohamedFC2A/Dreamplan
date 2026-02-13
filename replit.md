@@ -21,6 +21,8 @@ src/
 │   ├── api/
 │   │   └── generate/
 │   │       └── route.ts        # DeepSeek AI protocol generation endpoint
+│   ├── cr7-fba/
+│   │   └── page.tsx            # CR7 Full Body Analysis - interactive body part annotations
 │   ├── plans/
 │   │   └── page.tsx            # Pricing page with FREE and PRO tiers
 │   └── protocol/
@@ -33,9 +35,11 @@ src/
 │   ├── Popover.tsx             # Click-to-open popover for science explanations
 │   ├── ExercisePopover.tsx     # Exercise guide popover with steps (lucide icons)
 │   ├── AiProtocolLoader.tsx    # Loads AI-generated protocol from sessionStorage
+│   ├── Navbar.tsx               # Shared navigation bar with active states
 │   ├── LanguageToggle.tsx      # Arabic/English language switcher
 │   └── DirectionSetter.tsx     # Sets HTML dir/lang attributes reactively
 ├── data/
+│   ├── cr7-fba.ts              # CR7 Full Body Analysis data (12 body parts, bilingual)
 │   ├── hand-veins.json         # "Ultimate Vascularity" 7-day protocol (bilingual)
 │   └── ronaldo-neck.json       # "Ronaldo Neck" 7-day protocol (bilingual)
 └── lib/
@@ -55,7 +59,8 @@ src/
 - Plans/Pricing page with FREE and PRO subscription tiers
 - Sticky navigation bar with site logo and page links
 - Professional lucide-react icons throughout (NO emojis)
-- Cristiano Ronaldo in Al-Nassr jersey as hero image
+- Cristiano Ronaldo as hero image
+- CR7 Full Body Analysis (FBA) page with interactive body part annotations
 
 ## Design
 - **Theme:** Dark black (#000000) with gold (#D4AF37) accent
