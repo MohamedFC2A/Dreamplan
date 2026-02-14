@@ -99,13 +99,13 @@ export default function WeekCard({ week, weekIndex }: { week: WeekPlan; weekInde
       <button
         type="button"
         onClick={() => setExpanded((value) => !value)}
-        className="w-full px-5 py-4 flex items-start gap-4 text-start hover:bg-dark-border/20 transition-colors"
+        className="w-full px-4 sm:px-5 py-4 flex items-start gap-3 sm:gap-4 text-start hover:bg-dark-border/20 transition-colors"
       >
-        <div className="w-12 h-12 rounded-full border border-gold-500/30 bg-gold-500/10 flex items-center justify-center shrink-0">
+        <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full border border-gold-500/30 bg-gold-500/10 flex items-center justify-center shrink-0">
           <span className="font-heading text-gold-400 font-bold text-sm">{week.week}</span>
         </div>
         <div className="flex-1 min-w-0">
-          <h3 className="font-heading text-lg font-bold text-gray-100">{title}</h3>
+          <h3 className="font-heading text-base sm:text-lg font-bold text-gray-100">{title}</h3>
           <p className="text-xs text-gray-400 mt-1 line-clamp-2">{weeklyGoal}</p>
           <div className="mt-2 flex items-center gap-2 flex-wrap">
             <span className="text-[10px] px-2 py-0.5 rounded-full border border-gold-500/30 text-gold-400 bg-gold-500/10">
@@ -133,7 +133,7 @@ export default function WeekCard({ week, weekIndex }: { week: WeekPlan; weekInde
             transition={{ duration: 0.2 }}
             className="overflow-hidden"
           >
-            <div className="px-5 pb-5">
+            <div className="px-4 sm:px-5 pb-4 sm:pb-5">
               <div className="mb-4 p-3 rounded-lg border border-gold-500/20 bg-gold-500/5">
                 <p className="text-[10px] uppercase tracking-widest text-gold-400 font-bold mb-1">
                   {t(locale, "weeklyGoalLabel")} <Target className="w-3 h-3 inline" />

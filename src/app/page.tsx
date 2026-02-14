@@ -928,10 +928,10 @@ export default function Home() {
   };
 
   return (
-    <main className="min-h-screen flex flex-col">
+    <main className="min-h-screen flex flex-col bg-dark-bg overflow-x-hidden">
       <Navbar />
 
-      <section className="relative min-h-screen flex items-center overflow-hidden">
+      <section className="relative min-h-screen pt-16 md:pt-0 flex items-center overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-b from-black via-black/95 to-black z-0" />
 
         <motion.div
@@ -940,7 +940,7 @@ export default function Home() {
           transition={{ duration: 1.2, ease: "easeOut" }}
           className="absolute inset-0 flex items-end justify-end z-[1]"
         >
-          <div className="relative w-[60%] md:w-[45%] h-[75vh] md:h-[90vh] ltr:mr-[5%] rtl:ml-[5%]" style={{direction: "ltr"}}>
+          <div className="relative w-[78%] sm:w-[62%] md:w-[45%] h-[58vh] sm:h-[72vh] md:h-[90vh] ltr:mr-[2%] md:ltr:mr-[5%] rtl:ml-[2%] md:rtl:ml-[5%] opacity-35 sm:opacity-60 md:opacity-100" style={{direction: "ltr"}}>
             <Image
               src="/images/ronaldo-nassr.png"
               alt="Cristiano Ronaldo"
@@ -955,9 +955,9 @@ export default function Home() {
 
         <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-black to-transparent z-[2]" />
 
-        <div className="relative z-10 w-full max-w-6xl mx-auto px-6 md:px-8 py-20">
-          <div className="flex items-center min-h-[80vh]">
-            <div className="relative z-20 w-full md:w-1/2">
+        <div className="relative z-10 w-full max-w-6xl mx-auto px-4 sm:px-6 md:px-8 py-14 sm:py-20">
+          <div className="flex items-center min-h-[68vh] sm:min-h-[75vh]">
+            <div className="relative z-20 w-full md:w-1/2 max-w-xl">
               <div className="mb-6 inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gold-500/15 border border-gold-500/30">
                 <span className="w-2 h-2 rounded-full bg-gold-500 animate-pulse" />
                 <span className="text-xs text-gold-400 font-bold tracking-wider uppercase">
@@ -967,7 +967,7 @@ export default function Home() {
 
               {locale === "ar" ? (
                 <>
-                  <h1 className="font-heading text-5xl md:text-7xl lg:text-8xl font-bold text-white tracking-wider mb-2 leading-tight">
+                  <h1 className="font-heading text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-bold text-white tracking-wider mb-2 leading-tight">
                     {t(locale, "siteNameAr")}
                   </h1>
                   <p className="font-heading text-lg md:text-xl text-gray-500 tracking-widest mb-4">
@@ -975,23 +975,23 @@ export default function Home() {
                   </p>
                 </>
               ) : (
-                <h1 className="font-heading text-5xl md:text-7xl lg:text-8xl font-bold text-white tracking-wider mb-4 leading-tight">
+                <h1 className="font-heading text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-bold text-white tracking-wider mb-4 leading-tight">
                   DREAM<span className="text-gold-500">PLAN</span>
                 </h1>
               )}
 
-              <p className="font-heading text-xl md:text-2xl text-gold-400/80 tracking-widest uppercase mb-4">
+              <p className="font-heading text-lg sm:text-xl md:text-2xl text-gold-400/80 tracking-widest uppercase mb-4">
                 {t(locale, "tagline")}
               </p>
               <p className="text-[11px] text-gray-500 tracking-[0.18em] uppercase mb-4">
                 BUILT BY MATANY LABS
               </p>
 
-              <p className="text-gray-400 text-base md:text-lg mb-8 max-w-lg leading-relaxed">
+              <p className="text-gray-400 text-sm sm:text-base md:text-lg mb-8 max-w-lg leading-relaxed">
                 {t(locale, "heroDescription")}
               </p>
 
-              <div className="flex items-center gap-6 mb-8">
+              <div className="flex flex-wrap items-center gap-4 sm:gap-6 mb-8">
                 {[
                   { value: "7-90", label: locale === "ar" ? "يوم" : "Days" },
                   { value: "70+", label: locale === "ar" ? "مهمة" : "Tasks" },
@@ -999,7 +999,7 @@ export default function Home() {
                 ].map((stat, i) => (
                   <div key={i} className="flex items-center">
                     <div className="text-center">
-                      <div className="font-heading text-2xl md:text-3xl font-bold text-gold-500">{stat.value}</div>
+                      <div className="font-heading text-xl sm:text-2xl md:text-3xl font-bold text-gold-500">{stat.value}</div>
                       <div className="text-[10px] text-gray-500 uppercase tracking-widest">{stat.label}</div>
                     </div>
                     {i < 2 && <div className="w-1 h-1 rounded-full bg-gold-500/40 ltr:ml-6 rtl:mr-6" />}
@@ -1007,24 +1007,24 @@ export default function Home() {
                 ))}
               </div>
 
-              <div className="flex items-center gap-4">
+              <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 w-full">
                 <button
                   onClick={() => document.getElementById("protocol-form")?.scrollIntoView({ behavior: "smooth" })}
-                  className="inline-flex items-center gap-2 bg-gold-500 hover:bg-gold-600 text-black font-heading font-bold tracking-wider px-6 py-3 rounded-xl transition-all uppercase text-sm active:scale-[0.98] shadow-lg shadow-gold-500/20 hover:shadow-gold-500/30"
+                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-gold-500 hover:bg-gold-600 text-black font-heading font-bold tracking-wider px-6 py-3 rounded-xl transition-all uppercase text-sm active:scale-[0.98] shadow-lg shadow-gold-500/20 hover:shadow-gold-500/30"
                 >
                   <ArrowDown className="w-4 h-4" />
                   {locale === "ar" ? "ابدأ الآن" : "Start Now"}
                 </button>
                 <Link
                   href="/plans"
-                  className="inline-flex items-center gap-2 border border-gold-500/50 text-gold-400 hover:bg-gold-500/10 font-heading font-bold tracking-wider px-6 py-3 rounded-xl transition-all uppercase text-sm active:scale-[0.98]"
+                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2 border border-gold-500/50 text-gold-400 hover:bg-gold-500/10 font-heading font-bold tracking-wider px-6 py-3 rounded-xl transition-all uppercase text-sm active:scale-[0.98]"
                 >
                   <Crown className="w-4 h-4" />
                   {locale === "ar" ? "عرض الخطط" : "View Plans"}
                 </Link>
                 <Link
                   href="/profile"
-                  className="inline-flex items-center gap-2 border border-dark-border text-gray-300 hover:text-gold-400 hover:border-gold-500/40 px-6 py-3 rounded-xl transition-all uppercase text-sm active:scale-[0.98]"
+                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2 border border-dark-border text-gray-300 hover:text-gold-400 hover:border-gold-500/40 px-6 py-3 rounded-xl transition-all uppercase text-sm active:scale-[0.98]"
                 >
                   {locale === "ar" ? "الملف الشخصي" : "Profile"}
                 </Link>
@@ -1034,7 +1034,7 @@ export default function Home() {
         </div>
 
         <motion.div
-          className="absolute bottom-8 left-1/2 -translate-x-1/2 z-20"
+          className="hidden md:block absolute bottom-8 left-1/2 -translate-x-1/2 z-20"
           animate={{ y: [0, 8, 0] }}
           transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
         >
@@ -1042,7 +1042,7 @@ export default function Home() {
         </motion.div>
       </section>
 
-      <section id="protocol-form" className="relative z-10 px-4 py-16 max-w-5xl mx-auto w-full -mt-20">
+      <section id="protocol-form" className="relative z-10 px-4 py-12 md:py-16 max-w-5xl mx-auto w-full -mt-10 md:-mt-20">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -1050,7 +1050,7 @@ export default function Home() {
           transition={{ duration: 0.6 }}
           className="animated-border-wrapper mb-16"
         >
-          <div className="animated-border-inner p-8 md:p-10">
+          <div className="animated-border-inner p-5 sm:p-8 md:p-10">
             {/* Plan Mode toggle lives inside the "Design Your Protocol" block, near the main CTA. */}
 
             {flowState === "generating" ? (
@@ -1106,7 +1106,7 @@ export default function Home() {
                       type="button"
                       onClick={handlePlannerAnswerSubmit}
                       disabled={!plannerAnswerValue}
-                      className="inline-flex items-center justify-center gap-2 bg-gold-500 hover:bg-gold-600 disabled:opacity-50 disabled:cursor-not-allowed text-black font-heading font-bold tracking-wider px-6 py-3 rounded-xl uppercase text-xs"
+                      className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-gold-500 hover:bg-gold-600 disabled:opacity-50 disabled:cursor-not-allowed text-black font-heading font-bold tracking-wider px-6 py-3 rounded-xl uppercase text-xs"
                     >
                       {locale === "ar" ? "التالي" : "Next"}
                     </button>
@@ -1121,7 +1121,7 @@ export default function Home() {
                     <button
                       type="button"
                       onClick={generateProtocol}
-                      className="inline-flex items-center justify-center gap-2 bg-gold-500 hover:bg-gold-600 text-black font-heading font-bold tracking-wider px-6 py-3 rounded-xl uppercase text-xs"
+                      className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-gold-500 hover:bg-gold-600 text-black font-heading font-bold tracking-wider px-6 py-3 rounded-xl uppercase text-xs"
                     >
                       <Sparkles className="w-4 h-4" />
                       {t(locale, "confirmGenerate")}
@@ -1264,7 +1264,7 @@ export default function Home() {
                         type="button"
                         onClick={handleStartPlannerQuestions}
                         disabled={isLoading || !canStartPlanQuestions || !hasProDemo}
-                        className="inline-flex items-center justify-center gap-2 bg-gold-500 hover:bg-gold-600 disabled:opacity-50 disabled:cursor-not-allowed text-black font-heading font-bold tracking-wider px-8 py-4 rounded-xl uppercase text-sm"
+                        className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-gold-500 hover:bg-gold-600 disabled:opacity-50 disabled:cursor-not-allowed text-black font-heading font-bold tracking-wider px-8 py-4 rounded-xl uppercase text-sm"
                       >
                         <ClipboardList className="w-4 h-4" />
                         {t(locale, "startAiQuestions")}
@@ -1272,7 +1272,7 @@ export default function Home() {
                       <button
                         type="button"
                         onClick={() => router.push("/profile?returnTo=/")}
-                        className="inline-flex items-center justify-center gap-2 border border-gold-500/40 text-gold-300 hover:bg-gold-500/10 font-heading font-bold tracking-wider px-6 py-4 rounded-xl uppercase text-xs"
+                        className="w-full sm:w-auto inline-flex items-center justify-center gap-2 border border-gold-500/40 text-gold-300 hover:bg-gold-500/10 font-heading font-bold tracking-wider px-6 py-4 rounded-xl uppercase text-xs"
                       >
                         {t(locale, "openProfilePage")}
                       </button>
@@ -1281,7 +1281,7 @@ export default function Home() {
                     <button
                       type="button"
                       onClick={generateProtocol}
-                      className="inline-flex items-center justify-center gap-2 bg-gold-500 hover:bg-gold-600 text-black font-heading font-bold tracking-wider px-8 py-4 rounded-xl uppercase text-sm"
+                      className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-gold-500 hover:bg-gold-600 text-black font-heading font-bold tracking-wider px-8 py-4 rounded-xl uppercase text-sm"
                     >
                       <Sparkles className="w-4 h-4" />
                       {t(locale, "confirmGenerate")}
@@ -1290,7 +1290,7 @@ export default function Home() {
                   <button
                     type="button"
                     onClick={handleBackToGoal}
-                    className="inline-flex items-center justify-center gap-2 border border-dark-border text-gray-300 px-6 py-4 rounded-xl text-sm uppercase"
+                    className="w-full sm:w-auto inline-flex items-center justify-center gap-2 border border-dark-border text-gray-300 px-6 py-4 rounded-xl text-sm uppercase"
                   >
                     {t(locale, "editGoal")}
                   </button>
@@ -1691,7 +1691,7 @@ export default function Home() {
           </p>
           <Link
             href="/plans"
-            className="inline-flex items-center gap-2 bg-gold-500 hover:bg-gold-600 text-black font-heading font-bold tracking-wider px-8 py-3 rounded-xl transition-all uppercase text-sm"
+            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-gold-500 hover:bg-gold-600 text-black font-heading font-bold tracking-wider px-8 py-3 rounded-xl transition-all uppercase text-sm"
           >
             <Crown className="w-4 h-4" />
             {locale === "ar" ? "عرض الخطط" : "View Plans"}

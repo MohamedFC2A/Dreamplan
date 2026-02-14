@@ -175,9 +175,9 @@ function ProfilePageContent() {
   return (
     <main className="min-h-screen">
       <Navbar />
-      <section className="max-w-6xl mx-auto px-4 pt-24 pb-14 space-y-5">
+      <section className="max-w-6xl mx-auto px-4 pt-20 md:pt-24 pb-10 md:pb-14 space-y-4 md:space-y-5">
         <motion.div initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} className="rounded-2xl border border-dark-border bg-dark-card overflow-hidden">
-          <div className="p-6 border-b border-dark-border bg-gradient-to-r from-gold-500/10 via-gold-500/5 to-transparent">
+          <div className="p-4 md:p-6 border-b border-dark-border bg-gradient-to-r from-gold-500/10 via-gold-500/5 to-transparent">
             <div className="flex flex-wrap items-center justify-between gap-3">
               <div>
                 <h1 className="font-heading text-2xl font-bold text-white">{t(locale, "profilePageTitle")}</h1>
@@ -193,7 +193,7 @@ function ProfilePageContent() {
             </div>
           </div>
 
-          <div className="p-6 grid grid-cols-1 lg:grid-cols-3 gap-5">
+          <div className="p-4 md:p-6 grid grid-cols-1 lg:grid-cols-3 gap-5">
             <div className="lg:col-span-2 space-y-4">
               <div className="rounded-xl border border-dark-border bg-black/30 p-4 space-y-3">
                 <div className="flex items-center gap-2 text-gray-100">
@@ -281,16 +281,16 @@ function ProfilePageContent() {
                 </div>
               )}
 
-              <div className="flex flex-wrap gap-3">
-                <button type="button" onClick={handleSaveProfile} className="inline-flex items-center gap-2 bg-gold-500 hover:bg-gold-600 text-black font-heading font-bold tracking-wider px-6 py-3 rounded-xl uppercase text-xs">
+              <div className="flex flex-col sm:flex-row sm:flex-wrap gap-3">
+                <button type="button" onClick={handleSaveProfile} className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-gold-500 hover:bg-gold-600 text-black font-heading font-bold tracking-wider px-6 py-3 rounded-xl uppercase text-xs">
                   <Save className="w-4 h-4" />
                   {t(locale, "profileSaveBtn")}
                 </button>
-                <button type="button" onClick={() => router.push(returnTo)} className="inline-flex items-center gap-2 border border-dark-border text-gray-300 hover:border-gold-500/40 px-6 py-3 rounded-xl uppercase text-xs">
+                <button type="button" onClick={() => router.push(returnTo)} className="w-full sm:w-auto inline-flex items-center justify-center gap-2 border border-dark-border text-gray-300 hover:border-gold-500/40 px-6 py-3 rounded-xl uppercase text-xs">
                   <ArrowLeft className="w-4 h-4 rtl:rotate-180" />
                   {t(locale, "profileBackToPlanner")}
                 </button>
-                <Link href="/" className="inline-flex items-center gap-2 border border-dark-border text-gray-400 px-6 py-3 rounded-xl uppercase text-xs">{t(locale, "backToHome")}</Link>
+                <Link href="/" className="w-full sm:w-auto inline-flex items-center justify-center gap-2 border border-dark-border text-gray-400 px-6 py-3 rounded-xl uppercase text-xs">{t(locale, "backToHome")}</Link>
               </div>
             </div>
 

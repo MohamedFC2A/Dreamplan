@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Crown, LogIn, LogOut, UserCircle2 } from "lucide-react";
+import { Crown, LogIn, LogOut, Menu, UserCircle2, X } from "lucide-react";
 import { useLanguage } from "@/lib/LanguageContext";
 import { useAuth } from "@/lib/AuthContext";
 import { getGenerationTaskSnapshot, subscribeGenerationTask } from "@/lib/generation-task";
@@ -16,6 +16,7 @@ export default function Navbar() {
   const [isGenerating, setIsGenerating] = useState(false);
   const [isProEnabled, setIsProEnabled] = useState(false);
   const [authError, setAuthError] = useState("");
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     const initial = getGenerationTaskSnapshot();
@@ -36,6 +37,19 @@ export default function Navbar() {
       window.removeEventListener("focus", syncPro);
     };
   }, []);
+
+  useEffect(() => {
+    setMobileMenuOpen(false);
+  }, [pathname]);
+
+  useEffect(() => {
+    if (!mobileMenuOpen) return;
+    const previous = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = previous;
+    };
+  }, [mobileMenuOpen]);
 
   const links = [
     { href: "/", label: locale === "ar" ? "الرئيسية" : "Home" },
@@ -71,7 +85,8 @@ export default function Navbar() {
             BUILT BY MATANY LABS
           </span>
         </Link>
-        <div className="flex items-center gap-1 overflow-x-auto whitespace-nowrap">
+
+        <div className="hidden md:flex items-center gap-1 min-w-0">
           {isGenerating && (
             <Link
               href="/"
@@ -138,7 +153,117 @@ export default function Navbar() {
             {locale === "ar" ? "English" : "العربية"}
           </button>
         </div>
+
+        <div className="md:hidden flex items-center gap-2">
+          {isGenerating ? (
+            <span className="inline-flex items-center gap-1.5 px-2 py-1 rounded-md border border-gold-500/30 bg-gold-500/10 text-[10px] text-gold-300">
+              <span className="w-1.5 h-1.5 rounded-full bg-gold-400 animate-pulse" />
+              AI
+            </span>
+          ) : null}
+          <button
+            type="button"
+            onClick={() => setMobileMenuOpen((prev) => !prev)}
+            aria-label={mobileMenuOpen ? (locale === "ar" ? "إغلاق القائمة" : "Close menu") : (locale === "ar" ? "فتح القائمة" : "Open menu")}
+            className={`inline-flex items-center justify-center w-10 h-10 rounded-xl border transition-colors ${
+              mobileMenuOpen
+                ? "border-gold-500/40 bg-gold-500/10 text-gold-300"
+                : "border-dark-border bg-dark-card text-gray-300"
+            }`}
+          >
+            {mobileMenuOpen ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
+          </button>
+        </div>
       </div>
+
+      {mobileMenuOpen && (
+        <div className="md:hidden border-t border-dark-border/60 bg-black/95 backdrop-blur-xl">
+          <div className="px-4 py-4 space-y-3">
+            <div className="flex flex-wrap items-center gap-2">
+              {isProEnabled ? (
+                <Link
+                  href="/plans"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="text-[10px] px-2.5 py-1 rounded-md border border-gold-500/35 bg-gold-500/10 text-gold-300 inline-flex items-center gap-1.5"
+                >
+                  <Crown className="w-3 h-3" />
+                  PRO
+                </Link>
+              ) : null}
+              {isGenerating ? (
+                <Link
+                  href="/"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="text-[10px] px-2.5 py-1 rounded-md border border-gold-500/35 bg-gold-500/10 text-gold-300"
+                >
+                  {locale === "ar" ? "NEXUS AI يعمل بالخلفية" : "NEXUS AI in background"}
+                </Link>
+              ) : null}
+            </div>
+
+            <div className="grid grid-cols-1 gap-1.5">
+              {links.map((link) => {
+                const isActive = pathname === link.href;
+                return (
+                  <Link
+                    key={link.href}
+                    href={link.href}
+                    onClick={() => setMobileMenuOpen(false)}
+                    className={`px-3 py-2.5 rounded-xl text-sm border transition-colors ${
+                      isActive
+                        ? "border-gold-500/35 bg-gold-500/10 text-gold-300"
+                        : "border-dark-border bg-dark-card text-gray-300"
+                    }`}
+                  >
+                    {link.label}
+                  </Link>
+                );
+              })}
+            </div>
+
+            <div className="pt-2 border-t border-dark-border/60 space-y-2">
+              {isConfigured &&
+                (authLoading ? (
+                  <p className="text-xs text-gray-500 px-1">
+                    {locale === "ar" ? "جاري التحميل..." : "Loading..."}
+                  </p>
+                ) : user ? (
+                  <div className="space-y-2">
+                    <p className="text-xs text-gray-400 px-1">
+                      <span className="text-gold-300">{firstName}</span>
+                    </p>
+                    <button
+                      type="button"
+                      onClick={handleSignOut}
+                      className="w-full inline-flex items-center justify-center gap-2 text-xs px-3 py-2.5 rounded-xl border border-dark-border bg-dark-card text-gray-200"
+                    >
+                      <LogOut className="w-3.5 h-3.5" />
+                      {locale === "ar" ? "تسجيل الخروج" : "Sign Out"}
+                    </button>
+                  </div>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={handleGoogleSignIn}
+                    className="w-full inline-flex items-center justify-center gap-2 text-xs px-3 py-2.5 rounded-xl border border-gold-500/40 bg-gold-500/10 text-gold-300"
+                  >
+                    <LogIn className="w-3.5 h-3.5" />
+                    {locale === "ar" ? "Google دخول" : "Google Sign In"}
+                  </button>
+                ))}
+
+              <button
+                type="button"
+                onClick={() => setLocale(locale === "ar" ? "en" : "ar")}
+                className="w-full inline-flex items-center justify-center text-sm bg-dark-card border border-dark-border rounded-xl px-4 py-2.5 text-gold-400"
+              >
+                {locale === "ar" ? "English" : "العربية"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {authError && (
         <div className="px-4 py-1 text-center text-[11px] text-red-300 bg-red-500/10 border-t border-red-500/20">
           {authError}

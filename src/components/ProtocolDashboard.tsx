@@ -252,7 +252,7 @@ export default function ProtocolDashboard({ protocol }: { protocol: Protocol }) 
   const timelineList = inferredMode === "weekly" ? safeWeeks : safeDays;
 
   return (
-    <main className="min-h-screen px-4 py-12 max-w-5xl mx-auto pt-20">
+    <main className="min-h-screen px-3 sm:px-4 py-10 md:py-12 max-w-5xl mx-auto pt-20 md:pt-24">
       <Navbar />
       <motion.div
         initial={{ opacity: 0, y: 20 }}
@@ -275,10 +275,10 @@ export default function ProtocolDashboard({ protocol }: { protocol: Protocol }) 
           </span>
         </div>
 
-        <h1 className="font-heading text-3xl md:text-5xl font-bold text-gray-100 mb-2 tracking-wide">
+        <h1 className="font-heading text-2xl sm:text-3xl md:text-5xl font-bold text-gray-100 mb-2 tracking-wide">
           {title}
         </h1>
-        <p className="text-gray-500 text-lg mb-8">{subtitle}</p>
+        <p className="text-gray-500 text-base md:text-lg mb-8">{subtitle}</p>
 
         <div className="flex flex-wrap gap-2 mb-8">
           {focus.map((f) => (
@@ -338,25 +338,6 @@ export default function ProtocolDashboard({ protocol }: { protocol: Protocol }) 
           </div>
         </motion.div>
 
-        <div className="bg-dark-card border border-dark-border rounded-xl p-5 mb-6">
-          <h3 className="font-heading text-xs uppercase tracking-[0.18em] text-gold-400 mb-4">
-            {locale === "ar" ? "الأقسام الثابتة للبروتوكول" : "Fixed Protocol Sections"}
-          </h3>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-            {SECTION_META.map((section) => {
-              const Icon = section.icon;
-              return (
-                <div key={section.key} className={`rounded-lg border px-3 py-2 ${section.color}`}>
-                  <p className="inline-flex items-center gap-1 text-xs font-semibold">
-                    <Icon className="w-3.5 h-3.5" />
-                    {locale === "ar" ? section.ar : section.en}
-                  </p>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-
         <div className="grid grid-cols-1 md:grid-cols-4 gap-3 mb-6">
           <div className="rounded-xl border border-dark-border bg-black/35 p-4">
             <p className="text-[11px] uppercase tracking-widest text-gray-500 mb-1">
@@ -390,7 +371,7 @@ export default function ProtocolDashboard({ protocol }: { protocol: Protocol }) 
           initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.15, duration: 0.5 }}
-          className="bg-dark-card border border-gold-500/20 rounded-xl p-6 mb-8"
+          className="bg-dark-card border border-gold-500/20 rounded-xl p-4 sm:p-6 mb-8"
         >
           <h2 className="font-heading text-sm font-bold text-gold-400 mb-5 tracking-widest uppercase">
             {t(locale, "protocolSummary")}
@@ -505,7 +486,7 @@ export default function ProtocolDashboard({ protocol }: { protocol: Protocol }) 
           initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.25, duration: 0.5 }}
-          className="bg-dark-card border border-dark-border rounded-xl p-6 mb-8 border-l-2 border-r-2 border-l-gold-500/30 border-r-gold-500/30"
+          className="bg-dark-card border border-dark-border rounded-xl p-4 sm:p-6 mb-8 border-l-2 border-r-2 border-l-gold-500/30 border-r-gold-500/30"
         >
           <h2 className="font-heading text-lg font-bold text-gray-200 mb-3 tracking-wide uppercase">
             {t(locale, "scienceOverview")} <FlaskConical className="w-4 h-4 text-gray-200 inline" />

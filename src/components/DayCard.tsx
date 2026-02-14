@@ -86,21 +86,21 @@ export default function DayCard({
       <button
         type="button"
         onClick={() => setExpanded(!expanded)}
-        className="w-full flex items-center gap-4 p-5 text-start hover:bg-dark-border/20 transition-colors"
+        className="w-full flex items-center gap-3 sm:gap-4 p-4 sm:p-5 text-start hover:bg-dark-border/20 transition-colors"
         aria-expanded={expanded}
       >
-        <span className="font-heading text-3xl font-bold text-gold-500 shrink-0 w-12 text-center">
+        <span className="font-heading text-2xl sm:text-3xl font-bold text-gold-500 shrink-0 w-10 sm:w-12 text-center">
           {String(day.day).padStart(2, "0")}
         </span>
         <div className="flex-1 min-w-0">
-          <h3 className="font-heading text-xl font-bold text-gray-100 tracking-wide">
+          <h3 className="font-heading text-lg sm:text-xl font-bold text-gray-100 tracking-wide">
             {dayTitle}
           </h3>
           <span className="text-xs text-gold-400 uppercase tracking-widest">
             {dayTheme}
           </span>
-          <div className="mt-2 flex items-center gap-3">
-            <div className={`flex-1 h-2 rounded-full bg-dark-border overflow-hidden max-w-[200px] transition-shadow duration-500 ${
+          <div className="mt-2 flex flex-wrap items-center gap-2">
+            <div className={`w-full sm:w-auto flex-1 h-2 rounded-full bg-dark-border overflow-hidden sm:max-w-[200px] transition-shadow duration-500 ${
               isAllComplete ? "shadow-[0_0_8px_rgba(212,175,55,0.6)]" : ""
             }`}>
               <motion.div
@@ -148,7 +148,7 @@ export default function DayCard({
             transition={{ duration: 0.3, ease: "easeInOut" }}
             className="overflow-hidden"
           >
-            <div className="px-5 pb-5">
+            <div className="px-4 sm:px-5 pb-4 sm:pb-5">
               <AnimatePresence>
                 {isAllComplete && (
                   <motion.div

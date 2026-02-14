@@ -16,12 +16,17 @@
 html {
   scroll-behavior: smooth;
   scroll-padding-top: 5rem;
+  max-width: 100%;
+  overflow-x: hidden;
 }
 
 body {
   background-color: #000000;
   color: #f1f5f9;
   font-family: 'Inter', sans-serif;
+  max-width: 100%;
+  overflow-x: hidden;
+  -webkit-tap-highlight-color: transparent;
 }
 
 [dir="rtl"] body,
@@ -71,6 +76,20 @@ a:focus-visible {
 img {
   max-width: 100%;
   height: auto;
+}
+
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+@media (max-width: 640px) {
+  input,
+  textarea,
+  select {
+    font-size: 16px;
+  }
 }
 
 a {

@@ -90,6 +90,10 @@ export default function ProgressTracker({
   const scale = getImpactScale(maxImpact);
   const baseline = sorted[0];
   const current = sorted[sorted.length - 1];
+  const scoredSeries = sorted.map((item) => ({
+    unit: item.day,
+    score: toScore(item.impact, scale),
+  }));
   const baselineScore = toScore(baseline.impact, scale);
   const currentScore = toScore(current.impact, scale);
   const deltaScore = currentScore - baselineScore;
@@ -113,8 +117,34 @@ export default function ProgressTracker({
   const q3 = sorted[findMilestoneIndex(sorted, 0.75)];
   const milestones = [q1, q2, q3, current];
 
+  const deltaColumns = scoredSeries.map((item, index) => ({
+    unit: item.unit,
+    delta: index === 0 ? 0 : item.score - scoredSeries[index - 1].score,
+  }));
+  const maxAbsDelta = Math.max(
+    0.1,
+    ...deltaColumns.map((item) => Math.abs(item.delta))
+  );
+  const avgDelta =
+    deltaColumns.length > 1
+      ? deltaColumns.slice(1).reduce((sum, item) => sum + item.delta, 0) /
+        (deltaColumns.length - 1)
+      : 0;
+  const bestDelta = deltaColumns.slice(1).reduce((best, item) => {
+    if (!best || item.delta > best.delta) return item;
+    return best;
+  }, deltaColumns[1] || null);
+  const deltaLabelStride =
+    deltaColumns.length <= 12
+      ? 1
+      : deltaColumns.length <= 24
+      ? 2
+      : deltaColumns.length <= 40
+      ? 4
+      : 7;
+
   return (
-    <div className="bg-dark-card border border-dark-border rounded-xl p-6 mb-8">
+    <div className="bg-dark-card border border-dark-border rounded-xl p-4 sm:p-6 mb-8">
       <h2 className="font-heading text-lg font-bold text-gray-200 mb-4 tracking-wide uppercase">
         {t(locale, "projectedImpact")}
       </h2>
@@ -183,6 +213,79 @@ export default function ProgressTracker({
             </p>
           </div>
         </div>
+      </div>
+
+      <div className="rounded-xl border border-dark-border bg-black/35 p-4 mb-4">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1.5 mb-3">
+          <p className="text-[11px] uppercase tracking-widest text-gray-500">
+            {locale === "ar"
+              ? "أعمدة التغير اليومي في التأثير البصري"
+              : "Daily Visual Impact Change Columns"}
+          </p>
+          <p className="text-xs text-gray-400">
+            {locale === "ar" ? "متوسط التغير/يوم" : "Avg change / day"}:{" "}
+            <span className="text-gold-300 font-heading">
+              {avgDelta >= 0 ? "+" : ""}
+              {avgDelta.toFixed(2)}%
+            </span>
+          </p>
+        </div>
+
+        <div className="overflow-x-auto">
+          <div
+            className="flex items-end gap-1.5 h-36 min-w-[280px]"
+            style={{ minWidth: `${Math.max(deltaColumns.length * 18, 280)}px` }}
+          >
+            {deltaColumns.map((item, index) => {
+              const magnitude = Math.abs(item.delta);
+              const barHeight = clamp((magnitude / maxAbsDelta) * 100, 0, 100);
+              const isPositive = item.delta > 0;
+              const isNegative = item.delta < 0;
+              const showLabel =
+                index === 0 ||
+                index === deltaColumns.length - 1 ||
+                index % deltaLabelStride === 0;
+              return (
+                <div
+                  key={`${item.unit}-${index}`}
+                  className="flex flex-col items-center justify-end gap-1 h-full"
+                  title={`${t(locale, labelPrefix === "week" ? "week" : "day")} ${item.unit}: ${
+                    item.delta >= 0 ? "+" : ""
+                  }${item.delta.toFixed(2)}%`}
+                >
+                  <span className="text-[10px] text-gray-400 leading-none">
+                    {index === 0
+                      ? "--"
+                      : `${item.delta >= 0 ? "+" : ""}${item.delta.toFixed(1)}`}
+                  </span>
+                  <div
+                    className={`w-3 rounded-sm ${
+                      isPositive
+                        ? "bg-emerald-400"
+                        : isNegative
+                        ? "bg-red-400"
+                        : "bg-gray-500"
+                    }`}
+                    style={{ height: `${Math.max(6, barHeight)}%` }}
+                  />
+                  <span className="text-[9px] text-gray-500 leading-none">
+                    {showLabel
+                      ? `${labelPrefix === "week" ? "W" : "D"}${item.unit}`
+                      : ""}
+                  </span>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+
+        {bestDelta ? (
+          <p className="text-xs text-gray-500 mt-2">
+            {locale === "ar"
+              ? `أفضل قفزة كانت في ${t(locale, labelPrefix === "week" ? "week" : "day")} ${bestDelta.unit} بقيمة +${bestDelta.delta.toFixed(2)}%.`
+              : `Best jump was on ${t(locale, labelPrefix === "week" ? "week" : "day")} ${bestDelta.unit} at +${bestDelta.delta.toFixed(2)}%.`}
+          </p>
+        ) : null}
       </div>
 
       <div className="rounded-xl border border-dark-border bg-black/30 p-4">
