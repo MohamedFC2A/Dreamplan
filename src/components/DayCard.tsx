@@ -75,7 +75,7 @@ export default function DayCard({
 
   return (
     <div
-      className={`bg-dark-card border border-dark-border rounded-xl overflow-hidden transition-all duration-300 ${
+      className={`bg-dark-card border border-dark-border rounded-xl overflow-hidden transition-all duration-300 ux-card ${
         expanded
           ? locale === "ar"
             ? "border-r-2 border-r-gold-500/60"

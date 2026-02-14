@@ -334,6 +334,171 @@ select:focus {
   z-index: 1;
 }
 
+@layer components {
+  .ux-page-shell {
+    max-width: 72rem;
+    margin-inline: auto;
+    padding-inline: 1rem;
+  }
+
+  @media (min-width: 640px) {
+    .ux-page-shell {
+      padding-inline: 1.5rem;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .ux-page-shell {
+      padding-inline: 2rem;
+    }
+  }
+
+  .ux-heading-xl {
+    font-family: "Oswald", sans-serif;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    color: #f8fafc;
+    line-height: 1.15;
+  }
+
+  [dir="rtl"] .ux-heading-xl {
+    font-family: "Cairo", "Oswald", sans-serif;
+    letter-spacing: 0.02em;
+  }
+
+  .ux-heading-lg {
+    font-family: "Oswald", sans-serif;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: #f8fafc;
+    text-transform: uppercase;
+  }
+
+  [dir="rtl"] .ux-heading-lg {
+    font-family: "Cairo", "Oswald", sans-serif;
+    letter-spacing: 0.03em;
+    text-transform: none;
+  }
+
+  .ux-body-muted {
+    color: #c7d1df;
+    line-height: 1.7;
+  }
+
+  .ux-card {
+    border: 1px solid var(--glass-border-soft);
+    border-radius: 1rem;
+    background: linear-gradient(165deg, var(--glass-bg), var(--glass-bg-soft));
+    backdrop-filter: blur(16px) saturate(145%);
+    -webkit-backdrop-filter: blur(16px) saturate(145%);
+    box-shadow: var(--glass-shadow);
+  }
+
+  .ux-card-soft {
+    border: 1px solid rgba(255, 255, 255, 0.09);
+    border-radius: 0.9rem;
+    background: linear-gradient(165deg, rgba(10, 14, 20, 0.52), rgba(14, 20, 30, 0.38));
+    backdrop-filter: blur(12px) saturate(135%);
+    -webkit-backdrop-filter: blur(12px) saturate(135%);
+  }
+
+  .ux-chip {
+    border: 1px solid rgba(212, 175, 55, 0.32);
+    border-radius: 999px;
+    background: rgba(212, 175, 55, 0.1);
+    color: #f4cf7a;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 0.25rem 0.65rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+  }
+
+  .ux-btn-primary {
+    background: linear-gradient(160deg, #e2be58 0%, #d4af37 55%, #bc9524 100%);
+    color: #090909;
+    border: 1px solid rgba(212, 175, 55, 0.95);
+    border-radius: 0.75rem;
+    font-family: "Oswald", sans-serif;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    transition: transform 0.2s ease, filter 0.2s ease, box-shadow 0.2s ease;
+    box-shadow: 0 6px 20px rgba(212, 175, 55, 0.28);
+  }
+
+  .ux-btn-primary:hover {
+    filter: brightness(1.04);
+    transform: translateY(-1px);
+    box-shadow: 0 10px 26px rgba(212, 175, 55, 0.36);
+  }
+
+  .ux-btn-primary:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+  }
+
+  .ux-btn-secondary {
+    background: linear-gradient(165deg, rgba(212, 175, 55, 0.12), rgba(212, 175, 55, 0.06));
+    color: #f3ce78;
+    border: 1px solid rgba(212, 175, 55, 0.38);
+    border-radius: 0.75rem;
+    font-family: "Oswald", sans-serif;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    transition: background-color 0.2s ease, transform 0.2s ease;
+  }
+
+  .ux-btn-secondary:hover {
+    transform: translateY(-1px);
+    background: linear-gradient(165deg, rgba(212, 175, 55, 0.18), rgba(212, 175, 55, 0.09));
+  }
+
+  .ux-btn-ghost {
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    border-radius: 0.75rem;
+    color: #d7deea;
+    background: linear-gradient(165deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.01));
+    transition: border-color 0.2s ease, color 0.2s ease, transform 0.2s ease;
+  }
+
+  .ux-btn-ghost:hover {
+    color: #f2f5fa;
+    border-color: rgba(212, 175, 55, 0.34);
+    transform: translateY(-1px);
+  }
+
+  .ux-flow-steps {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 0.45rem;
+  }
+
+  .ux-flow-step {
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 0.7rem;
+    padding: 0.45rem 0.5rem;
+    background: rgba(10, 14, 20, 0.35);
+    text-align: center;
+    font-size: 0.65rem;
+    color: #aab6c8;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+
+  .ux-flow-step[data-active="true"] {
+    border-color: rgba(212, 175, 55, 0.48);
+    color: #f1cd79;
+    background: rgba(212, 175, 55, 0.13);
+  }
+}
+
 @layer utilities {
   .text-balance {
     text-wrap: balance;

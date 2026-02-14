@@ -95,7 +95,7 @@ export default function WeekCard({ week, weekIndex }: { week: WeekPlan; weekInde
   };
 
   return (
-    <div className="bg-dark-card border border-dark-border rounded-xl overflow-hidden">
+    <div className="bg-dark-card border border-dark-border rounded-xl overflow-hidden ux-card">
       <button
         type="button"
         onClick={() => setExpanded((value) => !value)}

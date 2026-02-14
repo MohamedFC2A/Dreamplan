@@ -128,7 +128,7 @@ function FAQItem({ question, answer }: { question: string; answer: string }) {
   const [open, setOpen] = useState(false);
 
   return (
-    <div className="border border-dark-border rounded-xl overflow-hidden bg-dark-card/50 hover:border-dark-border/80 transition-colors">
+    <div className="border border-dark-border rounded-xl overflow-hidden bg-dark-card/50 hover:border-dark-border/80 transition-colors ux-card-soft">
       <button
         onClick={() => setOpen(!open)}
         className="w-full flex items-center justify-between p-5 text-start hover:bg-white/[0.02] transition-colors"
@@ -178,7 +178,7 @@ export default function PlansPage() {
     <div className="min-h-screen bg-dark-bg">
       <Navbar />
 
-      <div className="max-w-5xl mx-auto px-4 py-8 md:py-16 pt-24">
+      <div className="max-w-5xl mx-auto px-4 py-8 md:py-16 pt-24 ux-page-shell">
 
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -186,13 +186,13 @@ export default function PlansPage() {
           transition={{ duration: 0.5 }}
           className="text-center mb-12"
         >
-          <h1 className="font-heading text-3xl md:text-4xl text-white mb-3">
+          <h1 className="font-heading text-3xl md:text-4xl text-white mb-3 ux-heading-xl">
             {t.title}
           </h1>
-          <p className="text-neutral-400 text-base md:text-lg max-w-xl mx-auto">
+          <p className="text-neutral-400 text-base md:text-lg max-w-xl mx-auto ux-body-muted">
             {t.subtitle}
           </p>
-          <div className="mt-5 inline-flex flex-col items-center gap-2 rounded-xl border border-gold-500/30 bg-gold-500/10 px-4 py-3">
+          <div className="mt-5 inline-flex flex-col items-center gap-2 rounded-xl border border-gold-500/30 bg-gold-500/10 px-4 py-3 ux-card-soft">
             <p className={`text-xs font-heading tracking-wider ${proDemoEnabled ? "text-gold-300" : "text-gray-400"}`}>
               {proDemoEnabled ? t.proDemoEnabled : t.proDemoDisabled}
             </p>
@@ -201,8 +201,8 @@ export default function PlansPage() {
               onClick={handleToggleProDemo}
               className={`inline-flex items-center gap-2 rounded-lg px-4 py-2 text-xs font-heading tracking-wider transition-colors ${
                 proDemoEnabled
-                  ? "border border-dark-border bg-black/40 text-gray-200 hover:border-gold-500/30"
-                  : "bg-gold-500 text-black hover:bg-gold-400"
+                  ? "ux-btn-ghost"
+                  : "ux-btn-primary"
               }`}
             >
               <Zap className="w-3.5 h-3.5" />
@@ -217,7 +217,7 @@ export default function PlansPage() {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.1 }}
-            className="bg-dark-card border border-dark-border rounded-2xl p-6 md:p-8 flex flex-col hover:border-dark-border/80 hover:bg-dark-card/80 transition-all duration-300"
+            className="bg-dark-card border border-dark-border rounded-2xl p-6 md:p-8 flex flex-col hover:border-dark-border/80 hover:bg-dark-card/80 transition-all duration-300 ux-card"
           >
             <div className="flex items-center gap-3 mb-6">
               <div className="w-10 h-10 rounded-lg bg-neutral-800 flex items-center justify-center">
@@ -247,7 +247,7 @@ export default function PlansPage() {
               ))}
             </ul>
 
-            <button className="w-full py-3 rounded-lg border border-gold-500 text-gold-500 font-heading text-sm hover:bg-gold-500/10 hover:border-gold-400 active:scale-[0.98] transition-all duration-200">
+            <button className="w-full py-3 ux-btn-secondary text-sm active:scale-[0.98]">
               {t.startFree}
             </button>
           </motion.div>
@@ -256,7 +256,7 @@ export default function PlansPage() {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.2 }}
-            className="bg-dark-card border-2 border-gold-500 rounded-2xl p-6 md:p-8 flex flex-col relative hover:shadow-gold-500/10 hover:shadow-2xl transition-all duration-300"
+            className="bg-dark-card border-2 border-gold-500 rounded-2xl p-6 md:p-8 flex flex-col relative hover:shadow-gold-500/10 hover:shadow-2xl transition-all duration-300 ux-card"
           >
             <div className="absolute -top-3 start-1/2 -translate-x-1/2 rtl:translate-x-1/2 bg-gold-500 text-black text-xs font-heading px-4 py-1 rounded-full">
               {t.mostPopular}
@@ -289,8 +289,8 @@ export default function PlansPage() {
               onClick={handleToggleProDemo}
               className={`w-full py-3 rounded-lg font-heading text-sm active:scale-[0.98] transition-all duration-200 ${
                 proDemoEnabled
-                  ? "border border-dark-border text-gray-200 hover:border-gold-500/30"
-                  : "bg-gold-500 text-black hover:bg-gold-400"
+                  ? "ux-btn-ghost"
+                  : "ux-btn-primary"
               }`}
             >
               {proDemoEnabled ? t.deactivateProDemo : t.activateProDemo}

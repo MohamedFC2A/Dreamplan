@@ -175,8 +175,8 @@ function ProfilePageContent() {
   return (
     <main className="min-h-screen">
       <Navbar />
-      <section className="max-w-6xl mx-auto px-4 pt-20 md:pt-24 pb-10 md:pb-14 space-y-4 md:space-y-5">
-        <motion.div initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} className="rounded-2xl border border-dark-border bg-dark-card overflow-hidden">
+      <section className="max-w-6xl mx-auto px-4 pt-20 md:pt-24 pb-10 md:pb-14 space-y-4 md:space-y-5 ux-page-shell">
+        <motion.div initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} className="rounded-2xl border border-dark-border bg-dark-card overflow-hidden ux-card">
           <div className="p-4 md:p-6 border-b border-dark-border bg-gradient-to-r from-gold-500/10 via-gold-500/5 to-transparent">
             <div className="flex flex-wrap items-center justify-between gap-3">
               <div>
@@ -195,7 +195,7 @@ function ProfilePageContent() {
 
           <div className="p-4 md:p-6 grid grid-cols-1 lg:grid-cols-3 gap-5">
             <div className="lg:col-span-2 space-y-4">
-              <div className="rounded-xl border border-dark-border bg-black/30 p-4 space-y-3">
+              <div className="rounded-xl border border-dark-border bg-black/30 p-4 space-y-3 ux-card-soft">
                 <div className="flex items-center gap-2 text-gray-100">
                   <UserCircle2 className="w-4 h-4 text-gold-400" />
                   <h2 className="text-sm font-heading">{locale === "ar" ? "تسجيل الدخول" : "Sign-In"}</h2>
@@ -221,7 +221,7 @@ function ProfilePageContent() {
                 {authError && <p className="text-xs text-red-300">{authError}</p>}
               </div>
 
-              <div className="rounded-xl border border-dark-border bg-black/30 p-4 space-y-3">
+              <div className="rounded-xl border border-dark-border bg-black/30 p-4 space-y-3 ux-card-soft">
                 <h2 className="text-sm font-heading text-gray-100">{locale === "ar" ? "البيانات الأساسية (متري فقط)" : "Core Metrics (Metric only)"}</h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                   <div className="md:col-span-2 rounded-lg border border-dark-border bg-black px-3 py-2.5">
@@ -263,7 +263,7 @@ function ProfilePageContent() {
                 </div>
               </div>
 
-              <div className="rounded-xl border border-dark-border bg-black/30 p-4 space-y-3">
+              <div className="rounded-xl border border-dark-border bg-black/30 p-4 space-y-3 ux-card-soft">
                 <h2 className="text-sm font-heading text-gray-100">{locale === "ar" ? "الحالة الصحية أو المرض المزمن (اختياري)" : "Health Issue / Chronic Condition (Optional)"}</h2>
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
                   {HEALTH_OPTIONS.map((option) => (
@@ -282,20 +282,20 @@ function ProfilePageContent() {
               )}
 
               <div className="flex flex-col sm:flex-row sm:flex-wrap gap-3">
-                <button type="button" onClick={handleSaveProfile} className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-gold-500 hover:bg-gold-600 text-black font-heading font-bold tracking-wider px-6 py-3 rounded-xl uppercase text-xs">
+                <button type="button" onClick={handleSaveProfile} className="w-full sm:w-auto inline-flex items-center justify-center gap-2 ux-btn-primary px-6 py-3 uppercase text-xs">
                   <Save className="w-4 h-4" />
                   {t(locale, "profileSaveBtn")}
                 </button>
-                <button type="button" onClick={() => router.push(returnTo)} className="w-full sm:w-auto inline-flex items-center justify-center gap-2 border border-dark-border text-gray-300 hover:border-gold-500/40 px-6 py-3 rounded-xl uppercase text-xs">
+                <button type="button" onClick={() => router.push(returnTo)} className="w-full sm:w-auto inline-flex items-center justify-center gap-2 ux-btn-secondary px-6 py-3 uppercase text-xs">
                   <ArrowLeft className="w-4 h-4 rtl:rotate-180" />
                   {t(locale, "profileBackToPlanner")}
                 </button>
-                <Link href="/" className="w-full sm:w-auto inline-flex items-center justify-center gap-2 border border-dark-border text-gray-400 px-6 py-3 rounded-xl uppercase text-xs">{t(locale, "backToHome")}</Link>
+                <Link href="/" className="w-full sm:w-auto inline-flex items-center justify-center gap-2 ux-btn-ghost px-6 py-3 uppercase text-xs">{t(locale, "backToHome")}</Link>
               </div>
             </div>
 
-            <div className="space-y-4">
-              <div className="rounded-xl border border-dark-border bg-black/40 p-4 text-sm">
+            <div className="space-y-4 lg:sticky lg:top-24 h-fit">
+              <div className="rounded-xl border border-dark-border bg-black/40 p-4 text-sm ux-card-soft">
                 <div className="flex items-center gap-2 text-gray-200">
                   <CheckCircle2 className={`w-4 h-4 ${profileErrors.length === 0 ? "text-green-400" : "text-yellow-400"}`} />
                   <span>{profileErrors.length === 0 ? t(locale, "profileReady") : locale === "ar" ? "الملف غير مكتمل بعد." : "Profile is not complete yet."}</span>
@@ -319,7 +319,7 @@ function ProfilePageContent() {
                 </div>
               </div>
 
-              <div className="rounded-xl border border-dark-border bg-black/40 p-4 space-y-3">
+              <div className="rounded-xl border border-dark-border bg-black/40 p-4 space-y-3 ux-card-soft">
                 <div className="flex items-center gap-2 text-gray-100">
                   <Gauge className="w-4 h-4 text-gold-400" />
                   <h3 className="text-sm font-heading">{locale === "ar" ? "تحليل ذكي بعد الحفظ" : "Smart Analysis (After Save)"}</h3>

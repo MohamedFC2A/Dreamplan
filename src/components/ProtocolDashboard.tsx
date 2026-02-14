@@ -252,7 +252,7 @@ export default function ProtocolDashboard({ protocol }: { protocol: Protocol }) 
   const timelineList = inferredMode === "weekly" ? safeWeeks : safeDays;
 
   return (
-    <main className="min-h-screen px-3 sm:px-4 py-10 md:py-12 max-w-5xl mx-auto pt-20 md:pt-24">
+    <main className="min-h-screen px-3 sm:px-4 py-10 md:py-12 max-w-5xl mx-auto pt-20 md:pt-24 ux-page-shell">
       <Navbar />
       <motion.div
         initial={{ opacity: 0, y: 20 }}
@@ -275,10 +275,10 @@ export default function ProtocolDashboard({ protocol }: { protocol: Protocol }) 
           </span>
         </div>
 
-        <h1 className="font-heading text-2xl sm:text-3xl md:text-5xl font-bold text-gray-100 mb-2 tracking-wide">
+        <h1 className="font-heading text-2xl sm:text-3xl md:text-5xl font-bold text-gray-100 mb-2 tracking-wide ux-heading-xl">
           {title}
         </h1>
-        <p className="text-gray-500 text-base md:text-lg mb-8">{subtitle}</p>
+        <p className="text-gray-500 text-base md:text-lg mb-8 ux-body-muted">{subtitle}</p>
 
         <div className="flex flex-wrap gap-2 mb-8">
           {focus.map((f) => (
@@ -295,7 +295,7 @@ export default function ProtocolDashboard({ protocol }: { protocol: Protocol }) 
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1, duration: 0.45 }}
-          className="bg-dark-card border border-gold-500/25 rounded-xl p-5 mb-6"
+          className="bg-dark-card border border-gold-500/25 rounded-xl p-5 mb-6 ux-card"
         >
           <div className="flex flex-wrap items-center justify-between gap-2 mb-3">
             <h2 className="font-heading text-sm uppercase tracking-[0.18em] text-gold-400">
@@ -339,25 +339,25 @@ export default function ProtocolDashboard({ protocol }: { protocol: Protocol }) 
         </motion.div>
 
         <div className="grid grid-cols-1 md:grid-cols-4 gap-3 mb-6">
-          <div className="rounded-xl border border-dark-border bg-black/35 p-4">
+          <div className="rounded-xl border border-dark-border bg-black/35 p-4 ux-card-soft">
             <p className="text-[11px] uppercase tracking-widest text-gray-500 mb-1">
               {locale === "ar" ? "متوسط المهام لكل وحدة" : "Avg Tasks / Unit"}
             </p>
             <p className="font-heading text-2xl text-gold-300">{averageTasksPerUnit.toFixed(1)}</p>
           </div>
-          <div className="rounded-xl border border-dark-border bg-black/35 p-4">
+          <div className="rounded-xl border border-dark-border bg-black/35 p-4 ux-card-soft">
             <p className="text-[11px] uppercase tracking-widest text-gray-500 mb-1">
               {locale === "ar" ? "جلسات تدريب/أسبوع" : "Training / Week"}
             </p>
             <p className="font-heading text-2xl text-red-300">{trainingPerWeek.toFixed(1)}</p>
           </div>
-          <div className="rounded-xl border border-dark-border bg-black/35 p-4">
+          <div className="rounded-xl border border-dark-border bg-black/35 p-4 ux-card-soft">
             <p className="text-[11px] uppercase tracking-widest text-gray-500 mb-1">
               {locale === "ar" ? "تغطية التعافي" : "Recovery Coverage"}
             </p>
             <p className="font-heading text-2xl text-blue-300">{recoveryShare.toFixed(1)}%</p>
           </div>
-          <div className="rounded-xl border border-dark-border bg-black/35 p-4">
+          <div className="rounded-xl border border-dark-border bg-black/35 p-4 ux-card-soft">
             <p className="text-[11px] uppercase tracking-widest text-gray-500 mb-1">
               {locale === "ar" ? "دقة التوقع النهائي" : "Projected Final Score"}
             </p>
@@ -371,7 +371,7 @@ export default function ProtocolDashboard({ protocol }: { protocol: Protocol }) 
           initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.15, duration: 0.5 }}
-          className="bg-dark-card border border-gold-500/20 rounded-xl p-4 sm:p-6 mb-8"
+          className="bg-dark-card border border-gold-500/20 rounded-xl p-4 sm:p-6 mb-8 ux-card"
         >
           <h2 className="font-heading text-sm font-bold text-gold-400 mb-5 tracking-widest uppercase">
             {t(locale, "protocolSummary")}
@@ -427,7 +427,7 @@ export default function ProtocolDashboard({ protocol }: { protocol: Protocol }) 
           <>
             <GoldDivider />
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-              <div className="bg-dark-card border border-dark-border rounded-xl p-4">
+              <div className="bg-dark-card border border-dark-border rounded-xl p-4 ux-card-soft">
                 <h3 className="text-xs uppercase tracking-widest text-gold-400 font-bold mb-2">
                   {t(locale, "profileFitPanel")} <UserCircle2 className="w-3 h-3 inline" />
                 </h3>
@@ -439,7 +439,7 @@ export default function ProtocolDashboard({ protocol }: { protocol: Protocol }) 
                 </p>
               </div>
 
-              <div className="bg-dark-card border border-red-500/20 rounded-xl p-4">
+              <div className="bg-dark-card border border-red-500/20 rounded-xl p-4 ux-card-soft">
                 <h3 className="text-xs uppercase tracking-widest text-red-300 font-bold mb-2">
                   {t(locale, "safetyPanel")} <ShieldAlert className="w-3 h-3 inline" />
                 </h3>
@@ -458,7 +458,7 @@ export default function ProtocolDashboard({ protocol }: { protocol: Protocol }) 
                 )}
               </div>
 
-              <div className="bg-dark-card border border-gold-500/20 rounded-xl p-4">
+              <div className="bg-dark-card border border-gold-500/20 rounded-xl p-4 ux-card-soft">
                 <h3 className="text-xs uppercase tracking-widest text-gold-400 font-bold mb-2">
                   {t(locale, "priorityPanel")} <Target className="w-3 h-3 inline" />
                 </h3>
@@ -486,7 +486,7 @@ export default function ProtocolDashboard({ protocol }: { protocol: Protocol }) 
           initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.25, duration: 0.5 }}
-          className="bg-dark-card border border-dark-border rounded-xl p-4 sm:p-6 mb-8 border-l-2 border-r-2 border-l-gold-500/30 border-r-gold-500/30"
+          className="bg-dark-card border border-dark-border rounded-xl p-4 sm:p-6 mb-8 border-l-2 border-r-2 border-l-gold-500/30 border-r-gold-500/30 ux-card"
         >
           <h2 className="font-heading text-lg font-bold text-gray-200 mb-3 tracking-wide uppercase">
             {t(locale, "scienceOverview")} <FlaskConical className="w-4 h-4 text-gray-200 inline" />

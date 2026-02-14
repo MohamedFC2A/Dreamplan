@@ -144,13 +144,13 @@ export default function ProgressTracker({
       : 7;
 
   return (
-    <div className="bg-dark-card border border-dark-border rounded-xl p-4 sm:p-6 mb-8">
+    <div className="bg-dark-card border border-dark-border rounded-xl p-4 sm:p-6 mb-8 ux-card">
       <h2 className="font-heading text-lg font-bold text-gray-200 mb-4 tracking-wide uppercase">
         {t(locale, "projectedImpact")}
       </h2>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mb-4">
-        <div className="rounded-xl border border-dark-border bg-black/35 p-4">
+        <div className="rounded-xl border border-dark-border bg-black/35 p-4 ux-card-soft">
           <p className="text-[11px] uppercase tracking-widest text-gray-500 mb-1">
             {locale === "ar" ? "خط الأساس" : "Baseline Score"}
           </p>
@@ -160,7 +160,7 @@ export default function ProgressTracker({
           </p>
         </div>
 
-        <div className="rounded-xl border border-gold-500/30 bg-gold-500/10 p-4">
+        <div className="rounded-xl border border-gold-500/30 bg-gold-500/10 p-4 ux-card-soft">
           <p className="text-[11px] uppercase tracking-widest text-gold-300 mb-1">
             {locale === "ar" ? "المستوى الحالي المتوقع" : "Current Projected Score"}
           </p>
@@ -170,7 +170,7 @@ export default function ProgressTracker({
           </p>
         </div>
 
-        <div className="rounded-xl border border-emerald-500/30 bg-emerald-500/10 p-4">
+        <div className="rounded-xl border border-emerald-500/30 bg-emerald-500/10 p-4 ux-card-soft">
           <p className="text-[11px] uppercase tracking-widest text-emerald-300 mb-1">
             {locale === "ar" ? "صافي التحسن" : "Net Improvement"}
           </p>

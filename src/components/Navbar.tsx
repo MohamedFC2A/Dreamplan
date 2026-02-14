@@ -129,7 +129,7 @@ export default function Navbar() {
               <button
                 type="button"
                 onClick={handleSignOut}
-                className="inline-flex items-center gap-1.5 text-[11px] md:text-xs px-2.5 py-1.5 rounded-lg border border-dark-border text-gray-300 hover:text-white hover:border-gold-500/30"
+                className="inline-flex items-center gap-1.5 text-[11px] md:text-xs px-2.5 py-1.5 rounded-lg ux-btn-ghost"
               >
                 <UserCircle2 className="w-3.5 h-3.5 text-gold-400" />
                 <span className="max-w-[7rem] truncate">{firstName}</span>
@@ -139,7 +139,7 @@ export default function Navbar() {
               <button
                 type="button"
                 onClick={handleGoogleSignIn}
-                className="inline-flex items-center gap-1.5 text-[11px] md:text-xs px-2.5 py-1.5 rounded-lg border border-gold-500/40 bg-gold-500/10 text-gold-300 hover:bg-gold-500/15"
+                className="inline-flex items-center gap-1.5 text-[11px] md:text-xs px-2.5 py-1.5 rounded-lg ux-btn-secondary"
               >
                 <LogIn className="w-3.5 h-3.5" />
                 <span>{locale === "ar" ? "Google دخول" : "Google Sign In"}</span>
@@ -148,7 +148,7 @@ export default function Navbar() {
           <button
             type="button"
             onClick={() => setLocale(locale === "ar" ? "en" : "ar")}
-            className="ms-2 bg-dark-card border border-dark-border rounded-full px-4 py-1.5 text-sm text-gold-400 hover:text-gold-300 hover:border-gold-500/50 transition-all duration-300"
+            className="ms-2 rounded-full px-4 py-1.5 text-sm ux-btn-ghost"
           >
             {locale === "ar" ? "English" : "العربية"}
           </button>
@@ -235,7 +235,7 @@ export default function Navbar() {
                     <button
                       type="button"
                       onClick={handleSignOut}
-                      className="w-full inline-flex items-center justify-center gap-2 text-xs px-3 py-2.5 rounded-xl border border-dark-border bg-dark-card text-gray-200"
+                      className="w-full inline-flex items-center justify-center gap-2 text-xs px-3 py-2.5 rounded-xl ux-btn-ghost"
                     >
                       <LogOut className="w-3.5 h-3.5" />
                       {locale === "ar" ? "تسجيل الخروج" : "Sign Out"}
@@ -245,7 +245,7 @@ export default function Navbar() {
                   <button
                     type="button"
                     onClick={handleGoogleSignIn}
-                    className="w-full inline-flex items-center justify-center gap-2 text-xs px-3 py-2.5 rounded-xl border border-gold-500/40 bg-gold-500/10 text-gold-300"
+                    className="w-full inline-flex items-center justify-center gap-2 text-xs px-3 py-2.5 rounded-xl ux-btn-secondary"
                   >
                     <LogIn className="w-3.5 h-3.5" />
                     {locale === "ar" ? "Google دخول" : "Google Sign In"}
@@ -255,7 +255,7 @@ export default function Navbar() {
               <button
                 type="button"
                 onClick={() => setLocale(locale === "ar" ? "en" : "ar")}
-                className="w-full inline-flex items-center justify-center text-sm bg-dark-card border border-dark-border rounded-xl px-4 py-2.5 text-gold-400"
+                className="w-full inline-flex items-center justify-center text-sm rounded-xl px-4 py-2.5 ux-btn-ghost"
               >
                 {locale === "ar" ? "English" : "العربية"}
               </button>
