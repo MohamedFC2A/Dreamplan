@@ -4,9 +4,9 @@ import { LanguageProvider } from "@/lib/LanguageContext";
 import DirectionSetter from "@/components/DirectionSetter";
 
 export const metadata: Metadata = {
-  title: "Dreamplan | AI Protocol Planner",
+  title: "Dreamplan | NEXUS AI Protocol Planner",
   description:
-    "Dreamplan builds realistic AI-powered transformation protocols with smart duration planning, profile-aware recommendations, and adaptive Q&A.",
+    "Dreamplan builds realistic NEXUS AI-powered transformation protocols with smart duration planning, profile-aware recommendations, and adaptive Q&A. Built by MATANY LABS.",
 };
 
 export default function RootLayout({

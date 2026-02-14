@@ -22,7 +22,6 @@ export default function Navbar() {
 
   const links = [
     { href: "/", label: locale === "ar" ? "الرئيسية" : "Home" },
-    { href: "/cr7-fba", label: "CR7 FBA" },
     { href: "/profile", label: locale === "ar" ? "الملف الشخصي" : "Profile" },
     { href: "/plans", label: locale === "ar" ? "الاشتراكات" : "Plans" },
   ];
@@ -31,7 +30,12 @@ export default function Navbar() {
     <nav className="fixed top-0 left-0 right-0 z-50 bg-black/80 backdrop-blur-md border-b border-dark-border/50">
       <div className="max-w-6xl mx-auto px-4 md:px-8 flex items-center justify-between h-16 gap-3">
         <Link href="/" className="font-heading text-base md:text-lg font-bold text-white tracking-widest whitespace-nowrap">
-          DREAM<span className="text-gold-500">PLAN</span>
+          <span className="block">
+            DREAM<span className="text-gold-500">PLAN</span>
+          </span>
+          <span className="block text-[8px] md:text-[9px] text-gray-500 tracking-[0.18em] mt-0.5">
+            BUILT BY MATANY LABS
+          </span>
         </Link>
         <div className="flex items-center gap-1 overflow-x-auto whitespace-nowrap">
           {isGenerating && (
@@ -39,7 +43,7 @@ export default function Navbar() {
               href="/"
               className="text-[10px] md:text-xs px-3 py-1.5 rounded-lg border border-gold-500/40 bg-gold-500/10 text-gold-300"
             >
-              {locale === "ar" ? "AI يعمل بالخلفية" : "AI running in background"}
+              {locale === "ar" ? "NEXUS AI يعمل بالخلفية" : "NEXUS AI running in background"}
             </Link>
           )}
           {links.map((link) => {

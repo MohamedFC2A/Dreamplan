@@ -926,6 +926,9 @@ export default function Home() {
               <p className="font-heading text-xl md:text-2xl text-gold-400/80 tracking-widest uppercase mb-4">
                 {t(locale, "tagline")}
               </p>
+              <p className="text-[11px] text-gray-500 tracking-[0.18em] uppercase mb-4">
+                BUILT BY MATANY LABS
+              </p>
 
               <p className="text-gray-400 text-base md:text-lg mb-8 max-w-lg leading-relaxed">
                 {t(locale, "heroDescription")}
@@ -935,7 +938,7 @@ export default function Home() {
                 {[
                   { value: "7-90", label: locale === "ar" ? "يوم" : "Days" },
                   { value: "70+", label: locale === "ar" ? "مهمة" : "Tasks" },
-                  { value: "AI", label: locale === "ar" ? "مدعوم" : "Powered" },
+                  { value: "NEXUS", label: locale === "ar" ? "ذكاء" : "AI" },
                 ].map((stat, i) => (
                   <div key={i} className="flex items-center">
                     <div className="text-center">
@@ -1070,9 +1073,9 @@ export default function Home() {
                   </h2>
                 </div>
                 <div className="p-4 rounded-xl border border-dark-border bg-black/30 mb-3">
-                  <p className="text-[11px] uppercase tracking-widest text-gray-500 mb-2">
-                    {locale === "ar" ? "سؤال AI عن المدة" : "AI Duration Question"}
-                  </p>
+                    <p className="text-[11px] uppercase tracking-widest text-gray-500 mb-2">
+                      {locale === "ar" ? "سؤال NEXUS AI عن المدة" : "NEXUS AI Duration Question"}
+                    </p>
                   <p className="text-sm text-gray-200 mb-2">{durationSuggestion.question}</p>
                   <p className="text-[11px] uppercase tracking-widest text-gray-500 mb-1">
                     {locale === "ar" ? "سبب الاقتراح" : "Why this suggestion"}
@@ -1092,7 +1095,7 @@ export default function Home() {
                         : "border-dark-border text-gray-400 hover:text-gray-200"
                     }`}
                   >
-                    {locale === "ar" ? "الاقتراح الذكي (AI)" : "Smart AI Suggestion"}
+                    {locale === "ar" ? "الاقتراح الذكي (NEXUS AI)" : "Smart NEXUS AI Suggestion"}
                   </button>
                   <button
                     type="button"
@@ -1139,8 +1142,8 @@ export default function Home() {
                 ) : (
                   <p className="text-xs text-gray-500 mb-4">
                     {locale === "ar"
-                      ? "يمكنك التخطي الآن والاعتماد على اقتراح AI مباشرة."
-                      : "You can skip manual editing and continue with the AI suggestion."}
+                      ? "يمكنك التخطي الآن والاعتماد على اقتراح NEXUS AI مباشرة."
+                      : "You can skip manual editing and continue with the NEXUS AI suggestion."}
                   </p>
                 )}
                 {planModeEnabled ? (
@@ -1148,8 +1151,8 @@ export default function Home() {
                     <p className="text-xs uppercase tracking-widest text-gray-400 mb-2">{t(locale, "aiQuestionsTitle")}</p>
                     <p className="text-sm text-gray-300">
                       {locale === "ar"
-                        ? "بعد تأكيد المدة، سيبدأ AI مرحلة أسئلة مخصصة (3-6 أسئلة) ثم يبني الخطة النهائية."
-                        : "After confirming duration, AI will run a dedicated 3-6 question phase, then build your final plan."}
+                        ? "بعد تأكيد المدة، سيبدأ NEXUS AI مرحلة أسئلة مخصصة (3-6 أسئلة) ثم يبني الخطة النهائية."
+                        : "After confirming duration, NEXUS AI will run a dedicated 3-6 question phase, then build your final plan."}
                     </p>
                     <p className={`text-xs mt-2 ${canStartPlanQuestions ? "text-green-400" : "text-amber-400"}`}>
                       {canStartPlanQuestions ? t(locale, "profileReady") : t(locale, "profileRequiredBeforePlan")}
@@ -1588,6 +1591,7 @@ export default function Home() {
             <Link href="/" className="font-heading text-sm font-bold text-white tracking-widest">
               DREAM<span className="text-gold-500">PLAN</span>
             </Link>
+            <p className="text-[10px] text-gray-500 tracking-[0.16em] uppercase">BUILT BY MATANY LABS</p>
             <div className="flex items-center gap-6">
               <Link href="/" className="text-sm text-gray-500 hover:text-gold-400 transition-colors">
                 {locale === "ar" ? "الرئيسية" : "Home"}
@@ -1601,9 +1605,17 @@ export default function Home() {
             <p className="text-gray-600 text-xs flex items-center gap-1">
               <Zap className="w-3.5 h-3.5 text-gold-400 inline" />
               {locale === "ar"
-                ? "مدعوم بالذكاء الاصطناعي DeepSeek — جميع البروتوكولات مبنية على أسس علمية"
-                : "Powered by DeepSeek AI — All protocols are scientifically grounded"}
+                ? "مدعوم بواسطة NEXUS AI — جميع البروتوكولات مبنية على أسس علمية"
+                : "Powered by NEXUS AI — All protocols are scientifically grounded"}
             </p>
+            <a
+              href="https://qure-ai-nexus.vercel.app/"
+              target="_blank"
+              rel="noreferrer"
+              className="text-gray-500 text-xs hover:text-gold-400 transition-colors"
+            >
+              {locale === "ar" ? "مدعوم بواسطة QURE AI" : "Powered by QURE AI"}
+            </a>
             <p className="text-gray-600 text-xs">
               {locale === "ar" ? "جميع الحقوق محفوظة" : "All rights reserved"} &copy; {new Date().getFullYear()} Dreamplan
             </p>
