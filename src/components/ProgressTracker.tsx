@@ -4,26 +4,21 @@ import { ProgressPoint } from "@/lib/protocols";
 import { motion } from "framer-motion";
 import { useLanguage } from "@/lib/LanguageContext";
 import { t } from "@/lib/i18n";
+import { Rocket, Sparkles, Target, Trophy } from "lucide-react";
 
-const CHART_WIDTH = 500;
-const CHART_HEIGHT = 200;
-const PADDING = { top: 25, right: 20, bottom: 35, left: 45 };
-const PLOT_WIDTH = CHART_WIDTH - PADDING.left - PADDING.right;
-const PLOT_HEIGHT = CHART_HEIGHT - PADDING.top - PADDING.bottom;
-
-function getX(index: number, totalPoints: number): number {
-  if (totalPoints <= 1) return PADDING.left + PLOT_WIDTH / 2;
-  return PADDING.left + (index / (totalPoints - 1)) * PLOT_WIDTH;
+function clamp(value: number, min: number, max: number): number {
+  return Math.max(min, Math.min(max, value));
 }
 
-function getY(impact: number, maxImpact: number): number {
-  if (maxImpact <= 0) return PADDING.top + PLOT_HEIGHT;
-  return PADDING.top + PLOT_HEIGHT - (impact / maxImpact) * PLOT_HEIGHT;
+function toVisualScore(impact: number, maxImpact: number): number {
+  if (maxImpact <= 0) return 0;
+  return Math.round((impact / maxImpact) * 100);
 }
 
-function buildTicks(maxImpact: number): number[] {
-  const top = Math.max(30, Math.ceil(maxImpact / 5) * 5);
-  return [0, Math.round(top / 3), Math.round((2 * top) / 3), top];
+function pickPoints(data: ProgressPoint[], maxItems: number): ProgressPoint[] {
+  if (data.length <= maxItems) return data;
+  const stride = Math.ceil(data.length / maxItems);
+  return data.filter((_, index) => index % stride === 0 || index === data.length - 1);
 }
 
 export default function ProgressTracker({
@@ -41,118 +36,199 @@ export default function ProgressTracker({
   if (sorted.length === 0) return null;
 
   const maxImpact = Math.max(30, ...sorted.map((point) => point.impact));
-  const yTicks = buildTicks(maxImpact);
+  const baseline = sorted[0];
+  const current = sorted[sorted.length - 1];
+  const peak = sorted.reduce((best, item) => (item.impact > best.impact ? item : best), sorted[0]);
 
-  const linePath = sorted
-    .map((point, index) => `${index === 0 ? "M" : "L"} ${getX(index, sorted.length)} ${getY(point.impact, maxImpact)}`)
-    .join(" ");
+  const baselineScore = toVisualScore(baseline.impact, maxImpact);
+  const currentScore = toVisualScore(current.impact, maxImpact);
+  const peakScore = toVisualScore(peak.impact, maxImpact);
+  const targetScore = clamp(
+    currentScore >= 100 ? 100 : currentScore + Math.max(10, Math.round((100 - currentScore) * 0.35)),
+    currentScore,
+    100
+  );
 
-  const areaPath =
-    linePath +
-    ` L ${getX(sorted.length - 1, sorted.length)} ${PADDING.top + PLOT_HEIGHT}` +
-    ` L ${getX(0, sorted.length)} ${PADDING.top + PLOT_HEIGHT} Z`;
+  const momentum = currentScore - baselineScore;
+  const confidence = clamp(Math.round(62 + momentum * 0.45 + sorted.length * 0.3), 55, 99);
+  const recoveryShield = clamp(Math.round(58 + currentScore * 0.25), 55, 95);
+  const samplePoints = pickPoints(sorted, 14);
 
-  const labelStride = sorted.length <= 10 ? 1 : sorted.length <= 20 ? 2 : sorted.length <= 40 ? 4 : 7;
+  const nextMilestoneScore = currentScore < 35 ? 35 : currentScore < 70 ? 70 : currentScore < 90 ? 90 : 100;
+  const milestonePoint =
+    sorted.find((item) => toVisualScore(item.impact, maxImpact) >= nextMilestoneScore) || current;
+
+  const phaseLabel =
+    currentScore < 35
+      ? locale === "ar"
+        ? "مرحلة التأسيس"
+        : "Foundation Phase"
+      : currentScore < 70
+      ? locale === "ar"
+        ? "مرحلة التسارع"
+        : "Acceleration Phase"
+      : locale === "ar"
+      ? "مرحلة الإتقان"
+      : "Mastery Phase";
+
+  const heroText =
+    momentum >= 45
+      ? locale === "ar"
+        ? "قفزة قوية في الشكل المرئي. استمر بنفس النسق وسترى فرقًا لافتًا جدًا."
+        : "Major visual jump detected. Maintain this pace and your look will shift dramatically."
+      : momentum >= 25
+      ? locale === "ar"
+        ? "تحسن واضح ومستقر. الخطة الآن في منطقة النتائج الحقيقية."
+        : "Stable and visible improvement. Your plan is now in the real-results zone."
+      : locale === "ar"
+      ? "بداية ممتازة. الالتزام في هذه المرحلة هو مفتاح التحول السريع لاحقًا."
+      : "Strong start. Consistency at this stage unlocks faster transformation next.";
 
   return (
     <div className="bg-dark-card border border-dark-border rounded-xl p-6 mb-8">
-      <h2 className="font-heading text-lg font-bold text-gray-200 mb-4 tracking-wide uppercase">
-        {t(locale, "projectedImpact")}
-      </h2>
-      <svg viewBox={`0 0 ${CHART_WIDTH} ${CHART_HEIGHT}`} className="w-full h-auto" preserveAspectRatio="xMidYMid meet">
-        <defs>
-          <linearGradient id="areaGradient" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="#D4AF37" stopOpacity="0.3" />
-            <stop offset="100%" stopColor="#D4AF37" stopOpacity="0" />
-          </linearGradient>
-        </defs>
+      <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
+        <h2 className="font-heading text-lg font-bold text-gray-200 tracking-wide uppercase">
+          {t(locale, "projectedImpact")}
+        </h2>
+        <span className="text-[10px] px-2.5 py-1 rounded-full border border-gold-500/30 bg-gold-500/10 text-gold-300 uppercase tracking-wider inline-flex items-center gap-1">
+          <Sparkles className="w-3 h-3" />
+          {phaseLabel}
+        </span>
+      </div>
 
-        {yTicks.map((tick) => (
-          <g key={tick}>
-            <line
-              x1={PADDING.left}
-              y1={getY(tick, maxImpact)}
-              x2={PADDING.left + PLOT_WIDTH}
-              y2={getY(tick, maxImpact)}
-              stroke="#1a1a1a"
-              strokeWidth="1"
-            />
-            <text
-              x={PADDING.left - 8}
-              y={getY(tick, maxImpact) + 4}
-              textAnchor="end"
-              fill="#64748b"
-              fontSize="9"
-              fontFamily="Inter, sans-serif"
-            >
-              {tick}%
-            </text>
-          </g>
-        ))}
+      <p className="text-sm text-gray-300 mb-5">{heroText}</p>
 
-        {sorted.map((point, index) => {
-          const showLabel = index === 0 || index === sorted.length - 1 || index % labelStride === 0;
-          if (!showLabel) return null;
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mb-5">
+        {[
+          {
+            key: "baseline",
+            label: locale === "ar" ? "قبل التنفيذ" : "Before",
+            sub: `${t(locale, labelPrefix === "week" ? "week" : "day")} ${baseline.day}`,
+            value: baselineScore,
+            icon: Target,
+            color: "text-gray-200 border-dark-border bg-black/35",
+          },
+          {
+            key: "current",
+            label: locale === "ar" ? "المسار الحالي" : "Current Trajectory",
+            sub: `${t(locale, labelPrefix === "week" ? "week" : "day")} ${current.day}`,
+            value: currentScore,
+            icon: Rocket,
+            color: "text-gold-300 border-gold-500/30 bg-gold-500/10",
+          },
+          {
+            key: "target",
+            label: locale === "ar" ? "الهدف المتوقع" : "Projected Target",
+            sub:
+              locale === "ar"
+                ? `قابل للتحقيق خلال ${sorted.length} ${labelPrefix === "week" ? "أسبوع" : "يوم"}`
+                : `Reachable across ${sorted.length} ${labelPrefix === "week" ? "weeks" : "days"}`,
+            value: targetScore,
+            icon: Trophy,
+            color: "text-emerald-300 border-emerald-500/30 bg-emerald-500/10",
+          },
+        ].map((card, index) => {
+          const Icon = card.icon;
           return (
-            <text
-              key={`label-${point.day}-${index}`}
-              x={getX(index, sorted.length)}
-              y={PADDING.top + PLOT_HEIGHT + 18}
-              textAnchor="middle"
-              fill="#64748b"
-              fontSize="9"
-              fontFamily="Inter, sans-serif"
+            <motion.div
+              key={card.key}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: index * 0.08, duration: 0.35 }}
+              className={`rounded-xl border p-4 ${card.color}`}
             >
-              {t(locale, labelPrefix === "week" ? "week" : "day")} {point.day}
-            </text>
+              <div className="flex items-center justify-between mb-2">
+                <p className="text-[11px] uppercase tracking-widest">{card.label}</p>
+                <Icon className="w-4 h-4" />
+              </div>
+              <p className="font-heading text-3xl leading-none">{card.value}%</p>
+              <p className="text-xs text-gray-400 mt-2">{card.sub}</p>
+            </motion.div>
           );
         })}
+      </div>
 
-        <path d={areaPath} fill="url(#areaGradient)" />
+      <div className="rounded-xl border border-dark-border bg-black/35 p-4 mb-5">
+        <div className="flex items-center justify-between text-[11px] text-gray-500 uppercase tracking-wider mb-2">
+          <span>{locale === "ar" ? "مقارنة التقدم" : "Trajectory Comparison"}</span>
+          <span>{currentScore}%</span>
+        </div>
+        <div className="relative h-3 rounded-full bg-[#121212] overflow-hidden border border-dark-border">
+          <motion.div
+            className="absolute inset-y-0 left-0 rounded-full"
+            style={{ background: "linear-gradient(90deg, #6b7280, #d4af37 55%, #10b981)" }}
+            initial={{ width: "0%" }}
+            animate={{ width: `${currentScore}%` }}
+            transition={{ duration: 0.9, ease: "easeOut" }}
+          />
+          <div
+            className="absolute top-1/2 -translate-y-1/2 w-3 h-3 rounded-full border-2 border-gray-300 bg-black"
+            style={{ left: `calc(${baselineScore}% - 6px)` }}
+          />
+          <div
+            className="absolute top-1/2 -translate-y-1/2 w-3 h-3 rounded-full border-2 border-gold-400 bg-black"
+            style={{ left: `calc(${currentScore}% - 6px)` }}
+          />
+          <div
+            className="absolute top-1/2 -translate-y-1/2 w-3 h-3 rounded-full border-2 border-emerald-400 bg-black"
+            style={{ left: `calc(${targetScore}% - 6px)` }}
+          />
+        </div>
+        <div className="mt-2 flex items-center justify-between text-[11px] text-gray-400">
+          <span>{locale === "ar" ? "البداية" : "Start"}</span>
+          <span>{locale === "ar" ? "الحالي" : "Current"}</span>
+          <span>{locale === "ar" ? "المستهدف" : "Target"}</span>
+        </div>
+      </div>
 
-        <motion.path
-          d={linePath}
-          fill="none"
-          stroke="#D4AF37"
-          strokeWidth="2.5"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          initial={{ pathLength: 0 }}
-          animate={{ pathLength: 1 }}
-          transition={{ duration: 1.2, ease: "easeInOut" }}
-        />
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mb-5">
+        <div className="rounded-xl border border-dark-border bg-black/35 p-4">
+          <p className="text-[11px] uppercase tracking-widest text-gray-500 mb-1">
+            {locale === "ar" ? "زخم التحول" : "Transformation Momentum"}
+          </p>
+          <p className="font-heading text-2xl text-gold-300">{momentum >= 0 ? `+${momentum}` : momentum}%</p>
+        </div>
+        <div className="rounded-xl border border-dark-border bg-black/35 p-4">
+          <p className="text-[11px] uppercase tracking-widest text-gray-500 mb-1">
+            {locale === "ar" ? "ثقة النتيجة" : "Outcome Confidence"}
+          </p>
+          <p className="font-heading text-2xl text-emerald-300">{confidence}%</p>
+        </div>
+        <div className="rounded-xl border border-dark-border bg-black/35 p-4">
+          <p className="text-[11px] uppercase tracking-widest text-gray-500 mb-1">
+            {locale === "ar" ? "حماية الاستمرارية" : "Consistency Shield"}
+          </p>
+          <p className="font-heading text-2xl text-cyan-300">{recoveryShield}%</p>
+        </div>
+      </div>
 
-        {sorted.map((point, index) => (
-          <motion.g
-            key={`${point.day}-${index}`}
-            initial={{ opacity: 0, scale: 0 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 0.04 * index + 0.2, duration: 0.2 }}
-          >
-            <circle
-              cx={getX(index, sorted.length)}
-              cy={getY(point.impact, maxImpact)}
-              r="3.6"
-              fill="#000000"
-              stroke="#D4AF37"
-              strokeWidth="1.8"
-            />
-            {sorted.length <= 18 && (
-              <text
-                x={getX(index, sorted.length)}
-                y={getY(point.impact, maxImpact) - 9}
-                textAnchor="middle"
-                fill="#D4AF37"
-                fontSize="8.5"
-                fontWeight="bold"
-                fontFamily="Inter"
-              >
-                {point.impact}%
-              </text>
-            )}
-          </motion.g>
-        ))}
-      </svg>
+      <div className="rounded-xl border border-dark-border bg-black/30 p-4">
+        <div className="flex items-center justify-between gap-2 mb-3">
+          <p className="text-[11px] uppercase tracking-widest text-gray-500">
+            {locale === "ar" ? "لقطات التقدم" : "Progress Snapshots"}
+          </p>
+          <p className="text-xs text-gold-300">
+            {locale === "ar"
+              ? `أقرب محطة: ${t(locale, labelPrefix === "week" ? "week" : "day")} ${milestonePoint.day}`
+              : `Next milestone: ${t(locale, labelPrefix === "week" ? "week" : "day")} ${milestonePoint.day}`}
+          </p>
+        </div>
+        <div className="grid grid-cols-7 md:grid-cols-14 gap-1.5 items-end h-20">
+          {samplePoints.map((point, index) => {
+            const bar = toVisualScore(point.impact, maxImpact);
+            return (
+              <motion.div
+                key={`${point.day}-${index}`}
+                initial={{ height: 4, opacity: 0 }}
+                animate={{ height: `${Math.max(8, bar)}%`, opacity: 1 }}
+                transition={{ delay: index * 0.03, duration: 0.35 }}
+                className={`rounded-sm ${index === samplePoints.length - 1 ? "bg-gold-400" : "bg-gray-600/80"}`}
+                title={`${t(locale, labelPrefix === "week" ? "week" : "day")} ${point.day}: ${bar}%`}
+              />
+            );
+          })}
+        </div>
+      </div>
     </div>
   );
 }
