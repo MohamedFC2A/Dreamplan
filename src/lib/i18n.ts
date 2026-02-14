@@ -2,10 +2,10 @@ export type Locale = "ar" | "en";
 
 export const translations = {
   ar: {
-    siteName: "MASCULINE PEAK",
-    siteNameAr: "ذروة الرجولة",
-    tagline: "بروتوكول التحول الشخصي بالذكاء الاصطناعي",
-    heroDescription: "بروتوكولات بيو-هاكينج مدعومة بالذكاء الاصطناعي مصممة لتحقيق أقصى قدر من التحول الجسدي الذكوري. صف هدفك واحصل على خطتك المخصصة.",
+    siteName: "DREAMPLAN",
+    siteNameAr: "دريم بلان",
+    tagline: "منصة تخطيط البروتوكولات بالذكاء الاصطناعي",
+    heroDescription: "خطط تحول ذكية ومخصصة مبنية على هدفك ومدتك وملفك الشخصي. اكتب هدفك ودع Dreamplan يبني لك بروتوكولًا قابلًا للتنفيذ.",
     searchPlaceholder: "صف حلمك الجسدي... مثال: عروق بارزة في اليد، رقبة قوية مثل رونالدو",
     generateBtn: "إنشاء البروتوكول بالذكاء الاصطناعي",
     featuredProtocols: "البروتوكولات المميزة",
@@ -155,10 +155,10 @@ export const translations = {
     profileRequiredBeforePlan: "أكمل ملفك الشخصي أولًا من صفحة الملف الشخصي.",
   },
   en: {
-    siteName: "MASCULINE PEAK",
-    siteNameAr: "MASCULINE PEAK",
-    tagline: "AI-Powered Transformation Protocol",
-    heroDescription: "AI-powered bio-hacking protocols engineered for peak masculine physique transformation. Describe your goal and unlock your personalized blueprint.",
+    siteName: "DREAMPLAN",
+    siteNameAr: "DREAMPLAN",
+    tagline: "AI Protocol Planning Platform",
+    heroDescription: "Smart personalized transformation planning powered by AI. Describe your goal and Dreamplan builds a realistic protocol you can actually execute.",
     searchPlaceholder: "Describe your dream physique... e.g., Pop-out hand veins, Ronaldo-like neck",
     generateBtn: "Generate Protocol with AI",
     featuredProtocols: "Featured Protocols",

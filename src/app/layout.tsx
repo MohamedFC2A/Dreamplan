@@ -4,8 +4,9 @@ import { LanguageProvider } from "@/lib/LanguageContext";
 import DirectionSetter from "@/components/DirectionSetter";
 
 export const metadata: Metadata = {
-  title: "Masculine Peak | ذروة الرجولة - بروتوكول التحول في 7 أيام",
-  description: "بروتوكولات بيو-هاكينج مدعومة بالذكاء الاصطناعي مصممة لتحقيق أقصى تحول جسدي. AI-powered bio-hacking protocols for peak physique transformation.",
+  title: "Dreamplan | AI Protocol Planner",
+  description:
+    "Dreamplan builds realistic AI-powered transformation protocols with smart duration planning, profile-aware recommendations, and adaptive Q&A.",
 };
 
 export default function RootLayout({
