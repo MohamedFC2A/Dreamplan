@@ -3,16 +3,18 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LogIn, LogOut, UserCircle2 } from "lucide-react";
+import { Crown, LogIn, LogOut, UserCircle2 } from "lucide-react";
 import { useLanguage } from "@/lib/LanguageContext";
 import { useAuth } from "@/lib/AuthContext";
 import { getGenerationTaskSnapshot, subscribeGenerationTask } from "@/lib/generation-task";
+import { getProAccessState } from "@/lib/pro-access";
 
 export default function Navbar() {
   const { locale, setLocale } = useLanguage();
   const { user, isLoading: authLoading, isConfigured, signInWithGoogle, signOut } = useAuth();
   const pathname = usePathname();
   const [isGenerating, setIsGenerating] = useState(false);
+  const [isProEnabled, setIsProEnabled] = useState(false);
   const [authError, setAuthError] = useState("");
 
   useEffect(() => {
@@ -22,6 +24,17 @@ export default function Navbar() {
       setIsGenerating(snapshot.status === "running");
     });
     return () => unsubscribe();
+  }, []);
+
+  useEffect(() => {
+    const syncPro = () => setIsProEnabled(getProAccessState().enabled);
+    syncPro();
+    window.addEventListener("storage", syncPro);
+    window.addEventListener("focus", syncPro);
+    return () => {
+      window.removeEventListener("storage", syncPro);
+      window.removeEventListener("focus", syncPro);
+    };
   }, []);
 
   const links = [
@@ -65,6 +78,15 @@ export default function Navbar() {
               className="text-[10px] md:text-xs px-3 py-1.5 rounded-lg border border-gold-500/40 bg-gold-500/10 text-gold-300"
             >
               {locale === "ar" ? "NEXUS AI يعمل بالخلفية" : "NEXUS AI running in background"}
+            </Link>
+          )}
+          {isProEnabled && (
+            <Link
+              href="/plans"
+              className="text-[10px] md:text-xs px-3 py-1.5 rounded-lg border border-gold-500/40 bg-gold-500/10 text-gold-300 inline-flex items-center gap-1.5"
+            >
+              <Crown className="w-3.5 h-3.5" />
+              PRO
             </Link>
           )}
           {links.map((link) => {

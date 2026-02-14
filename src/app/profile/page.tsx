@@ -11,6 +11,7 @@ import { t } from "@/lib/i18n";
 import { useAuth } from "@/lib/AuthContext";
 import { UserProfile } from "@/lib/planner-types";
 import {
+  computeProfileReadiness,
   createDefaultProfile,
   getMetabolicSummary,
   inferActivityLevelFromProfile,
@@ -126,7 +127,8 @@ function ProfilePageContent() {
   }, [conditionId, conditionNote, profile]);
 
   const profileErrors = useMemo(() => validateProfile(draftProfile, locale), [draftProfile, locale]);
-  const completion = Math.max(0, Math.min(100, Math.round(((7 - profileErrors.length) / 7) * 100)));
+  const readiness = useMemo(() => computeProfileReadiness(draftProfile), [draftProfile]);
+  const completion = readiness.score;
   const summary = useMemo(() => getMetabolicSummary(draftProfile), [draftProfile]);
   const insightHints = useMemo(() => buildInsightHints(draftProfile, locale), [draftProfile, locale]);
 
@@ -184,6 +186,9 @@ function ProfilePageContent() {
               <div className="rounded-xl border border-gold-500/30 bg-gold-500/10 px-4 py-2">
                 <p className="text-[11px] uppercase text-gold-400">{locale === "ar" ? "جاهزية الملف" : "Readiness"}</p>
                 <p className="font-heading text-2xl text-white">{completion}%</p>
+                <p className="text-[10px] text-gray-400 mt-1">
+                  {locale === "ar" ? "تعتمد على صحة البيانات + عمق التخصيص" : "Based on data validity + personalization depth"}
+                </p>
               </div>
             </div>
           </div>
@@ -304,6 +309,14 @@ function ProfilePageContent() {
                     ? "اضغط حفظ لتوليد التحليل الذكي."
                     : "Click save to generate smart analysis."}
                 </p>
+                <div className="mt-3 grid grid-cols-2 gap-2 text-[11px]">
+                  <div className="rounded-lg border border-dark-border bg-black px-2 py-1.5 text-gray-400">
+                    {locale === "ar" ? "صحة البيانات" : "Validation"}: <span className="text-gold-300">{readiness.validationScore}/68</span>
+                  </div>
+                  <div className="rounded-lg border border-dark-border bg-black px-2 py-1.5 text-gray-400">
+                    {locale === "ar" ? "عمق التخصيص" : "Personalization"}: <span className="text-gold-300">{readiness.personalizationScore}/32</span>
+                  </div>
+                </div>
               </div>
 
               <div className="rounded-xl border border-dark-border bg-black/40 p-4 space-y-3">

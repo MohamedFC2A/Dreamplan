@@ -106,6 +106,43 @@ export function validateProfile(profile: UserProfile, locale: Locale): string[] 
   return errors;
 }
 
+export interface ProfileReadinessBreakdown {
+  score: number;
+  validationScore: number;
+  personalizationScore: number;
+}
+
+export function computeProfileReadiness(profile: UserProfile): ProfileReadinessBreakdown {
+  const defaults = createDefaultProfile("");
+
+  let validationScore = 0;
+  if (Number.isFinite(profile.age) && profile.age >= 13 && profile.age <= 90) validationScore += 8;
+  if (profile.sex === "male" || profile.sex === "female") validationScore += 8;
+  if (Number.isFinite(profile.heightCm) && profile.heightCm >= 120 && profile.heightCm <= 230) validationScore += 10;
+  if (Number.isFinite(profile.weightKg) && profile.weightKg >= 35 && profile.weightKg <= 250) validationScore += 10;
+  if (Number.isFinite(profile.sleepHours) && (profile.sleepHours || 0) >= 5 && (profile.sleepHours || 0) <= 10) validationScore += 8;
+  if ((profile.injuriesOrConditions || "").trim().length > 0) validationScore += 8;
+  if ((profile.availableEquipment || "").trim().length > 0) validationScore += 8;
+  if (profile.activityLevel) validationScore += 8;
+
+  let personalizationScore = 0;
+  if (Math.abs(profile.age - defaults.age) >= 2) personalizationScore += 10;
+  if (Math.abs(profile.heightCm - defaults.heightCm) >= 3) personalizationScore += 10;
+  if (Math.abs(profile.weightKg - defaults.weightKg) >= 3) personalizationScore += 10;
+  if (Math.abs((profile.sleepHours || 7) - (defaults.sleepHours || 7)) >= 0.5) personalizationScore += 4;
+
+  const condition = (profile.injuriesOrConditions || "").toLowerCase();
+  const hasConditionDetails =
+    condition &&
+    condition !== "none" &&
+    condition !== "لا يوجد" &&
+    condition.trim().length > 0;
+  if (hasConditionDetails) personalizationScore += 6;
+
+  const score = Math.max(0, Math.min(100, validationScore + personalizationScore));
+  return { score, validationScore, personalizationScore };
+}
+
 export function isProfileComplete(profile: UserProfile | null, locale: Locale): boolean {
   if (!profile) return false;
   return validateProfile(profile, locale).length === 0;

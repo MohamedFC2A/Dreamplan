@@ -47,6 +47,7 @@ import {
   readStoredProfile,
   validateProfile,
 } from "@/lib/profile-storage";
+import { getProAccessState } from "@/lib/pro-access";
 import {
   getGenerationTaskSnapshot,
   getLatestPrivateProtocols,
@@ -407,7 +408,8 @@ export default function Home() {
   const [query, setQuery] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
-  const [planModeEnabled, setPlanModeEnabled] = useState(true);
+  const [planModeEnabled, setPlanModeEnabled] = useState(false);
+  const [hasProDemo, setHasProDemo] = useState(false);
   const [flowState, setFlowState] = useState<FlowState>("goal_input");
   const [durationSuggestion, setDurationSuggestion] = useState<DurationSuggestion | null>(null);
   const [selectedDuration, setSelectedDuration] = useState<number>(14);
@@ -439,6 +441,12 @@ export default function Home() {
 
   useEffect(() => {
     try {
+      const proState = getProAccessState();
+      setHasProDemo(proState.enabled);
+      if (proState.enabled) {
+        setPlanModeEnabled(true);
+      }
+
       const stored = readStoredProfile();
       if (stored) setProfile(stored);
 
@@ -456,6 +464,9 @@ export default function Home() {
           }
           if (parsedSession.durationInputMode === "custom" || parsedSession.durationInputMode === "ai") {
             setDurationInputMode(parsedSession.durationInputMode);
+          }
+          if (typeof parsedSession.planModeEnabled === "boolean") {
+            setPlanModeEnabled(parsedSession.planModeEnabled && proState.enabled);
           }
           if (
             parsedSession.flowState === "goal_input" ||
@@ -505,6 +516,21 @@ export default function Home() {
     };
     window.addEventListener("focus", syncProfile);
     return () => window.removeEventListener("focus", syncProfile);
+  }, []);
+
+  useEffect(() => {
+    const syncPro = () => {
+      const enabled = getProAccessState().enabled;
+      setHasProDemo(enabled);
+      if (!enabled) setPlanModeEnabled(false);
+    };
+    syncPro();
+    window.addEventListener("storage", syncPro);
+    window.addEventListener("focus", syncPro);
+    return () => {
+      window.removeEventListener("storage", syncPro);
+      window.removeEventListener("focus", syncPro);
+    };
   }, []);
 
   useEffect(() => {
@@ -645,6 +671,17 @@ export default function Home() {
     setRenameValue("");
   };
 
+  const preparePlanningProfile = useCallback(
+    (source: UserProfile): UserProfile => ({
+      ...source,
+      units: "metric",
+      primaryGoal: query.trim() || source.primaryGoal || "",
+      injuriesOrConditions: source.injuriesOrConditions?.trim() || "none",
+      availableEquipment: source.availableEquipment?.trim() || "bodyweight",
+    }),
+    [query]
+  );
+
   const requestDurationSuggestion = async (finalQuery: string) => {
     setIsLoading(true);
     setError("");
@@ -693,6 +730,7 @@ export default function Home() {
     const clampedDuration = durationSuggestion
       ? Math.max(durationSuggestion.minDays, Math.min(durationSuggestion.maxDays, durationDays))
       : durationDays;
+    const normalizedProfile = preparePlanningProfile(generationProfile);
 
     setIsLoading(true);
     setError("");
@@ -704,7 +742,7 @@ export default function Home() {
         locale,
         durationDays: clampedDuration,
         planModeEnabled,
-        profile: generationProfile,
+        profile: normalizedProfile,
         qaHistory: answers,
         qaSummary: plannerReady?.keyConstraints || [],
       });
@@ -717,7 +755,7 @@ export default function Home() {
 
   const requestPlannerStep = async (history: PlannerAnswer[], profileSnapshot?: UserProfile) => {
     if (!durationSuggestion) return;
-    const activeProfile = profileSnapshot || profile;
+    const activeProfile = preparePlanningProfile(profileSnapshot || profile);
     setIsLoading(true);
     setError("");
     try {
@@ -760,12 +798,17 @@ export default function Home() {
   };
 
   const handleStartPlannerQuestions = async () => {
+    if (!hasProDemo) {
+      setError(locale === "ar" ? "ميزة التخطيط المتقدم متاحة ضمن PRO. فعّل PRO التجريبي من صفحة الاشتراكات." : "Advanced planning is a PRO feature. Enable PRO demo from Plans.");
+      return;
+    }
     const latestProfile = readStoredProfile();
     if (!latestProfile) {
       setError(t(locale, "profileRequiredBeforePlan"));
       return;
     }
-    const errors = validateProfile(latestProfile, locale);
+    const normalizedProfile = preparePlanningProfile(latestProfile);
+    const errors = validateProfile(normalizedProfile, locale);
     if (errors.length > 0) {
       setError(errors[0] || t(locale, "profileValidationSummary"));
       return;
@@ -776,9 +819,9 @@ export default function Home() {
     setPlannerReasoningHint("");
     setPlannerProgress(0);
     setPlannerAnswerValue("");
-    setProfile(latestProfile);
+    setProfile(normalizedProfile);
     setFlowState("plan_qa");
-    await requestPlannerStep([], latestProfile);
+    await requestPlannerStep([], normalizedProfile);
   };
 
   const handlePlannerAnswerSubmit = async () => {
@@ -834,6 +877,10 @@ export default function Home() {
     e.preventDefault();
     if (!query.trim()) return;
     if (planModeEnabled) {
+      if (!hasProDemo) {
+        setError(locale === "ar" ? "Plan Mode PRO يتطلب تفعيل PRO التجريبي من صفحة الاشتراكات." : "Plan Mode PRO requires enabling PRO demo from Plans.");
+        return;
+      }
       await requestDurationSuggestion(query);
     } else {
       await handleFastGenerate();
@@ -852,6 +899,10 @@ export default function Home() {
   };
 
   const handleTogglePlanMode = () => {
+    if (!planModeEnabled && !hasProDemo) {
+      setError(locale === "ar" ? "فعّل PRO التجريبي من صفحة الاشتراكات لتشغيل Plan Mode PRO." : "Enable PRO demo from Plans to unlock Plan Mode PRO.");
+      return;
+    }
     setPlanModeEnabled((prev) => !prev);
     setFlowState("goal_input");
     setDurationSuggestion(null);
@@ -1166,12 +1217,22 @@ export default function Home() {
                 )}
                 {planModeEnabled ? (
                   <div className="p-4 rounded-xl border border-dark-border bg-black/30 mb-4">
-                    <p className="text-xs uppercase tracking-widest text-gray-400 mb-2">{t(locale, "aiQuestionsTitle")}</p>
+                    <p className="text-xs uppercase tracking-widest text-gray-400 mb-2 inline-flex items-center gap-2">
+                      {t(locale, "aiQuestionsTitle")}
+                      <span className="px-2 py-0.5 rounded-full border border-gold-500/30 bg-gold-500/10 text-gold-300 text-[10px]">PRO</span>
+                    </p>
                     <p className="text-sm text-gray-300">
                       {locale === "ar"
                         ? "بعد تأكيد المدة، سيبدأ NEXUS AI مرحلة 3 أسئلة ذكية بالاختيارات ثم يبني الخطة النهائية."
                         : "After confirming duration, NEXUS AI runs exactly 3 smart multiple-choice questions, then builds your final plan."}
                     </p>
+                    {!hasProDemo ? (
+                      <p className="text-xs text-amber-300 mt-2">
+                        {locale === "ar"
+                          ? "فعّل PRO التجريبي أولًا من صفحة الاشتراكات."
+                          : "Enable PRO demo first from the Plans page."}
+                      </p>
+                    ) : null}
                     <p className={`text-xs mt-2 ${canStartPlanQuestions ? "text-green-400" : "text-amber-400"}`}>
                       {canStartPlanQuestions ? t(locale, "profileReady") : t(locale, "profileRequiredBeforePlan")}
                     </p>
@@ -1183,7 +1244,7 @@ export default function Home() {
                       <button
                         type="button"
                         onClick={handleStartPlannerQuestions}
-                        disabled={isLoading || !canStartPlanQuestions}
+                        disabled={isLoading || !canStartPlanQuestions || !hasProDemo}
                         className="inline-flex items-center justify-center gap-2 bg-gold-500 hover:bg-gold-600 disabled:opacity-50 disabled:cursor-not-allowed text-black font-heading font-bold tracking-wider px-8 py-4 rounded-xl uppercase text-sm"
                       >
                         <ClipboardList className="w-4 h-4" />
@@ -1252,47 +1313,63 @@ export default function Home() {
                         </div>
                       )}
                     </div>
-                    <div className="flex flex-col sm:flex-row sm:items-center gap-3">
-                      <button
-                        type="button"
-                        onClick={handleTogglePlanMode}
-                        aria-pressed={planModeEnabled}
-                        title="Plan mode PRO"
-                        className={`inline-flex items-center justify-center rounded-full px-4 py-2 text-[11px] font-heading font-bold tracking-wider uppercase border transition-colors active:scale-[0.99] ${
-                          planModeEnabled
-                            ? "text-black bg-gold-500 border-gold-500 hover:bg-gold-600"
-                            : "text-gray-300 bg-black/40 border-dark-border hover:border-gold-500/30 hover:text-gray-200"
-                        }`}
-                      >
-                        <span className="inline-flex items-center gap-2">
-                          {planModeEnabled ? (
-                            <ClipboardList className="w-3.5 h-3.5" />
-                          ) : (
-                            <Zap className="w-3.5 h-3.5" />
-                          )}
-                          <span>{planModeEnabled ? "PLAN PRO" : "FAST"}</span>
-                        </span>
-                      </button>
-                      <button
-                        type="submit"
-                        disabled={isLoading || !query.trim()}
-                        className="flex-1 inline-flex items-center justify-center gap-2 bg-gold-500 hover:bg-gold-600 disabled:opacity-50 disabled:cursor-not-allowed text-black font-heading font-bold tracking-wider px-8 py-4 rounded-xl transition-all uppercase text-sm"
-                      >
-                        {isLoading ? (
-                          <span className="flex items-center justify-center gap-2">
-                            <svg className="animate-spin w-5 h-5" viewBox="0 0 24 24" fill="none">
-                              <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="3" className="opacity-25" />
-                              <path d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" fill="currentColor" className="opacity-75" />
-                            </svg>
-                            {planModeEnabled ? t(locale, "analyzeGoalBtn") : t(locale, "fastGenerateBtn")}
+                    <div className="space-y-2">
+                      <div className="flex items-center justify-between gap-2">
+                        <p className="text-[11px] text-gray-500">
+                          {locale === "ar" ? "FAST مجاني - PLAN PRO تخطيط متقدم" : "FAST is free - PLAN PRO is advanced planning"}
+                        </p>
+                        <Link href="/plans" className="text-[11px] text-gold-300 hover:text-gold-200">
+                          {hasProDemo
+                            ? locale === "ar"
+                              ? "PRO مفعل"
+                              : "PRO active"
+                            : locale === "ar"
+                            ? "تفعيل PRO"
+                            : "Activate PRO"}
+                        </Link>
+                      </div>
+                      <div className="flex flex-col sm:flex-row sm:items-center gap-3">
+                        <button
+                          type="button"
+                          onClick={handleTogglePlanMode}
+                          aria-pressed={planModeEnabled}
+                          title="Plan mode PRO"
+                          className={`inline-flex items-center justify-center rounded-full px-4 py-2 text-[11px] font-heading font-bold tracking-wider uppercase border transition-colors active:scale-[0.99] ${
+                            planModeEnabled
+                              ? "text-black bg-gold-500 border-gold-500 hover:bg-gold-600"
+                              : "text-gray-300 bg-black/40 border-dark-border hover:border-gold-500/30 hover:text-gray-200"
+                          }`}
+                        >
+                          <span className="inline-flex items-center gap-2">
+                            {planModeEnabled ? (
+                              <ClipboardList className="w-3.5 h-3.5" />
+                            ) : (
+                              <Zap className="w-3.5 h-3.5" />
+                            )}
+                            <span>{planModeEnabled ? "PLAN PRO" : "FAST"}</span>
                           </span>
-                        ) : (
-                          <>
-                            <Sparkles className="w-4 h-4" />
-                            {planModeEnabled ? t(locale, "analyzeGoalBtn") : t(locale, "fastGenerateBtn")}
-                          </>
-                        )}
-                      </button>
+                        </button>
+                        <button
+                          type="submit"
+                          disabled={isLoading || !query.trim()}
+                          className="flex-1 inline-flex items-center justify-center gap-2 bg-gold-500 hover:bg-gold-600 disabled:opacity-50 disabled:cursor-not-allowed text-black font-heading font-bold tracking-wider px-8 py-4 rounded-xl transition-all uppercase text-sm"
+                        >
+                          {isLoading ? (
+                            <span className="flex items-center justify-center gap-2">
+                              <svg className="animate-spin w-5 h-5" viewBox="0 0 24 24" fill="none">
+                                <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="3" className="opacity-25" />
+                                <path d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" fill="currentColor" className="opacity-75" />
+                              </svg>
+                              {planModeEnabled ? t(locale, "analyzeGoalBtn") : t(locale, "fastGenerateBtn")}
+                            </span>
+                          ) : (
+                            <>
+                              <Sparkles className="w-4 h-4" />
+                              {planModeEnabled ? t(locale, "analyzeGoalBtn") : t(locale, "fastGenerateBtn")}
+                            </>
+                          )}
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </form>

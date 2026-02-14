@@ -1,20 +1,33 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo, useState, type ReactNode } from "react";
 import { WeekPlan } from "@/lib/protocols";
 import { motion, AnimatePresence } from "framer-motion";
 import { useLanguage } from "@/lib/LanguageContext";
 import { t } from "@/lib/i18n";
-import { ChevronDown, ShieldCheck, Target, CalendarClock, CheckCircle2 } from "lucide-react";
+import {
+  ChevronDown,
+  ShieldCheck,
+  Target,
+  CalendarClock,
+  CheckCircle2,
+  Sunrise,
+  UtensilsCrossed,
+  Pill,
+  Dumbbell,
+  Heart,
+  Droplets,
+  Moon,
+} from "lucide-react";
 
-const CATEGORY_LABELS: Record<string, { en: string; ar: string }> = {
-  wake: { en: "Wake", ar: "استيقاظ" },
-  meal: { en: "Meal", ar: "وجبة" },
-  supplement: { en: "Supplement", ar: "مكمل" },
-  training: { en: "Training", ar: "تمرين" },
-  recovery: { en: "Recovery", ar: "تعافي" },
-  hydration: { en: "Hydration", ar: "ترطيب" },
-  sleep: { en: "Sleep", ar: "نوم" },
+const CATEGORY_LABELS: Record<string, { en: string; ar: string; icon: ReactNode }> = {
+  wake: { en: "Wake", ar: "استيقاظ", icon: <Sunrise className="w-3 h-3" /> },
+  meal: { en: "Meal", ar: "وجبة", icon: <UtensilsCrossed className="w-3 h-3" /> },
+  supplement: { en: "Supplement", ar: "مكملات", icon: <Pill className="w-3 h-3" /> },
+  training: { en: "Training", ar: "تدريب", icon: <Dumbbell className="w-3 h-3" /> },
+  recovery: { en: "Recovery", ar: "تعافي", icon: <Heart className="w-3 h-3" /> },
+  hydration: { en: "Hydration", ar: "ترطيب", icon: <Droplets className="w-3 h-3" /> },
+  sleep: { en: "Sleep", ar: "نوم", icon: <Moon className="w-3 h-3" /> },
 };
 
 export default function WeekCard({ week, weekIndex }: { week: WeekPlan; weekIndex: number }) {
@@ -123,7 +136,10 @@ export default function WeekCard({ week, weekIndex }: { week: WeekPlan; weekInde
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center gap-2 flex-wrap mb-1">
                             <span className="text-[10px] px-2 py-0.5 rounded-full border border-dark-border text-gray-400">
-                              {locale === "ar" ? category.ar : category.en}
+                              <span className="inline-flex items-center gap-1">
+                                {category.icon}
+                                {locale === "ar" ? category.ar : category.en}
+                              </span>
                             </span>
                             <span className="text-[10px] px-2 py-0.5 rounded-full border border-gold-500/30 text-gold-400 bg-gold-500/10">
                               <CalendarClock className="w-3 h-3 inline ltr:mr-1 rtl:ml-1" />

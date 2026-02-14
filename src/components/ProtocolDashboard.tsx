@@ -20,8 +20,17 @@ import {
   ShieldAlert,
   Target,
   UserCircle2,
+  Sunrise,
+  UtensilsCrossed,
+  Pill,
+  Dumbbell,
+  Heart,
+  Droplets,
+  Moon,
+  Crown,
 } from "lucide-react";
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { hasProAccess } from "@/lib/pro-access";
 
 function GoldDivider() {
   return (
@@ -75,8 +84,30 @@ function normalizeProgress(total: number) {
   }));
 }
 
+const SECTION_META = [
+  { key: "wake", icon: Sunrise, en: "Wake", ar: "استيقاظ" },
+  { key: "meal", icon: UtensilsCrossed, en: "Nutrition", ar: "تغذية" },
+  { key: "supplement", icon: Pill, en: "Supplements", ar: "مكملات" },
+  { key: "training", icon: Dumbbell, en: "Training", ar: "تدريب" },
+  { key: "recovery", icon: Heart, en: "Recovery", ar: "تعافي" },
+  { key: "hydration", icon: Droplets, en: "Hydration", ar: "ترطيب" },
+  { key: "sleep", icon: Moon, en: "Sleep", ar: "نوم" },
+] as const;
+
 export default function ProtocolDashboard({ protocol }: { protocol: Protocol }) {
   const { locale, isRTL } = useLanguage();
+  const [proEnabled, setProEnabled] = useState(false);
+
+  useEffect(() => {
+    const syncPro = () => setProEnabled(hasProAccess());
+    syncPro();
+    window.addEventListener("storage", syncPro);
+    window.addEventListener("focus", syncPro);
+    return () => {
+      window.removeEventListener("storage", syncPro);
+      window.removeEventListener("focus", syncPro);
+    };
+  }, []);
 
   const safeDays = Array.isArray(protocol?.days)
     ? protocol.days.filter((day) => day && Array.isArray(day.tasks))
@@ -163,6 +194,45 @@ export default function ProtocolDashboard({ protocol }: { protocol: Protocol }) 
     return { totalTasks: tasks, totalPoints: points };
   }, [inferredMode, safeWeeks, safeDays]);
 
+  const sectionCounts = useMemo(() => {
+    const counts = SECTION_META.reduce<Record<string, number>>((acc, section) => {
+      acc[section.key] = 0;
+      return acc;
+    }, {});
+
+    const buckets =
+      inferredMode === "weekly"
+        ? safeWeeks.flatMap((week) => week.tasks)
+        : safeDays.flatMap((day) => day.tasks);
+
+    for (const task of buckets) {
+      counts[task.category] = (counts[task.category] || 0) + 1;
+    }
+    return counts;
+  }, [inferredMode, safeWeeks, safeDays]);
+
+  const primarySection = useMemo(() => {
+    const ranked = Object.entries(sectionCounts).sort((a, b) => b[1] - a[1]);
+    return ranked[0]?.[0] || "training";
+  }, [sectionCounts]);
+
+  const adherenceForecast = useMemo(() => {
+    const base = totalTasks > 0 ? 72 : 60;
+    const density = totalUnits > 0 ? totalTasks / totalUnits : 0;
+    return Math.max(55, Math.min(97, Math.round(base + density * 3)));
+  }, [totalTasks, totalUnits]);
+
+  const recoveryCoverage = useMemo(() => {
+    const recoveryTasks = (sectionCounts.recovery || 0) + (sectionCounts.sleep || 0);
+    if (totalTasks <= 0) return 0;
+    return Math.round((recoveryTasks / totalTasks) * 100);
+  }, [sectionCounts, totalTasks]);
+
+  const visualMomentum = useMemo(() => {
+    if (totalTasks <= 0) return 0;
+    return Math.round(totalPoints / totalTasks);
+  }, [totalPoints, totalTasks]);
+
   const timelineList = inferredMode === "weekly" ? safeWeeks : safeDays;
 
   return (
@@ -202,6 +272,141 @@ export default function ProtocolDashboard({ protocol }: { protocol: Protocol }) 
             >
               {f}
             </span>
+          ))}
+        </div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.1, duration: 0.45 }}
+          className="bg-dark-card border border-gold-500/25 rounded-xl p-5 mb-6"
+        >
+          <div className="flex flex-wrap items-center justify-between gap-2 mb-3">
+            <h2 className="font-heading text-sm uppercase tracking-[0.18em] text-gold-400">
+              {locale === "ar" ? "الملخص التنفيذي للبروتوكول" : "Protocol Executive Brief"}
+            </h2>
+            <span className="text-[10px] px-2 py-1 rounded-full border border-gold-500/30 bg-gold-500/10 text-gold-300 uppercase tracking-wider">
+              {inferredMode === "weekly" ? (locale === "ar" ? "نمط أسبوعي" : "Weekly mode") : (locale === "ar" ? "نمط يومي" : "Daily mode")}
+            </span>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+            <div className="rounded-lg border border-dark-border bg-black/35 p-3">
+              <p className="text-[11px] uppercase tracking-widest text-gray-500 mb-1">
+                {locale === "ar" ? "الهدف الرئيسي" : "Main Objective"}
+              </p>
+              <p className="text-sm text-gray-200">{subtitle || (locale === "ar" ? "تحسين تدريجي واضح قابل للتنفيذ." : "Clear and realistic progressive improvement.")}</p>
+            </div>
+            <div className="rounded-lg border border-dark-border bg-black/35 p-3">
+              <p className="text-[11px] uppercase tracking-widest text-gray-500 mb-1">
+                {locale === "ar" ? "الإيقاع" : "Execution Rhythm"}
+              </p>
+              <p className="text-sm text-gray-200">
+                {inferredMode === "weekly"
+                  ? locale === "ar"
+                    ? `${totalUnits} أسابيع بمهام مركزة أسبوعيًا.`
+                    : `${totalUnits} weeks with concentrated weekly deliverables.`
+                  : locale === "ar"
+                  ? `${totalUnits} أيام بتسلسل يومي واضح.`
+                  : `${totalUnits} days with clear day-by-day sequencing.`}
+              </p>
+            </div>
+            <div className="rounded-lg border border-dark-border bg-black/35 p-3">
+              <p className="text-[11px] uppercase tracking-widest text-gray-500 mb-1">
+                {locale === "ar" ? "محرك الخطة" : "Primary Driver"}
+              </p>
+              <p className="text-sm text-gray-200">
+                {SECTION_META.find((item) => item.key === primarySection)?.[locale === "ar" ? "ar" : "en"]}{" "}
+                {locale === "ar" ? "هو الجزء الأكثر تأثيرًا في هذه الخطة." : "is the strongest execution lever in this plan."}
+              </p>
+            </div>
+          </div>
+        </motion.div>
+
+        <div className="bg-dark-card border border-dark-border rounded-xl p-5 mb-6">
+          <h3 className="font-heading text-xs uppercase tracking-[0.18em] text-gold-400 mb-4">
+            {locale === "ar" ? "خريطة الأقسام بالأيقونات" : "Section Map with Icons"}
+          </h3>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+            {SECTION_META.map((section) => {
+              const Icon = section.icon;
+              const count = sectionCounts[section.key] || 0;
+              return (
+                <div key={section.key} className="rounded-lg border border-dark-border bg-black/35 p-3">
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="w-7 h-7 rounded-full bg-gold-500/10 border border-gold-500/30 flex items-center justify-center text-gold-300">
+                      <Icon className="w-3.5 h-3.5" />
+                    </span>
+                    <span className="text-[11px] text-gold-300 font-bold">{count}</span>
+                  </div>
+                  <p className="text-xs text-gray-300">{locale === "ar" ? section.ar : section.en}</p>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mb-6">
+          {[
+            {
+              titleAr: "توقع الالتزام",
+              titleEn: "Adherence Forecast",
+              value: `${adherenceForecast}%`,
+              detailAr: "تقدير استمرارية التنفيذ بناءً على كثافة المهام.",
+              detailEn: "Estimated consistency based on task density.",
+            },
+            {
+              titleAr: "تغطية الاستشفاء",
+              titleEn: "Recovery Coverage",
+              value: `${recoveryCoverage}%`,
+              detailAr: "نسبة مهام التعافي والنوم من إجمالي الخطة.",
+              detailEn: "Recovery + sleep tasks ratio within the protocol.",
+            },
+            {
+              titleAr: "الزخم البصري",
+              titleEn: "Visual Momentum",
+              value: `${visualMomentum}`,
+              detailAr: "متوسط نقاط التأثير لكل مهمة.",
+              detailEn: "Average impact points per task.",
+            },
+          ].map((item) => (
+            <div
+              key={item.titleEn}
+              className={`rounded-xl border p-4 ${
+                proEnabled
+                  ? "border-gold-500/25 bg-gold-500/5"
+                  : "border-dark-border bg-black/35 opacity-80"
+              }`}
+            >
+              <div className="flex items-center justify-between mb-2">
+                <p className="text-[11px] uppercase tracking-[0.16em] text-gray-400">
+                  {locale === "ar" ? item.titleAr : item.titleEn}
+                </p>
+                <span className="inline-flex items-center gap-1 text-[10px] px-2 py-0.5 rounded-full border border-gold-500/30 bg-gold-500/10 text-gold-300">
+                  <Crown className="w-3 h-3" />
+                  PRO
+                </span>
+              </div>
+              <p className={`font-heading text-2xl ${proEnabled ? "text-gold-300" : "text-gray-500"}`}>
+                {proEnabled ? item.value : "--"}
+              </p>
+              <p className="text-xs text-gray-500 mt-1">
+                {proEnabled
+                  ? locale === "ar"
+                    ? item.detailAr
+                    : item.detailEn
+                  : locale === "ar"
+                  ? "فعّل PRO من صفحة الاشتراكات لعرض التحليلات المتقدمة."
+                  : "Enable PRO from Plans to unlock this advanced insight."}
+              </p>
+              {!proEnabled ? (
+                <Link
+                  href="/plans"
+                  className="inline-block mt-3 text-[11px] text-gold-300 hover:text-gold-200"
+                >
+                  {locale === "ar" ? "تفعيل PRO" : "Activate PRO"}
+                </Link>
+              ) : null}
+            </div>
           ))}
         </div>
 

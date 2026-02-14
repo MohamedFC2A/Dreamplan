@@ -4,8 +4,8 @@ import { useLanguage } from "@/lib/LanguageContext";
 import Navbar from "@/components/Navbar";
 import { Crown, Check, X, Zap, Shield, ChevronDown } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { getProAccessState, setProAccessDemo } from "@/lib/pro-access";
 
 const content = {
   ar: {
@@ -20,6 +20,11 @@ const content = {
     mostPopular: "الأكثر شعبية",
     startFree: "ابدأ مجاناً",
     subscribeNow: "اشترك الآن",
+    activateProDemo: "تفعيل PRO التجريبي",
+    deactivateProDemo: "إيقاف PRO التجريبي",
+    proDemoEnabled: "PRO مفعل الآن (نسخة تجريبية محلية)",
+    proDemoDisabled: "PRO غير مفعل",
+    proDemoNote: "هذا تفعيل تجريبي محلي فقط للتجربة وليس اشتراكًا رسميًا.",
     faqTitle: "الأسئلة الشائعة",
     freeFeatures: [
       { included: true, text: "بروتوكولان مميزان" },
@@ -72,6 +77,11 @@ const content = {
     mostPopular: "Most Popular",
     startFree: "Start Free",
     subscribeNow: "Subscribe Now",
+    activateProDemo: "Enable PRO Demo",
+    deactivateProDemo: "Disable PRO Demo",
+    proDemoEnabled: "PRO is active now (local demo mode)",
+    proDemoDisabled: "PRO is not active",
+    proDemoNote: "This is local demo activation only, not an official billing subscription.",
     faqTitle: "Frequently Asked Questions",
     freeFeatures: [
       { included: true, text: "2 featured protocols" },
@@ -153,6 +163,16 @@ function FAQItem({ question, answer }: { question: string; answer: string }) {
 export default function PlansPage() {
   const { locale } = useLanguage();
   const t = content[locale];
+  const [proDemoEnabled, setProDemoEnabled] = useState(false);
+
+  useEffect(() => {
+    setProDemoEnabled(getProAccessState().enabled);
+  }, []);
+
+  const handleToggleProDemo = () => {
+    const next = setProAccessDemo(!proDemoEnabled);
+    setProDemoEnabled(next.enabled);
+  };
 
   return (
     <div className="min-h-screen bg-dark-bg">
@@ -172,6 +192,24 @@ export default function PlansPage() {
           <p className="text-neutral-400 text-base md:text-lg max-w-xl mx-auto">
             {t.subtitle}
           </p>
+          <div className="mt-5 inline-flex flex-col items-center gap-2 rounded-xl border border-gold-500/30 bg-gold-500/10 px-4 py-3">
+            <p className={`text-xs font-heading tracking-wider ${proDemoEnabled ? "text-gold-300" : "text-gray-400"}`}>
+              {proDemoEnabled ? t.proDemoEnabled : t.proDemoDisabled}
+            </p>
+            <button
+              type="button"
+              onClick={handleToggleProDemo}
+              className={`inline-flex items-center gap-2 rounded-lg px-4 py-2 text-xs font-heading tracking-wider transition-colors ${
+                proDemoEnabled
+                  ? "border border-dark-border bg-black/40 text-gray-200 hover:border-gold-500/30"
+                  : "bg-gold-500 text-black hover:bg-gold-400"
+              }`}
+            >
+              <Zap className="w-3.5 h-3.5" />
+              {proDemoEnabled ? t.deactivateProDemo : t.activateProDemo}
+            </button>
+            <p className="text-[11px] text-gray-500">{t.proDemoNote}</p>
+          </div>
         </motion.div>
 
         <div className="grid md:grid-cols-2 gap-6 md:gap-8 mb-20">
@@ -246,8 +284,16 @@ export default function PlansPage() {
               ))}
             </ul>
 
-            <button className="w-full py-3 rounded-lg bg-gold-500 text-black font-heading text-sm hover:bg-gold-400 active:scale-[0.98] transition-all duration-200">
-              {t.subscribeNow}
+            <button
+              type="button"
+              onClick={handleToggleProDemo}
+              className={`w-full py-3 rounded-lg font-heading text-sm active:scale-[0.98] transition-all duration-200 ${
+                proDemoEnabled
+                  ? "border border-dark-border text-gray-200 hover:border-gold-500/30"
+                  : "bg-gold-500 text-black hover:bg-gold-400"
+              }`}
+            >
+              {proDemoEnabled ? t.deactivateProDemo : t.activateProDemo}
             </button>
           </motion.div>
         </div>
