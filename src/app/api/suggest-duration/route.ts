@@ -174,9 +174,9 @@ function buildDefaultRationale(goalType: GoalType, locale: Locale): string {
 
 function buildDefaultQuestion(locale: Locale, suggestedDays: number, minDays: number, maxDays: number): string {
   if (locale === "ar") {
-    return `أقترح ${suggestedDays} يوم. هل تريد اعتمادها أم تعديلها داخل النطاق ${minDays}-${maxDays} يوم؟`;
+    return `أقترح ${suggestedDays} يوم كخيار واقعي. هل تريد المتابعة بها، أم تعديلها اختياريًا داخل ${minDays}-${maxDays} يوم؟`;
   }
-  return `I suggest ${suggestedDays} days. Do you want to keep it or adjust within ${minDays}-${maxDays} days?`;
+  return `I suggest ${suggestedDays} days as a realistic option. Keep it, or optionally adjust within ${minDays}-${maxDays} days?`;
 }
 
 function buildDeterministicSuggestion(query: string, locale: Locale): DurationSuggestion {

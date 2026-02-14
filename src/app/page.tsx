@@ -34,13 +34,11 @@ import {
 import Navbar from "@/components/Navbar";
 import {
   PrivateProtocolEntry,
-  createPrivateProtocolEntry,
   deletePrivateProtocol,
   getPrivateProtocols,
   migrateLegacySavedProtocols,
   openPrivateProtocolEntry,
   renamePrivateProtocol,
-  upsertPrivateProtocol,
   clearPrivateProtocols,
 } from "@/lib/protocol-storage";
 import { PlannerAnswer, PlannerQuestion, UserProfile } from "@/lib/planner-types";
@@ -49,6 +47,13 @@ import {
   readStoredProfile,
   validateProfile,
 } from "@/lib/profile-storage";
+import {
+  getGenerationTaskSnapshot,
+  getLatestPrivateProtocols,
+  resetGenerationTask,
+  startGenerationTask,
+  subscribeGenerationTask,
+} from "@/lib/generation-task";
 
 const EXAMPLES_AR = [
   "أريد عروق بارزة في يدي وساعدي",
@@ -73,6 +78,7 @@ const EXAMPLES_EN = [
 type FlowState = "goal_input" | "duration_confirm" | "plan_qa" | "generating";
 type SortMode = "newest" | "oldest";
 type GoalType = "quick_visual" | "fat_loss" | "muscle_gain" | "posture_definition" | "general";
+type DurationInputMode = "ai" | "custom";
 
 interface DurationSuggestion {
   suggestedDays: number;
@@ -160,6 +166,7 @@ function formatDateByLocale(iso: string, locale: "ar" | "en"): string {
 }
 
 const PLANNER_QA_KEY = "planner-qa.v1";
+const PLANNER_SESSION_KEY = "planner-session.v1";
 
 
 function useTypewriter(
@@ -398,6 +405,7 @@ export default function Home() {
   const [flowState, setFlowState] = useState<FlowState>("goal_input");
   const [durationSuggestion, setDurationSuggestion] = useState<DurationSuggestion | null>(null);
   const [selectedDuration, setSelectedDuration] = useState<number>(14);
+  const [durationInputMode, setDurationInputMode] = useState<DurationInputMode>("ai");
   const [profile, setProfile] = useState<UserProfile>(createDefaultProfile(""));
   const [qaHistory, setQaHistory] = useState<PlannerAnswer[]>([]);
   const [plannerQuestion, setPlannerQuestion] = useState<PlannerQuestion | null>(null);
@@ -427,6 +435,45 @@ export default function Home() {
     try {
       const stored = readStoredProfile();
       if (stored) setProfile(stored);
+
+      const rawSession = localStorage.getItem(PLANNER_SESSION_KEY);
+      if (rawSession) {
+        const parsedSession = JSON.parse(rawSession);
+        if (parsedSession && typeof parsedSession === "object") {
+          if (typeof parsedSession.query === "string") setQuery(parsedSession.query);
+          if (parsedSession.durationSuggestion && typeof parsedSession.durationSuggestion === "object") {
+            const normalizedSuggestion = normalizeDurationSuggestion(parsedSession.durationSuggestion);
+            if (normalizedSuggestion) setDurationSuggestion(normalizedSuggestion);
+          }
+          if (Number.isFinite(parsedSession.selectedDuration)) {
+            setSelectedDuration(Math.round(Number(parsedSession.selectedDuration)));
+          }
+          if (parsedSession.durationInputMode === "custom" || parsedSession.durationInputMode === "ai") {
+            setDurationInputMode(parsedSession.durationInputMode);
+          }
+          if (
+            parsedSession.flowState === "goal_input" ||
+            parsedSession.flowState === "duration_confirm" ||
+            parsedSession.flowState === "plan_qa" ||
+            parsedSession.flowState === "generating"
+          ) {
+            setFlowState(parsedSession.flowState);
+          }
+          if (parsedSession.plannerQuestion && typeof parsedSession.plannerQuestion === "object") {
+            setPlannerQuestion(parsedSession.plannerQuestion as PlannerQuestion);
+          }
+          if (parsedSession.plannerReady && typeof parsedSession.plannerReady === "object") {
+            setPlannerReady(parsedSession.plannerReady as PlannerReadyResponse);
+          }
+          if (typeof parsedSession.plannerReasoningHint === "string") {
+            setPlannerReasoningHint(parsedSession.plannerReasoningHint);
+          }
+          if (Number.isFinite(parsedSession.plannerProgress)) {
+            setPlannerProgress(Math.max(0, Math.min(100, Math.round(Number(parsedSession.plannerProgress)))));
+          }
+        }
+      }
+
       const rawQa = localStorage.getItem(PLANNER_QA_KEY);
       if (rawQa) {
         const parsed = JSON.parse(rawQa);
@@ -456,12 +503,82 @@ export default function Home() {
 
   useEffect(() => {
     try {
+      const qaPayload = { query: query.trim(), durationDays: selectedDuration, qaHistory };
+      localStorage.setItem(PLANNER_QA_KEY, JSON.stringify(qaPayload));
       localStorage.setItem(
-        PLANNER_QA_KEY,
-        JSON.stringify({ query: query.trim(), durationDays: selectedDuration, qaHistory })
+        PLANNER_SESSION_KEY,
+        JSON.stringify({
+          query: query.trim(),
+          flowState,
+          durationSuggestion,
+          selectedDuration,
+          durationInputMode,
+          qaHistory,
+          plannerQuestion,
+          plannerProgress,
+          plannerReasoningHint,
+          plannerReady,
+          planModeEnabled,
+        })
       );
     } catch {}
-  }, [qaHistory, selectedDuration, query]);
+  }, [
+    qaHistory,
+    selectedDuration,
+    query,
+    flowState,
+    durationSuggestion,
+    durationInputMode,
+    plannerQuestion,
+    plannerProgress,
+    plannerReasoningHint,
+    plannerReady,
+    planModeEnabled,
+  ]);
+
+  useEffect(() => {
+    const initial = getGenerationTaskSnapshot();
+    if (initial.status === "running") {
+      setFlowState("generating");
+      setIsLoading(true);
+      if (initial.query) setQuery(initial.query);
+    } else if (initial.status === "success") {
+      setPrivateProtocols(getLatestPrivateProtocols());
+    }
+
+    const unsubscribe = subscribeGenerationTask((next) => {
+      if (next.status === "running") {
+        setFlowState("generating");
+        setIsLoading(true);
+        setError("");
+        if (next.query) setQuery(next.query);
+        return;
+      }
+      if (next.status === "success") {
+        setPrivateProtocols(getLatestPrivateProtocols());
+        setIsLoading(false);
+        setError("");
+        resetGenerationTask();
+        router.push("/protocol/ai-generated");
+        return;
+      }
+      if (next.status === "error") {
+        setIsLoading(false);
+        setFlowState(planModeEnabled ? "plan_qa" : "goal_input");
+        setError(mapGenerateError(locale, next.code || undefined, next.error || undefined));
+        resetGenerationTask();
+      }
+    });
+
+    return () => unsubscribe();
+  }, [locale, planModeEnabled, router]);
+
+  useEffect(() => {
+    if (flowState !== "generating") return;
+    if (getGenerationTaskSnapshot().status === "running") return;
+    setIsLoading(false);
+    setFlowState(durationSuggestion ? "duration_confirm" : "goal_input");
+  }, [flowState, durationSuggestion]);
 
   const filteredPrivateProtocols = useMemo(() => {
     const needle = privateSearch.trim().toLowerCase();
@@ -555,6 +672,7 @@ export default function Home() {
 
       setDurationSuggestion(suggestion);
       setSelectedDuration(suggestion.suggestedDays);
+      setDurationInputMode("ai");
       const latest = readStoredProfile();
       if (latest) setProfile(latest);
       setFlowState("duration_confirm");
@@ -574,49 +692,20 @@ export default function Home() {
     setError("");
     setFlowState("generating");
 
-    const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 70000);
-
     try {
-      const res = await fetch("/api/generate", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        signal: controller.signal,
-        body: JSON.stringify({
-          query: query.trim(),
-          locale,
-          durationDays: clampedDuration,
-          planModeEnabled,
-          profile: generationProfile,
-          qaHistory: answers,
-        }),
-      });
-
-      const payload = await res.json().catch(() => ({}));
-      if (!res.ok || payload?.error) {
-        const message = mapGenerateError(locale, payload?.code, payload?.error);
-        throw new Error(message);
-      }
-
-      const protocol = payload;
-      const entry = createPrivateProtocolEntry(protocol, {
-        profileSnapshot: generationProfile,
+      await startGenerationTask({
+        query: query.trim(),
+        locale,
+        durationDays: clampedDuration,
+        planModeEnabled,
+        profile: generationProfile,
         qaHistory: answers,
         qaSummary: plannerReady?.keyConstraints || [],
       });
-      const updated = upsertPrivateProtocol(entry);
-      setPrivateProtocols(updated);
-      localStorage.removeItem(PLANNER_QA_KEY);
-
-      openPrivateProtocolEntry(entry);
-      router.push("/protocol/ai-generated");
     } catch (err: any) {
-      const isAbort = err?.name === "AbortError";
       setFlowState(planModeEnabled ? "plan_qa" : "goal_input");
-      setError(isAbort ? t(locale, "errorTimeout") : err?.message || t(locale, "errorDesc"));
-    } finally {
-      clearTimeout(timeout);
       setIsLoading(false);
+      setError(mapGenerateError(locale, err?.code, err?.message || t(locale, "errorDesc")));
     }
   };
 
@@ -822,15 +911,15 @@ export default function Home() {
               {locale === "ar" ? (
                 <>
                   <h1 className="font-heading text-5xl md:text-7xl lg:text-8xl font-bold text-white tracking-wider mb-2 leading-tight">
-                    ذروة <span className="text-gold-500">الرجولة</span>
+                    {t(locale, "siteNameAr")}
                   </h1>
                   <p className="font-heading text-lg md:text-xl text-gray-500 tracking-widest mb-4">
-                    MASCULINE PEAK
+                    {t(locale, "siteName")}
                   </p>
                 </>
               ) : (
                 <h1 className="font-heading text-5xl md:text-7xl lg:text-8xl font-bold text-white tracking-wider mb-4 leading-tight">
-                  MASCULINE <span className="text-gold-500">PEAK</span>
+                  DREAM<span className="text-gold-500">PLAN</span>
                 </h1>
               )}
 
@@ -981,8 +1070,41 @@ export default function Home() {
                   </h2>
                 </div>
                 <div className="p-4 rounded-xl border border-dark-border bg-black/30 mb-3">
-                  <p className="text-sm text-gray-200 mb-1">{durationSuggestion.question}</p>
-                  <p className="text-xs text-gray-500">{durationSuggestion.rationale}</p>
+                  <p className="text-[11px] uppercase tracking-widest text-gray-500 mb-2">
+                    {locale === "ar" ? "سؤال AI عن المدة" : "AI Duration Question"}
+                  </p>
+                  <p className="text-sm text-gray-200 mb-2">{durationSuggestion.question}</p>
+                  <p className="text-[11px] uppercase tracking-widest text-gray-500 mb-1">
+                    {locale === "ar" ? "سبب الاقتراح" : "Why this suggestion"}
+                  </p>
+                  <p className="text-xs text-gray-400 leading-relaxed">{durationSuggestion.rationale}</p>
+                </div>
+                <div className="mb-3 flex flex-wrap gap-2">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setDurationInputMode("ai");
+                      setSelectedDuration(durationSuggestion.suggestedDays);
+                    }}
+                    className={`px-3 py-2 rounded-lg border text-xs font-bold uppercase tracking-wide ${
+                      durationInputMode === "ai"
+                        ? "border-gold-500/70 text-gold-300 bg-gold-500/10"
+                        : "border-dark-border text-gray-400 hover:text-gray-200"
+                    }`}
+                  >
+                    {locale === "ar" ? "الاقتراح الذكي (AI)" : "Smart AI Suggestion"}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setDurationInputMode("custom")}
+                    className={`px-3 py-2 rounded-lg border text-xs font-bold uppercase tracking-wide ${
+                      durationInputMode === "custom"
+                        ? "border-gold-500/70 text-gold-300 bg-gold-500/10"
+                        : "border-dark-border text-gray-400 hover:text-gray-200"
+                    }`}
+                  >
+                    {locale === "ar" ? "تخصيص المدة يدويًا" : "Custom Duration"}
+                  </button>
                 </div>
                 <div className="mb-2">
                   <label className="text-xs text-gray-400">{t(locale, "selectedDurationLabel")}</label>
@@ -990,16 +1112,37 @@ export default function Home() {
                     {selectedDuration} {locale === "ar" ? "يوم" : "days"}
                   </p>
                 </div>
-                <div className="mb-4">
-                  <input
-                    type="range"
-                    min={durationSuggestion.minDays}
-                    max={durationSuggestion.maxDays}
-                    value={selectedDuration}
-                    onChange={(event) => handleDurationInput(Number(event.target.value))}
-                    className="w-full accent-gold-500"
-                  />
-                </div>
+                {durationInputMode === "custom" ? (
+                  <div className="mb-4 space-y-3">
+                    <input
+                      type="range"
+                      min={durationSuggestion.minDays}
+                      max={durationSuggestion.maxDays}
+                      value={selectedDuration}
+                      onChange={(event) => handleDurationInput(Number(event.target.value))}
+                      className="w-full accent-gold-500"
+                    />
+                    <input
+                      type="number"
+                      min={durationSuggestion.minDays}
+                      max={durationSuggestion.maxDays}
+                      value={selectedDuration}
+                      onChange={(event) => handleDurationInput(Number(event.target.value))}
+                      className="w-full bg-black border border-dark-border rounded-lg px-3 py-2 text-gray-100"
+                    />
+                    <p className="text-xs text-gray-500">
+                      {locale === "ar"
+                        ? `النطاق المسموح: ${durationSuggestion.minDays}-${durationSuggestion.maxDays} يوم`
+                        : `Allowed range: ${durationSuggestion.minDays}-${durationSuggestion.maxDays} days`}
+                    </p>
+                  </div>
+                ) : (
+                  <p className="text-xs text-gray-500 mb-4">
+                    {locale === "ar"
+                      ? "يمكنك التخطي الآن والاعتماد على اقتراح AI مباشرة."
+                      : "You can skip manual editing and continue with the AI suggestion."}
+                  </p>
+                )}
                 {planModeEnabled ? (
                   <div className="p-4 rounded-xl border border-dark-border bg-black/30 mb-4">
                     <p className="text-xs uppercase tracking-widest text-gray-400 mb-2">{t(locale, "aiQuestionsTitle")}</p>
@@ -1443,7 +1586,7 @@ export default function Home() {
         <div className="max-w-5xl mx-auto px-4">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4 mb-6">
             <Link href="/" className="font-heading text-sm font-bold text-white tracking-widest">
-              MASCULINE <span className="text-gold-500">PEAK</span>
+              DREAM<span className="text-gold-500">PLAN</span>
             </Link>
             <div className="flex items-center gap-6">
               <Link href="/" className="text-sm text-gray-500 hover:text-gold-400 transition-colors">
@@ -1462,7 +1605,7 @@ export default function Home() {
                 : "Powered by DeepSeek AI — All protocols are scientifically grounded"}
             </p>
             <p className="text-gray-600 text-xs">
-              {locale === "ar" ? "جميع الحقوق محفوظة" : "All rights reserved"} &copy; {new Date().getFullYear()} Masculine Peak
+              {locale === "ar" ? "جميع الحقوق محفوظة" : "All rights reserved"} &copy; {new Date().getFullYear()} Dreamplan
             </p>
           </div>
         </div>
