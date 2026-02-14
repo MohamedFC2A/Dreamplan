@@ -5,12 +5,21 @@
 @tailwind utilities;
 
 :root {
-  --dark-bg: #000000;
-  --dark-card: #0a0a0a;
-  --dark-border: #1a1a1a;
+  --dark-bg: #050608;
+  --dark-card: #0c1118;
+  --dark-border: rgba(255, 255, 255, 0.14);
   --dark-accent: #D4AF37;
   --text-primary: #f1f5f9;
-  --text-secondary: #94a3b8;
+  --text-secondary: #aeb8c8;
+  --glass-bg: rgba(12, 17, 24, 0.62);
+  --glass-bg-soft: rgba(15, 21, 30, 0.5);
+  --glass-bg-strong: rgba(10, 14, 20, 0.8);
+  --glass-border: rgba(255, 255, 255, 0.16);
+  --glass-border-soft: rgba(255, 255, 255, 0.11);
+  --glass-highlight: rgba(255, 255, 255, 0.09);
+  --glass-shadow:
+    0 10px 32px rgba(0, 0, 0, 0.42),
+    inset 0 1px 0 rgba(255, 255, 255, 0.07);
 }
 
 html {
@@ -21,12 +30,45 @@ html {
 }
 
 body {
-  background-color: #000000;
+  background:
+    radial-gradient(circle at 12% 12%, rgba(212, 175, 55, 0.16), transparent 42%),
+    radial-gradient(circle at 82% 18%, rgba(67, 123, 255, 0.12), transparent 44%),
+    radial-gradient(circle at 50% 88%, rgba(113, 75, 219, 0.08), transparent 50%),
+    #050608;
   color: #f1f5f9;
   font-family: 'Inter', sans-serif;
   max-width: 100%;
   overflow-x: hidden;
   -webkit-tap-highlight-color: transparent;
+  position: relative;
+  isolation: isolate;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: -2;
+  background:
+    linear-gradient(
+      120deg,
+      rgba(255, 255, 255, 0.05),
+      transparent 28%,
+      transparent 72%,
+      rgba(212, 175, 55, 0.04)
+    );
+}
+
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: -1;
+  background-image: radial-gradient(rgba(255, 255, 255, 0.06) 0.5px, transparent 0.5px);
+  background-size: 3px 3px;
+  opacity: 0.08;
 }
 
 [dir="rtl"] body,
@@ -94,6 +136,119 @@ select {
 
 a {
   transition: color 0.2s ease;
+}
+
+.glass-panel {
+  background: linear-gradient(165deg, var(--glass-bg), var(--glass-bg-soft));
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(16px) saturate(145%);
+  -webkit-backdrop-filter: blur(16px) saturate(145%);
+  box-shadow: var(--glass-shadow);
+}
+
+.glass-panel-strong {
+  background: linear-gradient(165deg, var(--glass-bg-strong), rgba(8, 12, 18, 0.72));
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(20px) saturate(155%);
+  -webkit-backdrop-filter: blur(20px) saturate(155%);
+  box-shadow: var(--glass-shadow);
+}
+
+.glass-input {
+  background: linear-gradient(160deg, rgba(9, 13, 19, 0.7), rgba(15, 21, 30, 0.56));
+  border: 1px solid var(--glass-border-soft);
+  color: #f5f7fb;
+  backdrop-filter: blur(12px) saturate(130%);
+  -webkit-backdrop-filter: blur(12px) saturate(130%);
+}
+
+.glass-input::placeholder {
+  color: #a8b3c5;
+}
+
+.glass-nav {
+  background: linear-gradient(180deg, rgba(8, 12, 18, 0.84), rgba(8, 12, 18, 0.7));
+  border-bottom: 1px solid var(--glass-border-soft);
+  backdrop-filter: blur(18px) saturate(150%);
+  -webkit-backdrop-filter: blur(18px) saturate(150%);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+}
+
+[class*="bg-dark-card"] {
+  background: linear-gradient(165deg, var(--glass-bg), var(--glass-bg-soft)) !important;
+  backdrop-filter: blur(16px) saturate(145%);
+  -webkit-backdrop-filter: blur(16px) saturate(145%);
+  box-shadow: var(--glass-shadow);
+}
+
+[class*="border-dark-border"] {
+  border-color: var(--glass-border-soft) !important;
+}
+
+[class*="bg-black/30"],
+[class*="bg-black/35"],
+[class*="bg-black/40"],
+[class*="bg-black/50"],
+[class*="bg-black/60"],
+[class*="bg-black/80"],
+[class*="bg-black/95"] {
+  background: linear-gradient(
+    165deg,
+    rgba(11, 16, 24, 0.68),
+    rgba(12, 18, 27, 0.5)
+  ) !important;
+  backdrop-filter: blur(14px) saturate(140%);
+  -webkit-backdrop-filter: blur(14px) saturate(140%);
+}
+
+input:not([type="range"]):not([type="checkbox"]):not([type="radio"]),
+textarea,
+select {
+  background: linear-gradient(160deg, rgba(9, 13, 19, 0.7), rgba(15, 21, 30, 0.56));
+  border-color: var(--glass-border-soft);
+  color: #f5f7fb;
+  backdrop-filter: blur(12px) saturate(130%);
+  -webkit-backdrop-filter: blur(12px) saturate(130%);
+}
+
+input:not([type="range"]):not([type="checkbox"]):not([type="radio"])::placeholder,
+textarea::placeholder {
+  color: #a8b3c5;
+}
+
+input:not([type="range"]):focus,
+textarea:focus,
+select:focus {
+  border-color: rgba(212, 175, 55, 0.55);
+  box-shadow: 0 0 0 1px rgba(212, 175, 55, 0.35);
+}
+
+.text-gray-600 {
+  color: #9ca9be !important;
+}
+
+.text-gray-500 {
+  color: #b7c1d0 !important;
+}
+
+.text-gray-400 {
+  color: #d2d9e5 !important;
+}
+
+.text-neutral-400 {
+  color: #cfd7e4 !important;
+}
+
+.text-neutral-500 {
+  color: #b5bfd0 !important;
+}
+
+.animated-border-inner {
+  background: linear-gradient(165deg, rgba(10, 14, 21, 0.78), rgba(14, 20, 30, 0.6));
+  border: 1px solid var(--glass-border-soft);
+  backdrop-filter: blur(18px) saturate(145%);
+  -webkit-backdrop-filter: blur(18px) saturate(145%);
+  box-shadow: var(--glass-shadow);
 }
 
 @property --border-angle {
@@ -174,7 +329,6 @@ a {
 
 .animated-border-inner {
   position: relative;
-  background: #0a0a0a;
   border-radius: calc(1rem - 2px);
   z-index: 1;
 }

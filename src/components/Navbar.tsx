@@ -75,7 +75,7 @@ export default function Navbar() {
   };
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 bg-black/80 backdrop-blur-md border-b border-dark-border/50">
+    <nav className="fixed top-0 left-0 right-0 z-50 glass-nav">
       <div className="max-w-6xl mx-auto px-4 md:px-8 flex items-center justify-between h-16 gap-3">
         <Link href="/" className="font-heading text-base md:text-lg font-bold text-white tracking-widest whitespace-nowrap">
           <span className="block">
@@ -177,7 +177,7 @@ export default function Navbar() {
       </div>
 
       {mobileMenuOpen && (
-        <div className="md:hidden border-t border-dark-border/60 bg-black/95 backdrop-blur-xl">
+        <div className="md:hidden border-t border-dark-border/60 bg-black/95">
           <div className="px-4 py-4 space-y-3">
             <div className="flex flex-wrap items-center gap-2">
               {isProEnabled ? (
