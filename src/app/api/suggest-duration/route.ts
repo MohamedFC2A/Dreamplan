@@ -110,10 +110,17 @@ function estimateComplexityAdjustment(query: string): number {
     /(posture|neck|jaw|وضعية|رقبة|فك)/i,
     /(vein|vascular|عروق)/i,
     /(strength|power|قوة)/i,
+    /(speed|sprint|acceleration|agility|explosive|ronaldo|cr7|سرعة|انطلاق|رشاقة|انفجار|رونالدو)/i,
   ].reduce((acc, pattern) => acc + (pattern.test(q) ? 1 : 0), 0);
   if (featureMatches >= 3) score += 7;
   else if (featureMatches === 2) score += 3;
   return score;
+}
+
+function isAthleticPerformanceGoal(query: string): boolean {
+  return /(speed|sprint|acceleration|agility|explosive|soccer|football|ronaldo|cr7|سرعة|انطلاق|رشاقة|انفجار|كرة|رونالدو)/i.test(
+    query
+  );
 }
 
 function classifyGoalType(query: string): GoalType {
@@ -217,19 +224,32 @@ function buildDeterministicSuggestion(query: string, locale: Locale): DurationSu
   const requestedDays = extractRequestedDurationDays(query);
   const minDays = clamp(window.min, ABSOLUTE_MIN, ABSOLUTE_MAX);
   const maxDays = clamp(window.max, ABSOLUTE_MIN, ABSOLUTE_MAX);
+  const isPerformance = isAthleticPerformanceGoal(query);
   const adjustedBase =
     (requestedDays ?? window.fallback) +
     estimateUrgencyAdjustment(query) +
-    estimateComplexityAdjustment(query);
+    estimateComplexityAdjustment(query) +
+    (isPerformance ? 8 : 0);
   const suggested = clamp(adjustedBase, minDays, maxDays);
+  const rationale =
+    isPerformance && locale === "ar"
+      ? "أهداف السرعة/الأداء تحتاج وقتًا لبناء ميكانيكا الانطلاق والقوة الانفجارية والتحمل العصبي بشكل آمن."
+      : isPerformance
+      ? "Speed/performance goals need enough time to build acceleration mechanics, explosive power, and repeat-speed resilience safely."
+      : buildDefaultRationale(goalType, locale);
+  const question = isPerformance
+    ? locale === "ar"
+      ? `لهدف أداء مثل "${query}" أنصح بـ ${suggested} يوم. اخترها أو عدّل بسهولة داخل ${minDays}-${maxDays} يوم.`
+      : `For a performance goal like "${query}", I recommend ${suggested} days. Keep it or adjust within ${minDays}-${maxDays} days.`
+    : buildDefaultQuestion(locale, suggested, minDays, maxDays);
 
   return {
     suggestedDays: suggested,
     minDays,
     maxDays,
     planModeHint: suggested > 7 ? "weekly" : "daily",
-    rationale: buildDefaultRationale(goalType, locale),
-    question: buildDefaultQuestion(locale, suggested, minDays, maxDays),
+    rationale,
+    question,
     goalType,
     quickOptions: buildQuickOptions(suggested, minDays, maxDays),
   };

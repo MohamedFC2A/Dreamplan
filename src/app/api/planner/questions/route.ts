@@ -2,7 +2,13 @@ import { NextRequest, NextResponse } from "next/server";
 import { PlannerAnswer, PlannerQuestion, UserProfile } from "@/lib/planner-types";
 
 type Locale = "ar" | "en";
-type GoalType = "quick_visual" | "fat_loss" | "muscle_gain" | "posture_definition" | "general";
+type GoalArchetype =
+  | "speed_performance"
+  | "fat_loss"
+  | "muscle_gain"
+  | "quick_visual"
+  | "posture_definition"
+  | "general";
 
 interface AskResponse {
   status: "ask";
@@ -21,22 +27,16 @@ interface ReadyResponse {
 
 const TOTAL_QUESTIONS = 3;
 
-function classifyGoalType(input: string): GoalType {
-  const q = input.toLowerCase();
+function inferGoalArchetype(query: string): GoalArchetype {
+  const q = query.toLowerCase();
+  if (/(speed|sprint|acceleration|agility|explosive|quickness|soccer|football|ronaldo|cr7|سرعة|انطلاق|رشاقة|انفجار|رونالدو|كرة)/i.test(q)) {
+    return "speed_performance";
+  }
+  if (/(fat|lose|cut|lean|shred|دهون|خسارة|تنشيف|نحت)/i.test(q)) return "fat_loss";
+  if (/(muscle|mass|bulk|hypertrophy|gain|عضل|كتلة|تضخيم)/i.test(q)) return "muscle_gain";
   if (/(vein|vascular|pump|عروق|وريد|ضخ)/i.test(q)) return "quick_visual";
-  if (/(fat|lose|cut|lean|دهون|تنشيف|خسارة)/i.test(q)) return "fat_loss";
-  if (/(muscle|bulk|mass|gain|hypertrophy|تضخيم|عضل|كتلة)/i.test(q)) return "muscle_gain";
   if (/(posture|neck|jaw|face|shoulder|وضعية|رقبة|فك|وجه|كتف)/i.test(q)) return "posture_definition";
   return "general";
-}
-
-function hashSeed(text: string): number {
-  let hash = 0;
-  for (let i = 0; i < text.length; i++) {
-    hash = (hash << 5) - hash + text.charCodeAt(i);
-    hash |= 0;
-  }
-  return Math.abs(hash);
 }
 
 function isValidProfile(profile: any): profile is UserProfile {
@@ -70,220 +70,183 @@ function normalizeQaHistory(raw: any, allowedIds: Set<string>): PlannerAnswer[] 
     .slice(0, TOTAL_QUESTIONS);
 }
 
-function buildGoalSpecificOptions(goalType: GoalType, locale: Locale) {
-  if (goalType === "fat_loss") {
-    return [
-      {
-        value: "nutrition_first",
-        label: locale === "ar" ? "أولوية للتغذية الدقيقة" : "Nutrition-first precision",
-        labelAr: "أولوية للتغذية الدقيقة",
-      },
-      {
-        value: "training_first",
-        label: locale === "ar" ? "أولوية للتمرين المركّز" : "Training-first focus",
-        labelAr: "أولوية للتمرين المركّز",
-      },
-      {
-        value: "hybrid",
-        label: locale === "ar" ? "مزيج متوازن بين الاثنين" : "Balanced hybrid",
-        labelAr: "مزيج متوازن بين الاثنين",
-      },
-    ];
-  }
-
-  if (goalType === "muscle_gain") {
-    return [
-      {
-        value: "strength_priority",
-        label: locale === "ar" ? "تركيز على القوة والتدرج" : "Strength + progressive overload",
-        labelAr: "تركيز على القوة والتدرج",
-      },
-      {
-        value: "shape_priority",
-        label: locale === "ar" ? "تركيز على الشكل والتقسيم" : "Shape and symmetry priority",
-        labelAr: "تركيز على الشكل والتقسيم",
-      },
-      {
-        value: "joint_safe_gain",
-        label: locale === "ar" ? "زيادة آمنة مع ضغط أقل على المفاصل" : "Joint-safe growth approach",
-        labelAr: "زيادة آمنة مع ضغط أقل على المفاصل",
-      },
-    ];
-  }
-
-  if (goalType === "quick_visual") {
-    return [
-      {
-        value: "pump_visual",
-        label: locale === "ar" ? "مظهر سريع (Pump + Definition)" : "Fast visual pump and definition",
-        labelAr: "مظهر سريع (Pump + Definition)",
-      },
-      {
-        value: "lean_visual",
-        label: locale === "ar" ? "مظهر أنشف وثابت أكثر" : "Leaner and more stable look",
-        labelAr: "مظهر أنشف وثابت أكثر",
-      },
-      {
-        value: "balanced_visual",
-        label: locale === "ar" ? "نتيجة متوازنة بدون ضغط زائد" : "Balanced result with low stress",
-        labelAr: "نتيجة متوازنة بدون ضغط زائد",
-      },
-    ];
-  }
-
-  if (goalType === "posture_definition") {
-    return [
-      {
-        value: "posture_first",
-        label: locale === "ar" ? "أولوية لتصحيح الوضعية" : "Posture correction first",
-        labelAr: "أولوية لتصحيح الوضعية",
-      },
-      {
-        value: "neck_jaw_focus",
-        label: locale === "ar" ? "تركيز على الرقبة/الفك" : "Neck and jawline emphasis",
-        labelAr: "تركيز على الرقبة/الفك",
-      },
-      {
-        value: "balanced_aesthetic",
-        label: locale === "ar" ? "توازن وضعي + جمالي" : "Balanced posture + aesthetics",
-        labelAr: "توازن وضعي + جمالي",
-      },
-    ];
-  }
-
+function speedQuestionPack(query: string, locale: Locale, durationDays: number): PlannerQuestion[] {
   return [
     {
-      value: "habit_system",
-      label: locale === "ar" ? "نظام عادات قوي أولًا" : "Strong habit system first",
-      labelAr: "نظام عادات قوي أولًا",
+      id: "q_speed_baseline",
+      question:
+        locale === "ar"
+          ? `واضح إن هدفك "${query}" يحتاج بروتوكول سرعة حقيقي. مستواك الحالي في السرعة؟`
+          : `Your "${query}" goal needs real speed engineering. What is your current speed baseline?`,
+      questionAr: `واضح إن هدفك "${query}" يحتاج بروتوكول سرعة حقيقي. مستواك الحالي في السرعة؟`,
+      inputType: "single_choice",
+      required: true,
+      options: [
+        { value: "starter", label: "Starter (building mechanics)", labelAr: "مبتدئ (تأسيس ميكانيكا)" },
+        { value: "intermediate", label: "Intermediate (solid but inconsistent)", labelAr: "متوسط (جيد لكن غير ثابت)" },
+        { value: "advanced", label: "Advanced (ready for elite progression)", labelAr: "متقدم (جاهز لتدرج احترافي)" },
+      ],
+      reasoningHint:
+        locale === "ar"
+          ? "نحدد به شدة السرعات، مسافات الانطلاق، وحجم التحمل العصبي."
+          : "This controls sprint intensity, acceleration distance, and neural load volume.",
+      reasoningHintAr: "نحدد به شدة السرعات، مسافات الانطلاق، وحجم التحمل العصبي.",
     },
     {
-      value: "performance_system",
-      label: locale === "ar" ? "أداء أعلى وتدرج أوضح" : "Higher performance progression",
-      labelAr: "أداء أعلى وتدرج أوضح",
+      id: "q_speed_bottleneck",
+      question:
+        locale === "ar"
+          ? `ما العامل الأهم الذي تريد نرفعه خلال ${durationDays} يوم؟`
+          : `Which bottleneck should we improve most over ${durationDays} days?`,
+      questionAr: `ما العامل الأهم الذي تريد نرفعه خلال ${durationDays} يوم؟`,
+      inputType: "single_choice",
+      required: true,
+      options: [
+        { value: "first_10m", label: "First 10m acceleration", labelAr: "الانطلاق أول 10 متر" },
+        { value: "max_velocity", label: "Top speed mechanics", labelAr: "ميكانيكا السرعة القصوى" },
+        { value: "repeat_sprint", label: "Repeat sprint endurance", labelAr: "تحمل التكرارات السريعة" },
+      ],
+      reasoningHint:
+        locale === "ar"
+          ? "هذا يحدد نوع تمارين السرعة الأساسية والمكملات الداعمة."
+          : "This defines the core speed drill family and supportive supplement strategy.",
+      reasoningHintAr: "هذا يحدد نوع تمارين السرعة الأساسية والمكملات الداعمة.",
     },
     {
-      value: "visual_system",
-      label: locale === "ar" ? "تركيز بصري واضح على الشكل" : "Visual physique emphasis",
-      labelAr: "تركيز بصري واضح على الشكل",
+      id: "q_speed_environment",
+      question:
+        locale === "ar"
+          ? "أي بيئة تدريب تناسبك أكثر للاستمرارية؟"
+          : "Which training environment fits your consistency best?",
+      questionAr: "أي بيئة تدريب تناسبك أكثر للاستمرارية؟",
+      inputType: "single_choice",
+      required: true,
+      options: [
+        { value: "field_track", label: "Field/track focused", labelAr: "ملعب/مضمار" },
+        { value: "gym_hybrid", label: "Gym + field hybrid", labelAr: "مزيج جيم + ملعب" },
+        { value: "minimal_space", label: "Minimal-space drills", labelAr: "تمارين مساحة محدودة" },
+      ],
+      reasoningHint:
+        locale === "ar"
+          ? "نصمم الخطة حول بيئتك الفعلية حتى لا تضيع الحماسة."
+          : "We design around your real environment so motivation stays high.",
+      reasoningHintAr: "نصمم الخطة حول بيئتك الفعلية حتى لا تضيع الحماسة.",
     },
   ];
 }
 
-function buildQuestionPack(query: string, locale: Locale, goalType: GoalType, durationDays: number): PlannerQuestion[] {
-  const variant = hashSeed(query) % 2;
-  const q1Title =
-    locale === "ar"
-      ? variant === 0
-        ? `أنا فاهم هدفك "${query}". كم يوم تدريب أسبوعيًا تقدر تلتزم به فعلًا؟`
-        : `هدفك واضح جدًا. ما الالتزام الواقعي الذي تقدر تحافظ عليه أسبوعيًا؟`
-      : variant === 0
-      ? `I get your goal "${query}". What weekly training commitment is truly realistic for you?`
-      : `Your goal is clear. What commitment level can you honestly sustain each week?`;
+function buildQuestionPack(query: string, locale: Locale, archetype: GoalArchetype, durationDays: number): PlannerQuestion[] {
+  if (archetype === "speed_performance") {
+    return speedQuestionPack(query, locale, durationDays);
+  }
 
-  const q2Title =
+  const q1 =
     locale === "ar"
-      ? `للوصول لأفضل نتيجة خلال ${durationDays} يوم، أي أسلوب تحب نركز عليه؟`
-      : `To maximize your result across ${durationDays} days, which strategy should lead the plan?`;
+      ? `أنا فاهم هدفك "${query}". أي مستوى التزام يناسبك فعلًا؟`
+      : `I understand "${query}". Which commitment level is truly realistic for you?`;
+  const q2 =
+    locale === "ar"
+      ? `لتحقيق أفضل نتيجة خلال ${durationDays} يوم، ما أولوية التنفيذ؟`
+      : `To maximize results in ${durationDays} days, what execution priority should lead?`;
+  const q3 =
+    locale === "ar"
+      ? "ما نوع النتيجة التي ستحفزك جدًا للاستمرار أسبوعيًا؟"
+      : "Which type of weekly win would keep you highly motivated?";
 
-  const q3Title =
-    locale === "ar"
-      ? "ما الشيء الذي سيخليك متحمس جدًا تكمّل الخطة كل أسبوع؟"
-      : "Which weekly win would keep you genuinely excited to stick to the plan?";
+  const strategyOptions =
+    archetype === "fat_loss"
+      ? [
+          { value: "deficit_precision", label: "Calorie deficit precision", labelAr: "دقة العجز الحراري" },
+          { value: "metabolic_training", label: "Metabolic training density", labelAr: "كثافة التدريب الأيضي" },
+          { value: "hybrid_cut", label: "Balanced cut hybrid", labelAr: "تنشيف متوازن" },
+        ]
+      : archetype === "muscle_gain"
+      ? [
+          { value: "progressive_load", label: "Progressive overload", labelAr: "الحمل التدريجي" },
+          { value: "shape_symmetry", label: "Shape and symmetry", labelAr: "الشكل والتناسق" },
+          { value: "joint_safe_bulk", label: "Joint-safe growth", labelAr: "زيادة آمنة للمفاصل" },
+        ]
+      : archetype === "quick_visual"
+      ? [
+          { value: "rapid_visual", label: "Rapid visual impact", labelAr: "تأثير بصري سريع" },
+          { value: "stable_visual", label: "Stable visual improvement", labelAr: "تحسن بصري ثابت" },
+          { value: "balanced_visual", label: "Balanced visual plan", labelAr: "خطة بصرية متوازنة" },
+        ]
+      : archetype === "posture_definition"
+      ? [
+          { value: "posture_reset", label: "Posture reset first", labelAr: "تصحيح وضعية أولًا" },
+          { value: "neck_jaw", label: "Neck/jawline emphasis", labelAr: "تركيز رقبة/فك" },
+          { value: "balanced_form", label: "Balanced form and definition", labelAr: "توازن الشكل والتحديد" },
+        ]
+      : [
+          { value: "habit_system", label: "Strong habit system", labelAr: "نظام عادات قوي" },
+          { value: "performance_progress", label: "Performance progression", labelAr: "تدرج الأداء" },
+          { value: "visual_focus", label: "Visual transformation focus", labelAr: "تركيز بصري" },
+        ];
 
   return [
     {
       id: "q_commitment",
-      question: q1Title,
-      questionAr: q1Title,
+      question: q1,
+      questionAr: q1,
       inputType: "single_choice",
       required: true,
       options: [
-        { value: "3_light", label: "3 focused days", labelAr: "3 أيام مركزة" },
-        { value: "4_balanced", label: "4 balanced days", labelAr: "4 أيام متوازنة" },
-        { value: "5_push", label: "5 days with higher push", labelAr: "5 أيام بدفع أعلى" },
+        { value: "lean_mode", label: "Lean mode (light)", labelAr: "وضع خفيف" },
+        { value: "balanced_mode", label: "Balanced mode", labelAr: "وضع متوازن" },
+        { value: "pro_mode", label: "Pro mode (high push)", labelAr: "وضع احترافي" },
       ],
-      reasoningHint:
-        locale === "ar"
-          ? "هذا الاختيار يحدد شدة الخطة وتوزيع الاستشفاء بدقة."
-          : "This directly controls training intensity and recovery distribution.",
-      reasoningHintAr: "هذا الاختيار يحدد شدة الخطة وتوزيع الاستشفاء بدقة.",
+      reasoningHint: locale === "ar" ? "تحديد واضح لمستوى الحمل القابل للاستمرار." : "Clear calibration for sustainable load.",
+      reasoningHintAr: "تحديد واضح لمستوى الحمل القابل للاستمرار.",
     },
     {
       id: "q_strategy",
-      question: q2Title,
-      questionAr: q2Title,
+      question: q2,
+      questionAr: q2,
       inputType: "single_choice",
       required: true,
-      options: buildGoalSpecificOptions(goalType, locale),
-      reasoningHint:
-        locale === "ar"
-          ? "هنا نحدد محرك النتيجة الرئيسي بناءً على حلمك."
-          : "This defines the primary result driver for your specific goal.",
-      reasoningHintAr: "هنا نحدد محرك النتيجة الرئيسي بناءً على حلمك.",
+      options: strategyOptions,
+      reasoningHint: locale === "ar" ? "نحدد المحرك الرئيسي للنتيجة حسب حلمك." : "Defines the primary result driver for your exact goal.",
+      reasoningHintAr: "نحدد المحرك الرئيسي للنتيجة حسب حلمك.",
     },
     {
       id: "q_motivation",
-      question: q3Title,
-      questionAr: q3Title,
+      question: q3,
+      questionAr: q3,
       inputType: "single_choice",
       required: true,
       options: [
-        {
-          value: "mirror_change",
-          label: locale === "ar" ? "ألاحظ فرق واضح في المرآة" : "Seeing clear mirror change",
-          labelAr: "ألاحظ فرق واضح في المرآة",
-        },
-        {
-          value: "performance_gain",
-          label: locale === "ar" ? "أداء أعلى وقوة أقوى أسبوعيًا" : "Weekly strength/performance gains",
-          labelAr: "أداء أعلى وقوة أقوى أسبوعيًا",
-        },
-        {
-          value: "consistency_streak",
-          label: locale === "ar" ? "استمرارية سهلة بدون ضغط" : "Smooth consistency with low stress",
-          labelAr: "استمرارية سهلة بدون ضغط",
-        },
+        { value: "mirror", label: "Visible mirror change", labelAr: "تغير واضح في الشكل" },
+        { value: "numbers", label: "Clear measurable numbers", labelAr: "أرقام أداء واضحة" },
+        { value: "consistency", label: "Smooth consistency", labelAr: "استمرارية سهلة" },
       ],
-      reasoningHint:
-        locale === "ar"
-          ? "نعتمد هذا الاختيار لتصميم الخطة بشكل يخليك مستمر ومتحمس."
-          : "We use this to design a plan that keeps you motivated and consistent.",
-      reasoningHintAr: "نعتمد هذا الاختيار لتصميم الخطة بشكل يخليك مستمر ومتحمس.",
+      reasoningHint: locale === "ar" ? "نستخدمه للحفاظ على حماسك أسبوعًا بعد أسبوع." : "Used to keep motivation high week after week.",
+      reasoningHintAr: "نستخدمه للحفاظ على حماسك أسبوعًا بعد أسبوع.",
     },
   ];
 }
 
-function buildPlanBrief(locale: Locale, query: string, profile: UserProfile, qaHistory: PlannerAnswer[]): string {
+function buildPlanBrief(locale: Locale, query: string, profile: UserProfile, qaHistory: PlannerAnswer[], archetype: GoalArchetype): string {
   const topAnswers = qaHistory.map((qa) => qa.label || qa.value).slice(0, 3).join(" • ");
   if (locale === "ar") {
-    return `ممتاز. تم فهم حلمك "${query}" وبناء اتجاه خطة ذكي يراعي عمرك (${profile.age}) ونشاطك (${profile.activityLevel}) مع تفضيلاتك: ${topAnswers}.`;
+    return `تم تفكيك هدف "${query}" إلى خطة تنفيذ دقيقة (${archetype}) مع مراعاة ملفك (${profile.age} سنة) وتفضيلاتك: ${topAnswers}.`;
   }
-  return `Perfect. We understood "${query}" and built a smart direction calibrated to your age (${profile.age}), activity (${profile.activityLevel}), and preferences: ${topAnswers}.`;
+  return `Your "${query}" goal was decomposed into a precise execution blueprint (${archetype}), calibrated to your profile (${profile.age}y) and preferences: ${topAnswers}.`;
 }
 
 function buildKeyConstraints(profile: UserProfile, qaHistory: PlannerAnswer[]): string[] {
   const list: string[] = [];
-  list.push(`Activity level: ${profile.activityLevel}`);
-  list.push(`Equipment: ${profile.availableEquipment}`);
-  if (profile.injuriesOrConditions.toLowerCase() !== "none") {
-    list.push(`Safety constraints: ${profile.injuriesOrConditions}`);
-  }
-  qaHistory.forEach((answer) => {
-    list.push(`${answer.questionId}: ${answer.label || answer.value}`);
-  });
+  list.push(`Inferred activity: ${profile.activityLevel}`);
+  list.push(`Health conditions: ${profile.injuriesOrConditions}`);
+  qaHistory.forEach((answer) => list.push(`${answer.questionId}: ${answer.label || answer.value}`));
   return list.slice(0, 6);
 }
 
 function buildProfileFitSummary(locale: Locale, profile: UserProfile): string {
   if (locale === "ar") {
-    return `الخطة ستُضبط على بياناتك الفعلية: عمر ${profile.age}، وزن ${Math.round(
-      profile.weightKg
-    )} كجم، نشاط ${profile.activityLevel}، ومعداتك المتاحة مع فلترة أمان للإصابات/الحالة الصحية.`;
+    return `الخطة ستتكيّف تلقائيًا مع العمر (${profile.age})، الوزن (${Math.round(profile.weightKg)} كجم)، الحالة الصحية، والنشاط المستنتج (${profile.activityLevel}).`;
   }
-  return `The plan will be tuned to your real profile: age ${profile.age}, weight ${Math.round(
-    profile.weightKg
-  )} kg, ${profile.activityLevel} activity, available equipment, and safety constraints.`;
+  return `The plan auto-adapts to age (${profile.age}), weight (${Math.round(profile.weightKg)} kg), health constraints, and inferred activity (${profile.activityLevel}).`;
 }
 
 export async function POST(req: NextRequest) {
@@ -303,17 +266,14 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Query is required.", code: "MISSING_QUERY" }, { status: 400 });
   }
   if (!Number.isFinite(durationDays) || durationDays < 7 || durationDays > 90) {
-    return NextResponse.json(
-      { error: "Duration must be between 7 and 90.", code: "INVALID_DURATION" },
-      { status: 400 }
-    );
+    return NextResponse.json({ error: "Duration must be between 7 and 90.", code: "INVALID_DURATION" }, { status: 400 });
   }
   if (!isValidProfile(profile)) {
     return NextResponse.json({ error: "Valid profile is required.", code: "MISSING_PROFILE" }, { status: 400 });
   }
 
-  const goalType = classifyGoalType(`${query} ${profile.primaryGoal || ""}`);
-  const questionPack = buildQuestionPack(query, locale, goalType, durationDays);
+  const archetype = inferGoalArchetype(`${query} ${profile.primaryGoal || ""}`);
+  const questionPack = buildQuestionPack(query, locale, archetype, durationDays);
   const allowedIds = new Set(questionPack.map((item) => item.id));
   const qaHistory = normalizeQaHistory(body?.qaHistory, allowedIds);
 
@@ -321,7 +281,7 @@ export async function POST(req: NextRequest) {
     const response: ReadyResponse = {
       status: "ready",
       progress: 100,
-      planBrief: buildPlanBrief(locale, query, profile, qaHistory),
+      planBrief: buildPlanBrief(locale, query, profile, qaHistory, archetype),
       keyConstraints: buildKeyConstraints(profile, qaHistory),
       profileFitSummary: buildProfileFitSummary(locale, profile),
     };
