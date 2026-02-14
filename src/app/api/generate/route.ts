@@ -550,7 +550,10 @@ export async function POST(req: NextRequest) {
   }
 
   const prompt = buildPrompt(mode, locale, query, durationDays, durationWeeks, profile, qaHistory);
-  const attempts = [{ maxTokens: 2200 }, { maxTokens: 1600 }];
+  const attempts = [
+    { maxTokens: 1400, timeoutMs: 12000 },
+    { maxTokens: 900, timeoutMs: 8000 },
+  ];
 
   for (const attempt of attempts) {
     try {
@@ -564,7 +567,7 @@ export async function POST(req: NextRequest) {
           max_tokens: attempt.maxTokens,
           temperature: 0.35,
         }),
-        45000
+        attempt.timeoutMs
       );
       const content = completion.choices[0]?.message?.content;
       if (!content) continue;

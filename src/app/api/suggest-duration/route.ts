@@ -12,6 +12,7 @@ interface DurationSuggestion {
   rationale: string;
   question: string;
   goalType: GoalType;
+  quickOptions: number[];
 }
 
 function createDeepSeekClient(): OpenAI | null {
@@ -89,6 +90,30 @@ function extractRequestedDurationDays(query: string): number | null {
   }
 
   return null;
+}
+
+function estimateUrgencyAdjustment(query: string): number {
+  const q = query.toLowerCase();
+  let score = 0;
+  if (/(asap|quick|fast|urgent|now|بسرعة|سريع|فورًا|حالًا)/i.test(q)) score -= 4;
+  if (/(extreme|hardcore|pro|max|ضخم|احترافي|جذري)/i.test(q)) score += 5;
+  if (/(sustainable|steady|safe|واقعي|تدريجي|آمن)/i.test(q)) score += 3;
+  return score;
+}
+
+function estimateComplexityAdjustment(query: string): number {
+  const q = query.toLowerCase();
+  let score = 0;
+  const featureMatches = [
+    /(fat|دهون|تنشيف)/i,
+    /(muscle|عضل|تضخيم)/i,
+    /(posture|neck|jaw|وضعية|رقبة|فك)/i,
+    /(vein|vascular|عروق)/i,
+    /(strength|power|قوة)/i,
+  ].reduce((acc, pattern) => acc + (pattern.test(q) ? 1 : 0), 0);
+  if (featureMatches >= 3) score += 7;
+  else if (featureMatches === 2) score += 3;
+  return score;
 }
 
 function classifyGoalType(query: string): GoalType {
@@ -174,29 +199,39 @@ function buildDefaultRationale(goalType: GoalType, locale: Locale): string {
 
 function buildDefaultQuestion(locale: Locale, suggestedDays: number, minDays: number, maxDays: number): string {
   if (locale === "ar") {
-    return `أقترح ${suggestedDays} يوم كخيار واقعي. هل تريد المتابعة بها، أم تعديلها اختياريًا داخل ${minDays}-${maxDays} يوم؟`;
+    return `أنا فاهم هدفك. أفضل مدة لك الآن ${suggestedDays} يوم. اخترها مباشرة أو عدّل بسهولة داخل ${minDays}-${maxDays} يوم.`;
   }
-  return `I suggest ${suggestedDays} days as a realistic option. Keep it, or optionally adjust within ${minDays}-${maxDays} days?`;
+  return `I understand your goal. Best fit now is ${suggestedDays} days. Keep it or quickly adjust within ${minDays}-${maxDays} days.`;
+}
+
+function buildQuickOptions(suggested: number, minDays: number, maxDays: number): number[] {
+  const fast = clamp(Math.round(suggested * 0.8), minDays, maxDays);
+  const balanced = clamp(suggested, minDays, maxDays);
+  const deep = clamp(Math.round(suggested * 1.25), minDays, maxDays);
+  return Array.from(new Set([fast, balanced, deep])).sort((a, b) => a - b);
 }
 
 function buildDeterministicSuggestion(query: string, locale: Locale): DurationSuggestion {
   const goalType = classifyGoalType(query);
   const window = GOAL_WINDOWS[goalType];
   const requestedDays = extractRequestedDurationDays(query);
-  const suggested = clamp(
-    requestedDays ?? window.fallback,
-    Math.max(window.min, ABSOLUTE_MIN),
-    Math.min(window.max, ABSOLUTE_MAX)
-  );
+  const minDays = clamp(window.min, ABSOLUTE_MIN, ABSOLUTE_MAX);
+  const maxDays = clamp(window.max, ABSOLUTE_MIN, ABSOLUTE_MAX);
+  const adjustedBase =
+    (requestedDays ?? window.fallback) +
+    estimateUrgencyAdjustment(query) +
+    estimateComplexityAdjustment(query);
+  const suggested = clamp(adjustedBase, minDays, maxDays);
 
   return {
     suggestedDays: suggested,
-    minDays: clamp(window.min, ABSOLUTE_MIN, ABSOLUTE_MAX),
-    maxDays: clamp(window.max, ABSOLUTE_MIN, ABSOLUTE_MAX),
+    minDays,
+    maxDays,
     planModeHint: suggested > 7 ? "weekly" : "daily",
     rationale: buildDefaultRationale(goalType, locale),
-    question: buildDefaultQuestion(locale, suggested, window.min, window.max),
+    question: buildDefaultQuestion(locale, suggested, minDays, maxDays),
     goalType,
+    quickOptions: buildQuickOptions(suggested, minDays, maxDays),
   };
 }
 
@@ -248,6 +283,7 @@ function normalizeSuggestion(payload: any, fallback: DurationSuggestion, locale:
     rationale,
     question,
     goalType,
+    quickOptions: buildQuickOptions(suggestedDays, minDays, maxDays),
   };
 }
 
@@ -303,10 +339,10 @@ export async function POST(req: NextRequest) {
       client.chat.completions.create({
         model: "deepseek-chat",
         messages: [{ role: "system", content: buildPrompt(query, locale, deterministic) }],
-        max_tokens: 400,
+        max_tokens: 260,
         temperature: 0.2,
       }),
-      20000
+      7000
     );
 
     const content = completion.choices[0]?.message?.content;

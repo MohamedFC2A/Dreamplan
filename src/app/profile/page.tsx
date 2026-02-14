@@ -9,18 +9,14 @@ import Navbar from "@/components/Navbar";
 import { useLanguage } from "@/lib/LanguageContext";
 import { t } from "@/lib/i18n";
 import { useAuth } from "@/lib/AuthContext";
-import { MeasurementUnits, UserProfile } from "@/lib/planner-types";
+import { UserProfile } from "@/lib/planner-types";
 import {
   classifyGoal,
   createDefaultProfile,
   getMetabolicSummary,
   readStoredProfile,
   saveStoredProfile,
-  toDisplayHeight,
-  toDisplayWeight,
   validateProfile,
-  withConvertedHeight,
-  withConvertedWeight,
 } from "@/lib/profile-storage";
 
 type GoalPreset = "fat_loss" | "muscle_gain" | "definition" | "custom";
@@ -53,6 +49,15 @@ function parseNumber(value: string): number {
   return Number.isFinite(n) ? n : Number.NaN;
 }
 
+const HEIGHT_MIN = 140;
+const HEIGHT_MAX = 210;
+const WEIGHT_MIN = 40;
+const WEIGHT_MAX = 180;
+
+function clamp(value: number, min: number, max: number): number {
+  return Math.max(min, Math.min(max, value));
+}
+
 function parsePresetAndNote(raw: string): { base: string; note: string } {
   const [base, ...rest] = raw.split("|");
   return { base: base.trim().toLowerCase(), note: rest.join("|").trim() };
@@ -80,7 +85,7 @@ function ProfilePageContent() {
   useEffect(() => {
     const stored = readStoredProfile();
     if (stored) {
-      setProfile(stored);
+      setProfile({ ...stored, units: "metric" });
       const goal = stored.primaryGoal.toLowerCase();
       if (goal.includes("fat") || goal.includes("تنشيف")) setGoalPreset("fat_loss");
       else if (goal.includes("muscle") || goal.includes("تضخيم")) setGoalPreset("muscle_gain");
@@ -112,7 +117,7 @@ function ProfilePageContent() {
     if (!initializedRef.current) return;
     const timer = setTimeout(() => {
       setSaveState("saving");
-      saveStoredProfile(profile);
+      saveStoredProfile({ ...profile, units: "metric" });
       setSaveState("saved");
       setTimeout(() => setSaveState("idle"), 1200);
     }, 350);
@@ -176,7 +181,7 @@ function ProfilePageContent() {
     const validation = validateProfile(profile, locale);
     setErrors(validation);
     if (validation.length > 0) return;
-    saveStoredProfile(profile);
+    saveStoredProfile({ ...profile, units: "metric" });
     setSaveState("saved");
   };
 
@@ -273,17 +278,74 @@ function ProfilePageContent() {
                     <option value="active">{t(locale, "profileActivityActive")}</option>
                     <option value="athlete">{t(locale, "profileActivityAthlete")}</option>
                   </select>
-                  <select value={profile.units} onChange={(e) => setProfile((p) => ({ ...p, units: e.target.value as MeasurementUnits }))} className="bg-black border border-dark-border rounded-lg px-3 py-2.5 text-gray-100">
-                    <option value="metric">Metric</option>
-                    <option value="imperial">Imperial</option>
-                  </select>
                   <div className="grid grid-cols-2 gap-2">
                     <button type="button" onClick={() => setProfile((p) => ({ ...p, sex: "male" }))} className={`rounded-lg py-2 border text-xs ${profile.sex === "male" ? "border-gold-500/50 bg-gold-500/15 text-gold-300" : "border-dark-border text-gray-300"}`}>{t(locale, "profileSexMale")}</button>
                     <button type="button" onClick={() => setProfile((p) => ({ ...p, sex: "female" }))} className={`rounded-lg py-2 border text-xs ${profile.sex === "female" ? "border-gold-500/50 bg-gold-500/15 text-gold-300" : "border-dark-border text-gray-300"}`}>{t(locale, "profileSexFemale")}</button>
                   </div>
-                  <input type="number" value={Number.isFinite(toDisplayHeight(profile)) ? Number(toDisplayHeight(profile).toFixed(1)) : ""} onChange={(e) => setProfile((p) => withConvertedHeight(p, parseNumber(e.target.value)))} placeholder={`${t(locale, "profileHeight")} ${profile.units === "metric" ? "(cm)" : "(in)"}`} className="bg-black border border-dark-border rounded-lg px-3 py-2.5 text-gray-100" />
-                  <input type="number" value={Number.isFinite(toDisplayWeight(profile)) ? Number(toDisplayWeight(profile).toFixed(1)) : ""} onChange={(e) => setProfile((p) => withConvertedWeight(p, parseNumber(e.target.value)))} placeholder={`${t(locale, "profileWeight")} ${profile.units === "metric" ? "(kg)" : "(lb)"}`} className="bg-black border border-dark-border rounded-lg px-3 py-2.5 text-gray-100" />
+                  <div className="md:col-span-2 rounded-lg border border-dark-border bg-black px-3 py-2.5">
+                    <div className="flex items-center justify-between mb-1.5">
+                      <label className="text-xs text-gray-400">{t(locale, "profileHeight")} (cm)</label>
+                      <span className="text-xs text-gold-300">{Math.round(profile.heightCm)} cm</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <button
+                        type="button"
+                        onClick={() => setProfile((p) => ({ ...p, heightCm: clamp(Math.round(p.heightCm) - 1, HEIGHT_MIN, HEIGHT_MAX), units: "metric" }))}
+                        className="w-8 h-8 rounded-lg border border-dark-border text-gray-300"
+                      >
+                        -
+                      </button>
+                      <input
+                        type="range"
+                        min={HEIGHT_MIN}
+                        max={HEIGHT_MAX}
+                        step={1}
+                        value={Math.round(profile.heightCm)}
+                        onChange={(e) => setProfile((p) => ({ ...p, heightCm: clamp(Number(e.target.value), HEIGHT_MIN, HEIGHT_MAX), units: "metric" }))}
+                        className="w-full accent-gold-500"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setProfile((p) => ({ ...p, heightCm: clamp(Math.round(p.heightCm) + 1, HEIGHT_MIN, HEIGHT_MAX), units: "metric" }))}
+                        className="w-8 h-8 rounded-lg border border-dark-border text-gray-300"
+                      >
+                        +
+                      </button>
+                    </div>
+                  </div>
+                  <div className="md:col-span-2 rounded-lg border border-dark-border bg-black px-3 py-2.5">
+                    <div className="flex items-center justify-between mb-1.5">
+                      <label className="text-xs text-gray-400">{t(locale, "profileWeight")} (kg)</label>
+                      <span className="text-xs text-gold-300">{Math.round(profile.weightKg)} kg</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <button
+                        type="button"
+                        onClick={() => setProfile((p) => ({ ...p, weightKg: clamp(Math.round(p.weightKg) - 1, WEIGHT_MIN, WEIGHT_MAX), units: "metric" }))}
+                        className="w-8 h-8 rounded-lg border border-dark-border text-gray-300"
+                      >
+                        -
+                      </button>
+                      <input
+                        type="range"
+                        min={WEIGHT_MIN}
+                        max={WEIGHT_MAX}
+                        step={1}
+                        value={Math.round(profile.weightKg)}
+                        onChange={(e) => setProfile((p) => ({ ...p, weightKg: clamp(Number(e.target.value), WEIGHT_MIN, WEIGHT_MAX), units: "metric" }))}
+                        className="w-full accent-gold-500"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setProfile((p) => ({ ...p, weightKg: clamp(Math.round(p.weightKg) + 1, WEIGHT_MIN, WEIGHT_MAX), units: "metric" }))}
+                        className="w-8 h-8 rounded-lg border border-dark-border text-gray-300"
+                      >
+                        +
+                      </button>
+                    </div>
+                  </div>
                 </div>
+                <p className="text-[11px] text-gray-500">{locale === "ar" ? "الوحدات المستخدمة: النظام المتري الدولي فقط (cm / kg)." : "Units used: international metric only (cm / kg)."}</p>
                 <div>
                   <div className="flex justify-between text-xs text-gray-400"><span>{locale === "ar" ? "النوم" : "Sleep"}</span><span>{profile.sleepHours || 7}h</span></div>
                   <input type="range" min={4} max={10} step={0.5} value={profile.sleepHours || 7} onChange={(e) => setProfile((p) => ({ ...p, sleepHours: Number(e.target.value) }))} className="w-full accent-gold-500" />

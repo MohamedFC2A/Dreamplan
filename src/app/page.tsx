@@ -88,6 +88,7 @@ interface DurationSuggestion {
   rationale: string;
   question: string;
   goalType: GoalType;
+  quickOptions?: number[];
 }
 
 interface PlannerAskResponse {
@@ -134,6 +135,11 @@ function normalizeDurationSuggestion(payload: any): DurationSuggestion | null {
     planModeHint: payload.planModeHint === "weekly" ? "weekly" : "daily",
     rationale: typeof payload.rationale === "string" ? payload.rationale : "",
     question: typeof payload.question === "string" ? payload.question : "",
+    quickOptions: Array.isArray(payload.quickOptions)
+      ? payload.quickOptions
+          .map((item: unknown) => (Number.isFinite(item as number) ? Math.round(item as number) : NaN))
+          .filter((item: number) => Number.isFinite(item) && item >= minDays && item <= maxDays)
+      : undefined,
   };
 }
 
@@ -1009,37 +1015,28 @@ export default function Home() {
                     <p className="text-sm text-gray-200">
                       {locale === "ar" ? plannerQuestion.questionAr : plannerQuestion.question}
                     </p>
-                    {plannerQuestion.options && plannerQuestion.options.length > 0 ? (
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                        {plannerQuestion.options.map((option) => (
-                          <button
-                            type="button"
-                            key={option.value}
-                            onClick={() => setPlannerAnswerValue(option.value)}
-                            className={`text-start px-3 py-2 rounded-lg border text-sm ${
-                              plannerAnswerValue === option.value
-                                ? "border-gold-500/60 bg-gold-500/10 text-gold-300"
-                                : "border-dark-border text-gray-300"
-                            }`}
-                          >
-                            {locale === "ar" ? option.labelAr : option.label}
-                          </button>
-                        ))}
-                      </div>
-                    ) : (
-                      <textarea
-                        rows={2}
-                        value={plannerAnswerValue}
-                        onChange={(event) => setPlannerAnswerValue(event.target.value)}
-                        className="w-full bg-black border border-dark-border rounded-lg px-3 py-2 text-gray-100"
-                        placeholder={locale === "ar" ? "اكتب إجابتك..." : "Write your answer..."}
-                      />
-                    )}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                      {(plannerQuestion.options || []).map((option) => (
+                        <button
+                          type="button"
+                          key={option.value}
+                          onClick={() => setPlannerAnswerValue(option.value)}
+                          className={`text-start px-3 py-2 rounded-lg border text-sm ${
+                            plannerAnswerValue === option.value
+                              ? "border-gold-500/60 bg-gold-500/10 text-gold-300"
+                              : "border-dark-border text-gray-300"
+                          }`}
+                        >
+                          {locale === "ar" ? option.labelAr : option.label}
+                        </button>
+                      ))}
+                    </div>
                     {plannerReasoningHint ? <p className="text-xs text-gray-500">{plannerReasoningHint}</p> : null}
                     <button
                       type="button"
                       onClick={handlePlannerAnswerSubmit}
-                      className="inline-flex items-center justify-center gap-2 bg-gold-500 hover:bg-gold-600 text-black font-heading font-bold tracking-wider px-6 py-3 rounded-xl uppercase text-xs"
+                      disabled={!plannerAnswerValue}
+                      className="inline-flex items-center justify-center gap-2 bg-gold-500 hover:bg-gold-600 disabled:opacity-50 disabled:cursor-not-allowed text-black font-heading font-bold tracking-wider px-6 py-3 rounded-xl uppercase text-xs"
                     >
                       {locale === "ar" ? "التالي" : "Next"}
                     </button>
@@ -1117,6 +1114,35 @@ export default function Home() {
                 </div>
                 {durationInputMode === "custom" ? (
                   <div className="mb-4 space-y-3">
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                      {(durationSuggestion.quickOptions && durationSuggestion.quickOptions.length > 0
+                        ? durationSuggestion.quickOptions
+                        : [
+                            Math.max(
+                              durationSuggestion.minDays,
+                              Math.min(durationSuggestion.maxDays, Math.round(durationSuggestion.suggestedDays * 0.8))
+                            ),
+                            durationSuggestion.suggestedDays,
+                            Math.max(
+                              durationSuggestion.minDays,
+                              Math.min(durationSuggestion.maxDays, Math.round(durationSuggestion.suggestedDays * 1.25))
+                            ),
+                          ]
+                      ).map((days, idx) => (
+                        <button
+                          key={`${days}-${idx}`}
+                          type="button"
+                          onClick={() => handleDurationInput(days)}
+                          className={`px-3 py-2 rounded-lg border text-xs font-bold uppercase tracking-wide ${
+                            selectedDuration === days
+                              ? "border-gold-500/70 text-gold-300 bg-gold-500/10"
+                              : "border-dark-border text-gray-300 hover:border-gold-500/40"
+                          }`}
+                        >
+                          {days} {locale === "ar" ? "يوم" : "days"}
+                        </button>
+                      ))}
+                    </div>
                     <input
                       type="range"
                       min={durationSuggestion.minDays}
@@ -1124,14 +1150,6 @@ export default function Home() {
                       value={selectedDuration}
                       onChange={(event) => handleDurationInput(Number(event.target.value))}
                       className="w-full accent-gold-500"
-                    />
-                    <input
-                      type="number"
-                      min={durationSuggestion.minDays}
-                      max={durationSuggestion.maxDays}
-                      value={selectedDuration}
-                      onChange={(event) => handleDurationInput(Number(event.target.value))}
-                      className="w-full bg-black border border-dark-border rounded-lg px-3 py-2 text-gray-100"
                     />
                     <p className="text-xs text-gray-500">
                       {locale === "ar"
@@ -1151,8 +1169,8 @@ export default function Home() {
                     <p className="text-xs uppercase tracking-widest text-gray-400 mb-2">{t(locale, "aiQuestionsTitle")}</p>
                     <p className="text-sm text-gray-300">
                       {locale === "ar"
-                        ? "بعد تأكيد المدة، سيبدأ NEXUS AI مرحلة أسئلة مخصصة (3-6 أسئلة) ثم يبني الخطة النهائية."
-                        : "After confirming duration, NEXUS AI will run a dedicated 3-6 question phase, then build your final plan."}
+                        ? "بعد تأكيد المدة، سيبدأ NEXUS AI مرحلة 3 أسئلة ذكية بالاختيارات ثم يبني الخطة النهائية."
+                        : "After confirming duration, NEXUS AI runs exactly 3 smart multiple-choice questions, then builds your final plan."}
                     </p>
                     <p className={`text-xs mt-2 ${canStartPlanQuestions ? "text-green-400" : "text-amber-400"}`}>
                       {canStartPlanQuestions ? t(locale, "profileReady") : t(locale, "profileRequiredBeforePlan")}

@@ -117,21 +117,6 @@ export function hasRunningGenerationTask(): boolean {
   return snapshot.status === "running";
 }
 
-function withTimeout<T>(promise: Promise<T>, timeoutMs: number): Promise<T> {
-  return new Promise<T>((resolve, reject) => {
-    const timeout = setTimeout(() => reject(new GenerationError("AI timeout", "AI_TIMEOUT")), timeoutMs);
-    promise
-      .then((value) => {
-        clearTimeout(timeout);
-        resolve(value);
-      })
-      .catch((error) => {
-        clearTimeout(timeout);
-        reject(error);
-      });
-  });
-}
-
 async function parseGenerationResponse(res: Response): Promise<Protocol> {
   const payload = await res.json().catch(() => ({}));
   if (!res.ok || payload?.error) {
@@ -208,21 +193,18 @@ export async function startGenerationTask(input: GenerationTaskInput): Promise<G
 
   activePromise = (async () => {
     try {
-      const res = await withTimeout(
-        fetch("/api/generate", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            query: input.query.trim(),
-            locale: input.locale,
-            durationDays: input.durationDays,
-            planModeEnabled: input.planModeEnabled,
-            profile: input.profile,
-            qaHistory: input.qaHistory,
-          }),
+      const res = await fetch("/api/generate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          query: input.query.trim(),
+          locale: input.locale,
+          durationDays: input.durationDays,
+          planModeEnabled: input.planModeEnabled,
+          profile: input.profile,
+          qaHistory: input.qaHistory,
         }),
-        70000
-      );
+      });
       const protocol = await parseGenerationResponse(res);
       return completeWithSuccess(taskId, input, protocol);
     } catch (error) {
