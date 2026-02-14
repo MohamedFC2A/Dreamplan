@@ -9,11 +9,12 @@ export function createDefaultProfile(goal = ""): UserProfile {
     sex: "male",
     activityLevel: "moderate",
     primaryGoal: goal,
-    injuriesOrConditions: "",
-    availableEquipment: "",
+    injuriesOrConditions: "none",
+    availableEquipment: "bodyweight",
     units: "metric",
     heightCm: 175,
     weightKg: 75,
+    sleepHours: 7,
   };
 }
 
@@ -78,4 +79,121 @@ export function withConvertedHeight(profile: UserProfile, displayHeight: number)
 export function withConvertedWeight(profile: UserProfile, displayWeight: number): UserProfile {
   const weightKg = profile.units === "metric" ? displayWeight : displayWeight / 2.2046226218;
   return { ...profile, weightKg: Math.round(weightKg * 10) / 10 };
+}
+
+export interface MetabolicSummary {
+  bmi: number;
+  bmiCategory: "underweight" | "normal" | "overweight" | "obesity";
+  bmr: number;
+  tdee: number;
+  targetCalories: { min: number; max: number };
+  proteinRangeG: { min: number; max: number };
+  hydrationMl: number;
+  healthyWeightRangeKg: { min: number; max: number };
+  weightDeltaKg: number;
+}
+
+function activityMultiplier(level: UserProfile["activityLevel"]): number {
+  switch (level) {
+    case "sedentary":
+      return 1.2;
+    case "light":
+      return 1.375;
+    case "moderate":
+      return 1.55;
+    case "active":
+      return 1.725;
+    case "athlete":
+      return 1.9;
+    default:
+      return 1.55;
+  }
+}
+
+export function classifyGoal(primaryGoal: string): "fat_loss" | "muscle_gain" | "maintenance" {
+  const goal = primaryGoal.toLowerCase();
+  if (
+    goal.includes("fat") ||
+    goal.includes("lose") ||
+    goal.includes("cut") ||
+    goal.includes("lean") ||
+    goal.includes("دهون") ||
+    goal.includes("تنشيف") ||
+    goal.includes("خسارة")
+  ) {
+    return "fat_loss";
+  }
+  if (
+    goal.includes("muscle") ||
+    goal.includes("bulk") ||
+    goal.includes("mass") ||
+    goal.includes("gain") ||
+    goal.includes("عضل") ||
+    goal.includes("تضخيم") ||
+    goal.includes("كتلة")
+  ) {
+    return "muscle_gain";
+  }
+  return "maintenance";
+}
+
+export function getMetabolicSummary(profile: UserProfile): MetabolicSummary {
+  const heightM = profile.heightCm / 100;
+  const bmiRaw = profile.weightKg / Math.max(0.0001, heightM * heightM);
+  const bmi = Math.round(bmiRaw * 10) / 10;
+
+  let bmiCategory: MetabolicSummary["bmiCategory"] = "normal";
+  if (bmi < 18.5) bmiCategory = "underweight";
+  else if (bmi < 25) bmiCategory = "normal";
+  else if (bmi < 30) bmiCategory = "overweight";
+  else bmiCategory = "obesity";
+
+  const bmrRaw =
+    10 * profile.weightKg +
+    6.25 * profile.heightCm -
+    5 * profile.age +
+    (profile.sex === "male" ? 5 : -161);
+  const bmr = Math.round(bmrRaw);
+  const tdee = Math.round(bmr * activityMultiplier(profile.activityLevel));
+
+  const goalClass = classifyGoal(profile.primaryGoal || "");
+  let targetMin = tdee;
+  let targetMax = tdee;
+  if (goalClass === "fat_loss") {
+    targetMin = Math.round(tdee * 0.8);
+    targetMax = Math.round(tdee * 0.9);
+  } else if (goalClass === "muscle_gain") {
+    targetMin = Math.round(tdee * 1.05);
+    targetMax = Math.round(tdee * 1.15);
+  } else {
+    targetMin = Math.round(tdee * 0.95);
+    targetMax = Math.round(tdee * 1.05);
+  }
+
+  const proteinPerKgMin = goalClass === "muscle_gain" ? 1.8 : goalClass === "fat_loss" ? 1.9 : 1.6;
+  const proteinPerKgMax = goalClass === "muscle_gain" ? 2.3 : goalClass === "fat_loss" ? 2.4 : 2.0;
+  const proteinRangeG = {
+    min: Math.round(profile.weightKg * proteinPerKgMin),
+    max: Math.round(profile.weightKg * proteinPerKgMax),
+  };
+
+  const hydrationMl = Math.round(profile.weightKg * 35);
+  const healthyWeightRangeKg = {
+    min: Math.round(18.5 * heightM * heightM),
+    max: Math.round(24.9 * heightM * heightM),
+  };
+  const healthyMidpoint = (healthyWeightRangeKg.min + healthyWeightRangeKg.max) / 2;
+  const weightDeltaKg = Math.round((profile.weightKg - healthyMidpoint) * 10) / 10;
+
+  return {
+    bmi,
+    bmiCategory,
+    bmr,
+    tdee,
+    targetCalories: { min: targetMin, max: targetMax },
+    proteinRangeG,
+    hydrationMl,
+    healthyWeightRangeKg,
+    weightDeltaKg,
+  };
 }

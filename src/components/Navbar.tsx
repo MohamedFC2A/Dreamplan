@@ -3,13 +3,17 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { LogIn, LogOut, UserCircle2 } from "lucide-react";
 import { useLanguage } from "@/lib/LanguageContext";
+import { useAuth } from "@/lib/AuthContext";
 import { getGenerationTaskSnapshot, subscribeGenerationTask } from "@/lib/generation-task";
 
 export default function Navbar() {
   const { locale, setLocale } = useLanguage();
+  const { user, isLoading: authLoading, isConfigured, signInWithGoogle, signOut } = useAuth();
   const pathname = usePathname();
   const [isGenerating, setIsGenerating] = useState(false);
+  const [authError, setAuthError] = useState("");
 
   useEffect(() => {
     const initial = getGenerationTaskSnapshot();
@@ -25,6 +29,23 @@ export default function Navbar() {
     { href: "/profile", label: locale === "ar" ? "الملف الشخصي" : "Profile" },
     { href: "/plans", label: locale === "ar" ? "الاشتراكات" : "Plans" },
   ];
+
+  const firstName =
+    user?.user_metadata?.full_name?.split?.(" ")?.[0] ||
+    user?.email?.split("@")?.[0] ||
+    (locale === "ar" ? "حسابك" : "Your Account");
+
+  const handleGoogleSignIn = async () => {
+    setAuthError("");
+    const result = await signInWithGoogle(pathname || "/profile");
+    if (result.error) setAuthError(result.error);
+  };
+
+  const handleSignOut = async () => {
+    setAuthError("");
+    const result = await signOut();
+    if (result.error) setAuthError(result.error);
+  };
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-black/80 backdrop-blur-md border-b border-dark-border/50">
@@ -62,6 +83,31 @@ export default function Navbar() {
               </Link>
             );
           })}
+          {isConfigured &&
+            (authLoading ? (
+              <span className="text-[11px] text-gray-500 px-2">
+                {locale === "ar" ? "جاري التحميل..." : "Loading..."}
+              </span>
+            ) : user ? (
+              <button
+                type="button"
+                onClick={handleSignOut}
+                className="inline-flex items-center gap-1.5 text-[11px] md:text-xs px-2.5 py-1.5 rounded-lg border border-dark-border text-gray-300 hover:text-white hover:border-gold-500/30"
+              >
+                <UserCircle2 className="w-3.5 h-3.5 text-gold-400" />
+                <span className="max-w-[7rem] truncate">{firstName}</span>
+                <LogOut className="w-3 h-3" />
+              </button>
+            ) : (
+              <button
+                type="button"
+                onClick={handleGoogleSignIn}
+                className="inline-flex items-center gap-1.5 text-[11px] md:text-xs px-2.5 py-1.5 rounded-lg border border-gold-500/40 bg-gold-500/10 text-gold-300 hover:bg-gold-500/15"
+              >
+                <LogIn className="w-3.5 h-3.5" />
+                <span>{locale === "ar" ? "Google دخول" : "Google Sign In"}</span>
+              </button>
+            ))}
           <button
             type="button"
             onClick={() => setLocale(locale === "ar" ? "en" : "ar")}
@@ -71,6 +117,11 @@ export default function Navbar() {
           </button>
         </div>
       </div>
+      {authError && (
+        <div className="px-4 py-1 text-center text-[11px] text-red-300 bg-red-500/10 border-t border-red-500/20">
+          {authError}
+        </div>
+      )}
     </nav>
   );
 }
