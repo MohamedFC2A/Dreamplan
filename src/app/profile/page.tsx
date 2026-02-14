@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense, useEffect, useMemo, useRef, useState } from "react";
+import { Suspense, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { motion } from "framer-motion";
@@ -11,56 +11,81 @@ import { t } from "@/lib/i18n";
 import { useAuth } from "@/lib/AuthContext";
 import { UserProfile } from "@/lib/planner-types";
 import {
-  classifyGoal,
   createDefaultProfile,
   getMetabolicSummary,
+  inferActivityLevelFromProfile,
+  normalizeStoredProfile,
   readStoredProfile,
   saveStoredProfile,
   validateProfile,
 } from "@/lib/profile-storage";
 
-type GoalPreset = "fat_loss" | "muscle_gain" | "definition" | "custom";
-type InjuryPreset = "none" | "knee" | "back" | "shoulder" | "custom";
-type EquipmentPreset = "bodyweight" | "dumbbells" | "bands" | "full_gym" | "custom";
-
-const GOAL_VALUES: Record<Exclude<GoalPreset, "custom">, string> = {
-  fat_loss: "fat loss with visible definition",
-  muscle_gain: "muscle gain and shape",
-  definition: "lean aesthetic definition",
-};
-
-const INJURY_VALUES: Record<Exclude<InjuryPreset, "custom">, string> = {
-  none: "none",
-  knee: "knee sensitivity",
-  back: "lower-back sensitivity",
-  shoulder: "shoulder sensitivity",
-};
-
-const EQUIPMENT_VALUES: Record<Exclude<EquipmentPreset, "custom">, string> = {
-  bodyweight: "bodyweight only",
-  dumbbells: "dumbbells",
-  bands: "resistance bands",
-  full_gym: "full gym access",
-};
-
-function parseNumber(value: string): number {
-  if (!value.trim()) return Number.NaN;
-  const n = Number(value);
-  return Number.isFinite(n) ? n : Number.NaN;
-}
-
+const AGE_MIN = 13;
+const AGE_MAX = 90;
 const HEIGHT_MIN = 140;
 const HEIGHT_MAX = 210;
 const WEIGHT_MIN = 40;
 const WEIGHT_MAX = 180;
 
+type SaveState = "idle" | "saved";
+
+interface HealthOption {
+  id: string;
+  value: string;
+  ar: string;
+  en: string;
+}
+
+const HEALTH_OPTIONS: HealthOption[] = [
+  { id: "none", value: "none", ar: "لا يوجد", en: "None" },
+  { id: "diabetes", value: "type 2 diabetes", ar: "سكري", en: "Diabetes" },
+  { id: "hypertension", value: "hypertension", ar: "ضغط مرتفع", en: "Hypertension" },
+  { id: "asthma", value: "asthma", ar: "ربو", en: "Asthma" },
+  { id: "thyroid", value: "thyroid disorder", ar: "اضطراب الغدة", en: "Thyroid Disorder" },
+  { id: "knee", value: "knee pain", ar: "ألم ركبة", en: "Knee Pain" },
+  { id: "back", value: "lower-back pain", ar: "ألم أسفل الظهر", en: "Lower Back Pain" },
+  { id: "heart", value: "heart condition", ar: "مشكلة قلب", en: "Heart Condition" },
+  { id: "custom", value: "custom", ar: "مخصص", en: "Custom" },
+];
+
 function clamp(value: number, min: number, max: number): number {
   return Math.max(min, Math.min(max, value));
 }
 
-function parsePresetAndNote(raw: string): { base: string; note: string } {
-  const [base, ...rest] = raw.split("|");
-  return { base: base.trim().toLowerCase(), note: rest.join("|").trim() };
+function parseCondition(raw: string): { optionId: string; note: string } {
+  const [base, ...rest] = (raw || "none").split("|");
+  const baseValue = base.trim().toLowerCase();
+  const note = rest.join("|").trim();
+  const matched = HEALTH_OPTIONS.find((item) => item.value === baseValue);
+  return { optionId: matched ? matched.id : "custom", note };
+}
+
+function buildConditionValue(optionId: string, note: string): string {
+  const option = HEALTH_OPTIONS.find((item) => item.id === optionId);
+  const base = option?.value && option.value !== "custom" ? option.value : "";
+  if (note.trim()) return base ? `${base} | ${note.trim()}` : note.trim();
+  return base || "none";
+}
+
+function buildInsightHints(profile: UserProfile, locale: "ar" | "en"): string[] {
+  const summary = getMetabolicSummary(profile);
+  const hints: string[] = [];
+  if (summary.bmiCategory === "underweight") {
+    hints.push(locale === "ar" ? "التركيز الأفضل: زيادة سعرات تدريجية مع تمارين مقاومة آمنة." : "Best focus: gradual calorie surplus with safe resistance work.");
+  }
+  if (summary.bmiCategory === "overweight" || summary.bmiCategory === "obesity") {
+    hints.push(locale === "ar" ? "ابدأ بعجز سعرات محافظ + بروتين مرتفع لحماية الكتلة العضلية." : "Start with a conservative calorie deficit plus high protein to preserve lean mass.");
+  }
+  if ((profile.sleepHours || 7) < 7) {
+    hints.push(locale === "ar" ? "رفع النوم إلى 7-8 ساعات سيحسن الاستشفاء وسرعة التقدم." : "Raising sleep to 7-8h will improve recovery and progress speed.");
+  }
+  if ((profile.injuriesOrConditions || "none").toLowerCase() !== "none") {
+    hints.push(locale === "ar" ? "سيتم تفعيل فلترة أمان تلقائية لتجنب أي توصيات لا تناسب حالتك الصحية." : "Safety filtering will automatically avoid recommendations that conflict with your health condition.");
+  }
+  if (hints.length === 0) {
+    hints.push(locale === "ar" ? "ملفك ممتاز. يمكنك الآن الحصول على خطة أدق وأكثر ثباتًا." : "Your profile looks strong. You can now get a more precise and stable plan.");
+  }
+  return hints;
 }
 
 function ProfilePageContent() {
@@ -71,96 +96,50 @@ function ProfilePageContent() {
   const returnTo = searchParams.get("returnTo") || "/";
 
   const [profile, setProfile] = useState<UserProfile>(createDefaultProfile(""));
-  const [goalPreset, setGoalPreset] = useState<GoalPreset>("definition");
-  const [goalNote, setGoalNote] = useState("");
-  const [injuryPreset, setInjuryPreset] = useState<InjuryPreset>("none");
-  const [injuryNote, setInjuryNote] = useState("");
-  const [equipmentPreset, setEquipmentPreset] = useState<EquipmentPreset>("bodyweight");
-  const [equipmentNote, setEquipmentNote] = useState("");
+  const [conditionId, setConditionId] = useState<string>("none");
+  const [conditionNote, setConditionNote] = useState("");
   const [errors, setErrors] = useState<string[]>([]);
-  const [saveState, setSaveState] = useState<"idle" | "saving" | "saved">("idle");
+  const [saveState, setSaveState] = useState<SaveState>("idle");
   const [authError, setAuthError] = useState("");
-  const initializedRef = useRef(false);
+  const [analysisReady, setAnalysisReady] = useState(false);
 
   useEffect(() => {
     const stored = readStoredProfile();
-    if (stored) {
-      setProfile({ ...stored, units: "metric" });
-      const goal = stored.primaryGoal.toLowerCase();
-      if (goal.includes("fat") || goal.includes("تنشيف")) setGoalPreset("fat_loss");
-      else if (goal.includes("muscle") || goal.includes("تضخيم")) setGoalPreset("muscle_gain");
-      else if (goal.includes("|")) {
-        setGoalPreset("custom");
-        setGoalNote(stored.primaryGoal);
-      }
-
-      const injuryParts = parsePresetAndNote(stored.injuriesOrConditions || "none");
-      if (injuryParts.base.includes("knee")) setInjuryPreset("knee");
-      else if (injuryParts.base.includes("back")) setInjuryPreset("back");
-      else if (injuryParts.base.includes("shoulder")) setInjuryPreset("shoulder");
-      else if (injuryParts.base === "none") setInjuryPreset("none");
-      else setInjuryPreset("custom");
-      setInjuryNote(injuryParts.note);
-
-      const equipmentParts = parsePresetAndNote(stored.availableEquipment || "bodyweight");
-      if (equipmentParts.base.includes("dumbbell")) setEquipmentPreset("dumbbells");
-      else if (equipmentParts.base.includes("band")) setEquipmentPreset("bands");
-      else if (equipmentParts.base.includes("gym")) setEquipmentPreset("full_gym");
-      else if (equipmentParts.base.includes("bodyweight")) setEquipmentPreset("bodyweight");
-      else setEquipmentPreset("custom");
-      setEquipmentNote(equipmentParts.note);
-    }
-    initializedRef.current = true;
+    const normalized = normalizeStoredProfile(stored || createDefaultProfile(""));
+    const parsedCondition = parseCondition(normalized.injuriesOrConditions);
+    setConditionId(parsedCondition.optionId);
+    setConditionNote(parsedCondition.note);
+    setProfile(normalized);
   }, []);
 
-  useEffect(() => {
-    if (!initializedRef.current) return;
-    const timer = setTimeout(() => {
-      setSaveState("saving");
-      saveStoredProfile({ ...profile, units: "metric" });
-      setSaveState("saved");
-      setTimeout(() => setSaveState("idle"), 1200);
-    }, 350);
-    return () => clearTimeout(timer);
-  }, [profile]);
+  const draftProfile = useMemo(() => {
+    const condition = buildConditionValue(conditionId, conditionNote);
+    const base: UserProfile = {
+      ...profile,
+      units: "metric",
+      primaryGoal: "",
+      availableEquipment: "bodyweight",
+      injuriesOrConditions: condition,
+    };
+    const inferredActivity = inferActivityLevelFromProfile(base);
+    return { ...base, activityLevel: inferredActivity };
+  }, [conditionId, conditionNote, profile]);
 
-  useEffect(() => {
-    const base = goalPreset === "custom" ? "" : GOAL_VALUES[goalPreset];
-    const value = goalNote.trim() ? (base ? `${base} | ${goalNote.trim()}` : goalNote.trim()) : base;
-    setProfile((prev) => ({ ...prev, primaryGoal: value }));
-  }, [goalNote, goalPreset]);
-
-  useEffect(() => {
-    const base = injuryPreset === "custom" ? "" : INJURY_VALUES[injuryPreset];
-    const value = injuryNote.trim() ? (base ? `${base} | ${injuryNote.trim()}` : injuryNote.trim()) : base || "none";
-    setProfile((prev) => ({ ...prev, injuriesOrConditions: value }));
-  }, [injuryNote, injuryPreset]);
-
-  useEffect(() => {
-    const base = equipmentPreset === "custom" ? "" : EQUIPMENT_VALUES[equipmentPreset];
-    const value = equipmentNote.trim()
-      ? base
-        ? `${base} | ${equipmentNote.trim()}`
-        : equipmentNote.trim()
-      : base || "bodyweight";
-    setProfile((prev) => ({ ...prev, availableEquipment: value }));
-  }, [equipmentNote, equipmentPreset]);
-
-  const profileErrors = useMemo(() => validateProfile(profile, locale), [profile, locale]);
+  const profileErrors = useMemo(() => validateProfile(draftProfile, locale), [draftProfile, locale]);
   const completion = Math.max(0, Math.min(100, Math.round(((7 - profileErrors.length) / 7) * 100)));
-  const metabolism = useMemo(() => getMetabolicSummary(profile), [profile]);
-  const goalType = classifyGoal(profile.primaryGoal || "");
+  const summary = useMemo(() => getMetabolicSummary(draftProfile), [draftProfile]);
+  const insightHints = useMemo(() => buildInsightHints(draftProfile, locale), [draftProfile, locale]);
 
   const bmiLabel =
-    metabolism.bmiCategory === "underweight"
+    summary.bmiCategory === "underweight"
       ? locale === "ar"
         ? "نحافة"
         : "Underweight"
-      : metabolism.bmiCategory === "normal"
+      : summary.bmiCategory === "normal"
       ? locale === "ar"
         ? "طبيعي"
         : "Normal"
-      : metabolism.bmiCategory === "overweight"
+      : summary.bmiCategory === "overweight"
       ? locale === "ar"
         ? "وزن زائد"
         : "Overweight"
@@ -168,24 +147,18 @@ function ProfilePageContent() {
       ? "سمنة"
       : "Obesity";
 
-  const hints = useMemo(() => {
-    const out: string[] = [];
-    if (goalType === "fat_loss") out.push(locale === "ar" ? "عجز حراري محافظ أفضل من الحِرمان الشديد." : "A conservative deficit beats aggressive restriction.");
-    if (goalType === "muscle_gain") out.push(locale === "ar" ? "زد السعرات تدريجيًا وركز على التمرين المركب." : "Increase calories gradually and focus on compound training.");
-    if ((profile.sleepHours || 7) < 7) out.push(locale === "ar" ? "النوم أقل من 7 ساعات يبطئ التعافي." : "Sleep below 7 hours slows recovery.");
-    if (out.length === 0) out.push(locale === "ar" ? "بياناتك جيدة لبدء خطة متوازنة عالية الالتزام." : "Your data supports a balanced high-adherence plan.");
-    return out;
-  }, [goalType, locale, profile.sleepHours]);
-
-  const saveNow = () => {
-    const validation = validateProfile(profile, locale);
+  const handleSaveProfile = () => {
+    const validation = validateProfile(draftProfile, locale);
     setErrors(validation);
     if (validation.length > 0) return;
-    saveStoredProfile({ ...profile, units: "metric" });
+    saveStoredProfile(draftProfile);
+    setProfile(draftProfile);
+    setAnalysisReady(true);
     setSaveState("saved");
+    setTimeout(() => setSaveState("idle"), 1800);
   };
 
-  const handleSignIn = async () => {
+  const handleGoogleSignIn = async () => {
     setAuthError("");
     const result = await signInWithGoogle("/profile");
     if (result.error) setAuthError(result.error);
@@ -201,12 +174,12 @@ function ProfilePageContent() {
     <main className="min-h-screen">
       <Navbar />
       <section className="max-w-6xl mx-auto px-4 pt-24 pb-14 space-y-5">
-        <motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} className="rounded-2xl border border-dark-border bg-dark-card overflow-hidden">
+        <motion.div initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} className="rounded-2xl border border-dark-border bg-dark-card overflow-hidden">
           <div className="p-6 border-b border-dark-border bg-gradient-to-r from-gold-500/10 via-gold-500/5 to-transparent">
             <div className="flex flex-wrap items-center justify-between gap-3">
               <div>
                 <h1 className="font-heading text-2xl font-bold text-white">{t(locale, "profilePageTitle")}</h1>
-                <p className="text-sm text-gray-400 mt-1">{t(locale, "profilePageSubtitle")}</p>
+                <p className="text-sm text-gray-400 mt-1">{locale === "ar" ? "بيانات أقل، تأثير أكبر. ركّز فقط على المعلومات المفيدة فعلًا." : "Less input, more impact. Only provide what really improves planning."}</p>
               </div>
               <div className="rounded-xl border border-gold-500/30 bg-gold-500/10 px-4 py-2">
                 <p className="text-[11px] uppercase text-gold-400">{locale === "ar" ? "جاهزية الملف" : "Readiness"}</p>
@@ -235,7 +208,7 @@ function ProfilePageContent() {
                     </button>
                   </div>
                 ) : (
-                  <button type="button" onClick={handleSignIn} className="inline-flex items-center gap-2 border border-gold-500/40 bg-gold-500/10 text-gold-300 px-4 py-2 rounded-lg text-sm">
+                  <button type="button" onClick={handleGoogleSignIn} className="inline-flex items-center gap-2 border border-gold-500/40 bg-gold-500/10 text-gold-300 px-4 py-2 rounded-lg text-sm">
                     <LogIn className="w-4 h-4" />
                     {locale === "ar" ? "Google تسجيل الدخول" : "Continue with Google"}
                   </button>
@@ -244,140 +217,57 @@ function ProfilePageContent() {
               </div>
 
               <div className="rounded-xl border border-dark-border bg-black/30 p-4 space-y-3">
-                <h2 className="text-sm font-heading text-gray-100">{locale === "ar" ? "إعداد الهدف" : "Goal Setup"}</h2>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
-                  {[
-                    { id: "fat_loss", ar: "تنشيف", en: "Fat Loss" },
-                    { id: "muscle_gain", ar: "تضخيم", en: "Muscle Gain" },
-                    { id: "definition", ar: "تعريف عضلي", en: "Definition" },
-                    { id: "custom", ar: "مخصص", en: "Custom" },
-                  ].map((item) => (
-                    <button
-                      key={item.id}
-                      type="button"
-                      onClick={() => setGoalPreset(item.id as GoalPreset)}
-                      className={`px-3 py-2 rounded-lg text-xs border ${
-                        goalPreset === item.id ? "border-gold-500/50 bg-gold-500/15 text-gold-300" : "border-dark-border text-gray-300"
-                      }`}
-                    >
-                      {locale === "ar" ? item.ar : item.en}
-                    </button>
-                  ))}
-                </div>
-                <input value={goalNote} onChange={(e) => setGoalNote(e.target.value)} placeholder={locale === "ar" ? "تفصيل اختياري" : "Optional detail"} className="w-full bg-black border border-dark-border rounded-lg px-3 py-2.5 text-gray-100" />
-              </div>
-
-              <div className="rounded-xl border border-dark-border bg-black/30 p-4 space-y-3">
-                <h2 className="text-sm font-heading text-gray-100">{locale === "ar" ? "البيانات الأساسية" : "Core Data"}</h2>
+                <h2 className="text-sm font-heading text-gray-100">{locale === "ar" ? "البيانات الأساسية (متري فقط)" : "Core Metrics (Metric only)"}</h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                  <input type="number" value={Number.isFinite(profile.age) ? profile.age : ""} onChange={(e) => setProfile((p) => ({ ...p, age: parseNumber(e.target.value) }))} placeholder={t(locale, "profileAge")} className="bg-black border border-dark-border rounded-lg px-3 py-2.5 text-gray-100" />
-                  <select value={profile.activityLevel} onChange={(e) => setProfile((p) => ({ ...p, activityLevel: e.target.value as UserProfile["activityLevel"] }))} className="bg-black border border-dark-border rounded-lg px-3 py-2.5 text-gray-100">
-                    <option value="sedentary">{t(locale, "profileActivitySedentary")}</option>
-                    <option value="light">{t(locale, "profileActivityLight")}</option>
-                    <option value="moderate">{t(locale, "profileActivityModerate")}</option>
-                    <option value="active">{t(locale, "profileActivityActive")}</option>
-                    <option value="athlete">{t(locale, "profileActivityAthlete")}</option>
-                  </select>
+                  <div className="md:col-span-2 rounded-lg border border-dark-border bg-black px-3 py-2.5">
+                    <div className="flex items-center justify-between mb-1.5">
+                      <label className="text-xs text-gray-400">{t(locale, "profileAge")}</label>
+                      <span className="text-xs text-gold-300">{Math.round(profile.age)} {locale === "ar" ? "سنة" : "years"}</span>
+                    </div>
+                    <input type="range" min={AGE_MIN} max={AGE_MAX} step={1} value={Math.round(profile.age)} onChange={(e) => setProfile((p) => ({ ...p, age: clamp(Number(e.target.value), AGE_MIN, AGE_MAX) }))} className="w-full accent-gold-500" />
+                  </div>
+
                   <div className="grid grid-cols-2 gap-2">
                     <button type="button" onClick={() => setProfile((p) => ({ ...p, sex: "male" }))} className={`rounded-lg py-2 border text-xs ${profile.sex === "male" ? "border-gold-500/50 bg-gold-500/15 text-gold-300" : "border-dark-border text-gray-300"}`}>{t(locale, "profileSexMale")}</button>
                     <button type="button" onClick={() => setProfile((p) => ({ ...p, sex: "female" }))} className={`rounded-lg py-2 border text-xs ${profile.sex === "female" ? "border-gold-500/50 bg-gold-500/15 text-gold-300" : "border-dark-border text-gray-300"}`}>{t(locale, "profileSexFemale")}</button>
                   </div>
+
+                  <div className="rounded-lg border border-dark-border bg-black px-3 py-2.5">
+                    <div className="flex items-center justify-between mb-1.5">
+                      <label className="text-xs text-gray-400">{locale === "ar" ? "النوم" : "Sleep"}</label>
+                      <span className="text-xs text-gold-300">{profile.sleepHours || 7}h</span>
+                    </div>
+                    <input type="range" min={5} max={10} step={0.5} value={profile.sleepHours || 7} onChange={(e) => setProfile((p) => ({ ...p, sleepHours: Number(e.target.value) }))} className="w-full accent-gold-500" />
+                  </div>
+
                   <div className="md:col-span-2 rounded-lg border border-dark-border bg-black px-3 py-2.5">
                     <div className="flex items-center justify-between mb-1.5">
                       <label className="text-xs text-gray-400">{t(locale, "profileHeight")} (cm)</label>
                       <span className="text-xs text-gold-300">{Math.round(profile.heightCm)} cm</span>
                     </div>
-                    <div className="flex items-center gap-2">
-                      <button
-                        type="button"
-                        onClick={() => setProfile((p) => ({ ...p, heightCm: clamp(Math.round(p.heightCm) - 1, HEIGHT_MIN, HEIGHT_MAX), units: "metric" }))}
-                        className="w-8 h-8 rounded-lg border border-dark-border text-gray-300"
-                      >
-                        -
-                      </button>
-                      <input
-                        type="range"
-                        min={HEIGHT_MIN}
-                        max={HEIGHT_MAX}
-                        step={1}
-                        value={Math.round(profile.heightCm)}
-                        onChange={(e) => setProfile((p) => ({ ...p, heightCm: clamp(Number(e.target.value), HEIGHT_MIN, HEIGHT_MAX), units: "metric" }))}
-                        className="w-full accent-gold-500"
-                      />
-                      <button
-                        type="button"
-                        onClick={() => setProfile((p) => ({ ...p, heightCm: clamp(Math.round(p.heightCm) + 1, HEIGHT_MIN, HEIGHT_MAX), units: "metric" }))}
-                        className="w-8 h-8 rounded-lg border border-dark-border text-gray-300"
-                      >
-                        +
-                      </button>
-                    </div>
+                    <input type="range" min={HEIGHT_MIN} max={HEIGHT_MAX} step={1} value={Math.round(profile.heightCm)} onChange={(e) => setProfile((p) => ({ ...p, heightCm: clamp(Number(e.target.value), HEIGHT_MIN, HEIGHT_MAX) }))} className="w-full accent-gold-500" />
                   </div>
+
                   <div className="md:col-span-2 rounded-lg border border-dark-border bg-black px-3 py-2.5">
                     <div className="flex items-center justify-between mb-1.5">
                       <label className="text-xs text-gray-400">{t(locale, "profileWeight")} (kg)</label>
                       <span className="text-xs text-gold-300">{Math.round(profile.weightKg)} kg</span>
                     </div>
-                    <div className="flex items-center gap-2">
-                      <button
-                        type="button"
-                        onClick={() => setProfile((p) => ({ ...p, weightKg: clamp(Math.round(p.weightKg) - 1, WEIGHT_MIN, WEIGHT_MAX), units: "metric" }))}
-                        className="w-8 h-8 rounded-lg border border-dark-border text-gray-300"
-                      >
-                        -
-                      </button>
-                      <input
-                        type="range"
-                        min={WEIGHT_MIN}
-                        max={WEIGHT_MAX}
-                        step={1}
-                        value={Math.round(profile.weightKg)}
-                        onChange={(e) => setProfile((p) => ({ ...p, weightKg: clamp(Number(e.target.value), WEIGHT_MIN, WEIGHT_MAX), units: "metric" }))}
-                        className="w-full accent-gold-500"
-                      />
-                      <button
-                        type="button"
-                        onClick={() => setProfile((p) => ({ ...p, weightKg: clamp(Math.round(p.weightKg) + 1, WEIGHT_MIN, WEIGHT_MAX), units: "metric" }))}
-                        className="w-8 h-8 rounded-lg border border-dark-border text-gray-300"
-                      >
-                        +
-                      </button>
-                    </div>
+                    <input type="range" min={WEIGHT_MIN} max={WEIGHT_MAX} step={1} value={Math.round(profile.weightKg)} onChange={(e) => setProfile((p) => ({ ...p, weightKg: clamp(Number(e.target.value), WEIGHT_MIN, WEIGHT_MAX) }))} className="w-full accent-gold-500" />
                   </div>
-                </div>
-                <p className="text-[11px] text-gray-500">{locale === "ar" ? "الوحدات المستخدمة: النظام المتري الدولي فقط (cm / kg)." : "Units used: international metric only (cm / kg)."}</p>
-                <div>
-                  <div className="flex justify-between text-xs text-gray-400"><span>{locale === "ar" ? "النوم" : "Sleep"}</span><span>{profile.sleepHours || 7}h</span></div>
-                  <input type="range" min={4} max={10} step={0.5} value={profile.sleepHours || 7} onChange={(e) => setProfile((p) => ({ ...p, sleepHours: Number(e.target.value) }))} className="w-full accent-gold-500" />
                 </div>
               </div>
 
               <div className="rounded-xl border border-dark-border bg-black/30 p-4 space-y-3">
-                <h2 className="text-sm font-heading text-gray-100">{locale === "ar" ? "الحالة الصحية والمعدات" : "Safety & Equipment"}</h2>
-                <div className="grid grid-cols-2 md:grid-cols-5 gap-2">
-                  {[
-                    { id: "none", ar: "لا يوجد", en: "None" },
-                    { id: "knee", ar: "ركبة", en: "Knee" },
-                    { id: "back", ar: "ظهر", en: "Back" },
-                    { id: "shoulder", ar: "كتف", en: "Shoulder" },
-                    { id: "custom", ar: "مخصص", en: "Custom" },
-                  ].map((item) => (
-                    <button key={item.id} type="button" onClick={() => setInjuryPreset(item.id as InjuryPreset)} className={`px-2 py-2 rounded-lg text-xs border ${injuryPreset === item.id ? "border-gold-500/50 bg-gold-500/15 text-gold-300" : "border-dark-border text-gray-300"}`}>{locale === "ar" ? item.ar : item.en}</button>
+                <h2 className="text-sm font-heading text-gray-100">{locale === "ar" ? "الحالة الصحية أو المرض المزمن (اختياري)" : "Health Issue / Chronic Condition (Optional)"}</h2>
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
+                  {HEALTH_OPTIONS.map((option) => (
+                    <button key={option.id} type="button" onClick={() => setConditionId(option.id)} className={`px-2 py-2 rounded-lg text-xs border ${conditionId === option.id ? "border-gold-500/50 bg-gold-500/15 text-gold-300" : "border-dark-border text-gray-300"}`}>
+                      {locale === "ar" ? option.ar : option.en}
+                    </button>
                   ))}
                 </div>
-                <input value={injuryNote} onChange={(e) => setInjuryNote(e.target.value)} placeholder={locale === "ar" ? "ملاحظة صحية اختيارية" : "Optional safety note"} className="w-full bg-black border border-dark-border rounded-lg px-3 py-2.5 text-gray-100" />
-                <div className="grid grid-cols-2 md:grid-cols-5 gap-2">
-                  {[
-                    { id: "bodyweight", ar: "وزن الجسم", en: "Bodyweight" },
-                    { id: "dumbbells", ar: "دمبل", en: "Dumbbells" },
-                    { id: "bands", ar: "مطاط", en: "Bands" },
-                    { id: "full_gym", ar: "جيم كامل", en: "Full Gym" },
-                    { id: "custom", ar: "مخصص", en: "Custom" },
-                  ].map((item) => (
-                    <button key={item.id} type="button" onClick={() => setEquipmentPreset(item.id as EquipmentPreset)} className={`px-2 py-2 rounded-lg text-xs border ${equipmentPreset === item.id ? "border-gold-500/50 bg-gold-500/15 text-gold-300" : "border-dark-border text-gray-300"}`}>{locale === "ar" ? item.ar : item.en}</button>
-                  ))}
-                </div>
-                <input value={equipmentNote} onChange={(e) => setEquipmentNote(e.target.value)} placeholder={locale === "ar" ? "تفصيل المعدات (اختياري)" : "Equipment detail (optional)"} className="w-full bg-black border border-dark-border rounded-lg px-3 py-2.5 text-gray-100" />
+                <input value={conditionNote} onChange={(e) => setConditionNote(e.target.value)} placeholder={locale === "ar" ? "وصف مختصر إضافي (اختياري)" : "Extra short note (optional)"} className="w-full bg-black border border-dark-border rounded-lg px-3 py-2.5 text-gray-100" />
               </div>
 
               {errors.length > 0 && (
@@ -387,7 +277,7 @@ function ProfilePageContent() {
               )}
 
               <div className="flex flex-wrap gap-3">
-                <button type="button" onClick={saveNow} className="inline-flex items-center gap-2 bg-gold-500 hover:bg-gold-600 text-black font-heading font-bold tracking-wider px-6 py-3 rounded-xl uppercase text-xs">
+                <button type="button" onClick={handleSaveProfile} className="inline-flex items-center gap-2 bg-gold-500 hover:bg-gold-600 text-black font-heading font-bold tracking-wider px-6 py-3 rounded-xl uppercase text-xs">
                   <Save className="w-4 h-4" />
                   {t(locale, "profileSaveBtn")}
                 </button>
@@ -405,33 +295,52 @@ function ProfilePageContent() {
                   <CheckCircle2 className={`w-4 h-4 ${profileErrors.length === 0 ? "text-green-400" : "text-yellow-400"}`} />
                   <span>{profileErrors.length === 0 ? t(locale, "profileReady") : locale === "ar" ? "الملف غير مكتمل بعد." : "Profile is not complete yet."}</span>
                 </div>
-                <p className="text-xs text-gray-500 mt-2">{saveState === "saving" ? (locale === "ar" ? "يتم الحفظ..." : "Saving...") : saveState === "saved" ? (locale === "ar" ? "تم الحفظ محليًا." : "Saved locally.") : locale === "ar" ? "الحفظ التلقائي مفعل." : "Autosave enabled."}</p>
+                <p className="text-xs text-gray-500 mt-2">
+                  {saveState === "saved"
+                    ? locale === "ar"
+                      ? "تم الحفظ بنجاح. التحليل الذكي جاهز."
+                      : "Saved successfully. Smart analysis is ready."
+                    : locale === "ar"
+                    ? "اضغط حفظ لتوليد التحليل الذكي."
+                    : "Click save to generate smart analysis."}
+                </p>
               </div>
 
               <div className="rounded-xl border border-dark-border bg-black/40 p-4 space-y-3">
                 <div className="flex items-center gap-2 text-gray-100">
                   <Gauge className="w-4 h-4 text-gold-400" />
-                  <h3 className="text-sm font-heading">{locale === "ar" ? "تحليل ذكي" : "Smart Insights"}</h3>
+                  <h3 className="text-sm font-heading">{locale === "ar" ? "تحليل ذكي بعد الحفظ" : "Smart Analysis (After Save)"}</h3>
                 </div>
-                <div className="grid grid-cols-2 gap-2 text-xs">
-                  <div className="rounded-lg border border-dark-border bg-black p-2"><p className="text-gray-500">BMI</p><p className="text-gray-100">{metabolism.bmi} ({bmiLabel})</p></div>
-                  <div className="rounded-lg border border-dark-border bg-black p-2"><p className="text-gray-500">BMR</p><p className="text-gray-100">{metabolism.bmr} kcal</p></div>
-                  <div className="rounded-lg border border-dark-border bg-black p-2"><p className="text-gray-500">TDEE</p><p className="text-gray-100">{metabolism.tdee} kcal</p></div>
-                  <div className="rounded-lg border border-dark-border bg-black p-2"><p className="text-gray-500">{locale === "ar" ? "الماء" : "Water"}</p><p className="text-gray-100">{metabolism.hydrationMl} ml</p></div>
-                </div>
-                <div className="rounded-lg border border-dark-border bg-black p-3 text-xs text-gray-300 space-y-1">
-                  <p>{locale === "ar" ? "السعرات المستهدفة" : "Target calories"}: <span className="text-gold-300">{metabolism.targetCalories.min}-{metabolism.targetCalories.max} kcal</span></p>
-                  <p>{locale === "ar" ? "البروتين" : "Protein"}: <span className="text-gold-300">{metabolism.proteinRangeG.min}-{metabolism.proteinRangeG.max} g/day</span></p>
-                  <p>{locale === "ar" ? "الوزن الصحي التقريبي" : "Healthy range"}: <span className="text-gold-300">{metabolism.healthyWeightRangeKg.min}-{metabolism.healthyWeightRangeKg.max} kg</span></p>
-                </div>
-                <div className="space-y-1.5">
-                  {hints.map((hint) => (
-                    <p key={hint} className="text-xs text-gray-300 flex items-start gap-2">
-                      <CheckCircle2 className="w-3.5 h-3.5 text-gold-400 mt-0.5 shrink-0" />
-                      {hint}
-                    </p>
-                  ))}
-                </div>
+
+                {!analysisReady ? (
+                  <p className="text-xs text-gray-500">
+                    {locale === "ar"
+                      ? "بعد الضغط على حفظ، سنولّد تحليلًا ذكيًا تلقائيًا من بياناتك (BMI / BMR / TDEE + توصيات عملية)."
+                      : "After you click save, we generate a smart analysis from your data (BMI / BMR / TDEE + actionable tips)."}
+                  </p>
+                ) : (
+                  <>
+                    <div className="grid grid-cols-2 gap-2 text-xs">
+                      <div className="rounded-lg border border-dark-border bg-black p-2"><p className="text-gray-500">BMI</p><p className="text-gray-100">{summary.bmi} ({bmiLabel})</p></div>
+                      <div className="rounded-lg border border-dark-border bg-black p-2"><p className="text-gray-500">BMR</p><p className="text-gray-100">{summary.bmr} kcal</p></div>
+                      <div className="rounded-lg border border-dark-border bg-black p-2"><p className="text-gray-500">TDEE</p><p className="text-gray-100">{summary.tdee} kcal</p></div>
+                      <div className="rounded-lg border border-dark-border bg-black p-2"><p className="text-gray-500">{locale === "ar" ? "النشاط المستنتج" : "Inferred Activity"}</p><p className="text-gray-100">{draftProfile.activityLevel}</p></div>
+                    </div>
+                    <div className="rounded-lg border border-dark-border bg-black p-3 text-xs text-gray-300 space-y-1">
+                      <p>{locale === "ar" ? "السعرات المستهدفة" : "Target calories"}: <span className="text-gold-300">{summary.targetCalories.min}-{summary.targetCalories.max} kcal</span></p>
+                      <p>{locale === "ar" ? "البروتين" : "Protein"}: <span className="text-gold-300">{summary.proteinRangeG.min}-{summary.proteinRangeG.max} g/day</span></p>
+                      <p>{locale === "ar" ? "الوزن الصحي التقريبي" : "Healthy range"}: <span className="text-gold-300">{summary.healthyWeightRangeKg.min}-{summary.healthyWeightRangeKg.max} kg</span></p>
+                    </div>
+                    <div className="space-y-1.5">
+                      {insightHints.map((hint) => (
+                        <p key={hint} className="text-xs text-gray-300 flex items-start gap-2">
+                          <CheckCircle2 className="w-3.5 h-3.5 text-gold-400 mt-0.5 shrink-0" />
+                          {hint}
+                        </p>
+                      ))}
+                    </div>
+                  </>
+                )}
               </div>
             </div>
           </div>

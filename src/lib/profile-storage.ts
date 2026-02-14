@@ -18,6 +18,54 @@ export function createDefaultProfile(goal = ""): UserProfile {
   };
 }
 
+function normalizeStringValue(value: unknown, fallback: string): string {
+  return typeof value === "string" && value.trim() ? value.trim() : fallback;
+}
+
+function toFiniteNumber(value: unknown, fallback: number): number {
+  const num = typeof value === "number" ? value : Number(value);
+  return Number.isFinite(num) ? num : fallback;
+}
+
+export function inferActivityLevelFromProfile(profile: Pick<UserProfile, "age" | "weightKg" | "heightCm" | "sleepHours" | "injuriesOrConditions">): UserProfile["activityLevel"] {
+  const heightM = Math.max(0.0001, profile.heightCm / 100);
+  const bmi = profile.weightKg / (heightM * heightM);
+  const sleep = profile.sleepHours ?? 7;
+  const condition = (profile.injuriesOrConditions || "").toLowerCase();
+
+  if (sleep < 6) return "light";
+  if (condition !== "none" && condition !== "لا يوجد") return "light";
+  if (bmi >= 33 || profile.age >= 55) return "sedentary";
+  if (bmi >= 27 || profile.age >= 45) return "light";
+  if (bmi <= 22 && sleep >= 7.5 && profile.age < 35) return "active";
+  return "moderate";
+}
+
+export function normalizeStoredProfile(raw: Partial<UserProfile> | null | undefined): UserProfile {
+  const base = createDefaultProfile("");
+  const merged: UserProfile = {
+    age: Math.round(toFiniteNumber(raw?.age, base.age)),
+    sex: raw?.sex === "female" ? "female" : "male",
+    activityLevel:
+      raw?.activityLevel === "sedentary" ||
+      raw?.activityLevel === "light" ||
+      raw?.activityLevel === "moderate" ||
+      raw?.activityLevel === "active" ||
+      raw?.activityLevel === "athlete"
+        ? raw.activityLevel
+        : base.activityLevel,
+    primaryGoal: normalizeStringValue(raw?.primaryGoal, ""),
+    injuriesOrConditions: normalizeStringValue(raw?.injuriesOrConditions, "none"),
+    availableEquipment: normalizeStringValue(raw?.availableEquipment, "bodyweight"),
+    units: "metric",
+    heightCm: Math.round(toFiniteNumber(raw?.heightCm, base.heightCm) * 10) / 10,
+    weightKg: Math.round(toFiniteNumber(raw?.weightKg, base.weightKg) * 10) / 10,
+    sleepHours: Math.round(toFiniteNumber(raw?.sleepHours, base.sleepHours || 7) * 10) / 10,
+  };
+  merged.activityLevel = inferActivityLevelFromProfile(merged);
+  return merged;
+}
+
 export function readStoredProfile(): UserProfile | null {
   if (typeof window === "undefined") return null;
   try {
@@ -25,7 +73,7 @@ export function readStoredProfile(): UserProfile | null {
     if (!raw) return null;
     const parsed = JSON.parse(raw);
     if (!parsed || typeof parsed !== "object") return null;
-    return parsed as UserProfile;
+    return normalizeStoredProfile(parsed as Partial<UserProfile>);
   } catch {
     return null;
   }
@@ -33,7 +81,7 @@ export function readStoredProfile(): UserProfile | null {
 
 export function saveStoredProfile(profile: UserProfile): void {
   if (typeof window === "undefined") return;
-  localStorage.setItem(USER_PROFILE_KEY, JSON.stringify(profile));
+  localStorage.setItem(USER_PROFILE_KEY, JSON.stringify(normalizeStoredProfile(profile)));
 }
 
 export function validateProfile(profile: UserProfile, locale: Locale): string[] {
