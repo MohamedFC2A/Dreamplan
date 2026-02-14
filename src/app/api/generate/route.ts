@@ -348,12 +348,73 @@ function defaultProfile(query: string): UserProfile {
   };
 }
 
-function buildProgressData(mode: PlanMode, durationDays: number, durationWeeks: number) {
-  const total = mode === "weekly" ? durationWeeks : durationDays;
-  return Array.from({ length: total }, (_, index) => ({
-    day: index + 1,
-    impact: Math.round(((index + 1) / Math.max(1, total)) * 30),
-  }));
+function getProfileResponseFactor(profile: UserProfile): number {
+  const sleep = profile.sleepHours ?? 7;
+  const sleepFactor =
+    sleep >= 7 ? 1 + Math.min((sleep - 7) * 0.03, 0.09) : 1 - Math.min((7 - sleep) * 0.05, 0.2);
+  const ageFactor =
+    profile.age < 30 ? 1.04 : profile.age <= 40 ? 1.0 : profile.age <= 55 ? 0.95 : 0.9;
+  const activityFactor: Record<UserProfile["activityLevel"], number> = {
+    sedentary: 0.9,
+    light: 0.95,
+    moderate: 1,
+    active: 1.05,
+    athlete: 1.08,
+  };
+  const condition = (profile.injuriesOrConditions || "").toLowerCase();
+  const conditionFactor =
+    condition && condition !== "none" && condition !== "لا يوجد" ? 0.92 : 1.0;
+
+  return clamp(sleepFactor * ageFactor * activityFactor[profile.activityLevel] * conditionFactor, 0.72, 1.18);
+}
+
+function buildProgressData(
+  mode: PlanMode,
+  durationDays: number,
+  durationWeeks: number,
+  archetype: GoalArchetype,
+  profile: UserProfile
+) {
+  const total = Math.max(1, mode === "weekly" ? durationWeeks : durationDays);
+  const durationNorm = clamp((durationDays - MIN_DURATION_DAYS) / (MAX_DURATION_DAYS - MIN_DURATION_DAYS), 0, 1);
+  const response = getProfileResponseFactor(profile);
+
+  const params: Record<
+    GoalArchetype,
+    { k: number; minCap: number; maxCap: number; start: number; curvePower: number }
+  > = {
+    quick_visual: { k: 2.35, minCap: 60, maxCap: 88, start: 20, curvePower: 0.9 },
+    fat_loss: { k: 1.35, minCap: 55, maxCap: 85, start: 14, curvePower: 1.0 },
+    muscle_gain: { k: 1.0, minCap: 50, maxCap: 80, start: 12, curvePower: 1.14 },
+    speed_performance: { k: 1.25, minCap: 54, maxCap: 84, start: 13, curvePower: 1.02 },
+    posture_definition: { k: 1.5, minCap: 54, maxCap: 83, start: 14, curvePower: 0.98 },
+    general: { k: 1.2, minCap: 52, maxCap: 82, start: 12, curvePower: 1.02 },
+  };
+
+  const config = params[archetype];
+  const baseCap = config.minCap + (config.maxCap - config.minCap) * durationNorm;
+  const cap = clamp(baseCap * response, config.minCap, config.maxCap);
+  const start = clamp(config.start * response, 8, cap - 4);
+  const denominator = 1 - Math.exp(-config.k);
+
+  const points: { day: number; impact: number }[] = [];
+  let previous = Math.round(Math.max(0, start - 2));
+
+  for (let index = 0; index < total; index++) {
+    const t = (index + 1) / total;
+    const curveRaw = (1 - Math.exp(-config.k * t)) / Math.max(0.0001, denominator);
+    const curve = Math.pow(curveRaw, config.curvePower);
+    const rawScore = start + curve * (cap - start);
+    let score = Math.round(clamp(rawScore, start, cap));
+
+    if (score < previous) score = previous;
+    if (score === previous && score < Math.round(cap)) score += 1;
+
+    points.push({ day: index + 1, impact: score });
+    previous = score;
+  }
+
+  return points;
 }
 
 function buildSafetyNotes(profile: UserProfile): { en: string[]; ar: string[] } {
@@ -637,7 +698,7 @@ function buildFallbackProtocol(
     safetyNotesGlobal: safetyNotes.en,
     safetyNotesGlobalAr: safetyNotes.ar,
     qaSummary: qaHistory.slice(0, 6).map((item) => `${item.questionId}: ${item.label || item.value}`),
-    progressData: buildProgressData(planMode, durationDays, durationWeeks),
+    progressData: buildProgressData(planMode, durationDays, durationWeeks, blueprint.archetype, profile),
     days: [],
     weeks: [],
   };

@@ -27,10 +27,8 @@ import {
   Heart,
   Droplets,
   Moon,
-  Crown,
 } from "lucide-react";
-import { useEffect, useMemo, useState } from "react";
-import { hasProAccess } from "@/lib/pro-access";
+import { useMemo } from "react";
 
 function GoldDivider() {
   return (
@@ -85,29 +83,59 @@ function normalizeProgress(total: number) {
 }
 
 const SECTION_META = [
-  { key: "wake", icon: Sunrise, en: "Wake", ar: "استيقاظ" },
-  { key: "meal", icon: UtensilsCrossed, en: "Nutrition", ar: "تغذية" },
-  { key: "supplement", icon: Pill, en: "Supplements", ar: "مكملات" },
-  { key: "training", icon: Dumbbell, en: "Training", ar: "تدريب" },
-  { key: "recovery", icon: Heart, en: "Recovery", ar: "تعافي" },
-  { key: "hydration", icon: Droplets, en: "Hydration", ar: "ترطيب" },
-  { key: "sleep", icon: Moon, en: "Sleep", ar: "نوم" },
+  {
+    key: "wake",
+    icon: Sunrise,
+    en: "Wake",
+    ar: "استيقاظ",
+    color: "text-purple-300 border-purple-500/30 bg-purple-500/10",
+  },
+  {
+    key: "meal",
+    icon: UtensilsCrossed,
+    en: "Nutrition",
+    ar: "تغذية",
+    color: "text-orange-300 border-orange-500/30 bg-orange-500/10",
+  },
+  {
+    key: "supplement",
+    icon: Pill,
+    en: "Supplements",
+    ar: "مكملات",
+    color: "text-pink-300 border-pink-500/30 bg-pink-500/10",
+  },
+  {
+    key: "training",
+    icon: Dumbbell,
+    en: "Training",
+    ar: "تدريب",
+    color: "text-red-300 border-red-500/30 bg-red-500/10",
+  },
+  {
+    key: "recovery",
+    icon: Heart,
+    en: "Recovery",
+    ar: "تعافي",
+    color: "text-blue-300 border-blue-500/30 bg-blue-500/10",
+  },
+  {
+    key: "hydration",
+    icon: Droplets,
+    en: "Hydration",
+    ar: "ترطيب",
+    color: "text-cyan-300 border-cyan-500/30 bg-cyan-500/10",
+  },
+  {
+    key: "sleep",
+    icon: Moon,
+    en: "Sleep",
+    ar: "نوم",
+    color: "text-indigo-300 border-indigo-500/30 bg-indigo-500/10",
+  },
 ] as const;
 
 export default function ProtocolDashboard({ protocol }: { protocol: Protocol }) {
   const { locale, isRTL } = useLanguage();
-  const [proEnabled, setProEnabled] = useState(false);
-
-  useEffect(() => {
-    const syncPro = () => setProEnabled(hasProAccess());
-    syncPro();
-    window.addEventListener("storage", syncPro);
-    window.addEventListener("focus", syncPro);
-    return () => {
-      window.removeEventListener("storage", syncPro);
-      window.removeEventListener("focus", syncPro);
-    };
-  }, []);
 
   const safeDays = Array.isArray(protocol?.days)
     ? protocol.days.filter((day) => day && Array.isArray(day.tasks))
@@ -170,28 +198,20 @@ export default function ProtocolDashboard({ protocol }: { protocol: Protocol }) 
       ? priorityActionsRaw.filter((item): item is string => typeof item === "string" && item.trim().length > 0)
       : [];
 
-  const { totalTasks, totalPoints } = useMemo(() => {
+  const totalTasks = useMemo(() => {
     let tasks = 0;
-    let points = 0;
-    const pointsMap: Record<string, number> = { high: 15, medium: 10, low: 5 };
 
     if (inferredMode === "weekly") {
       for (const week of safeWeeks) {
         tasks += week.tasks.length;
-        for (const task of week.tasks) {
-          points += pointsMap[task.visualImpact] || 5;
-        }
       }
     } else {
       for (const day of safeDays) {
         tasks += day.tasks.length;
-        for (const task of day.tasks) {
-          points += pointsMap[task.visualImpact] || 5;
-        }
       }
     }
 
-    return { totalTasks: tasks, totalPoints: points };
+    return tasks;
   }, [inferredMode, safeWeeks, safeDays]);
 
   const sectionCounts = useMemo(() => {
@@ -216,22 +236,18 @@ export default function ProtocolDashboard({ protocol }: { protocol: Protocol }) 
     return ranked[0]?.[0] || "training";
   }, [sectionCounts]);
 
-  const adherenceForecast = useMemo(() => {
-    const base = totalTasks > 0 ? 72 : 60;
-    const density = totalUnits > 0 ? totalTasks / totalUnits : 0;
-    return Math.max(55, Math.min(97, Math.round(base + density * 3)));
-  }, [totalTasks, totalUnits]);
-
-  const recoveryCoverage = useMemo(() => {
-    const recoveryTasks = (sectionCounts.recovery || 0) + (sectionCounts.sleep || 0);
-    if (totalTasks <= 0) return 0;
-    return Math.round((recoveryTasks / totalTasks) * 100);
-  }, [sectionCounts, totalTasks]);
-
-  const visualMomentum = useMemo(() => {
-    if (totalTasks <= 0) return 0;
-    return Math.round(totalPoints / totalTasks);
-  }, [totalPoints, totalTasks]);
+  const durationWeeks = inferredMode === "weekly" ? totalUnits : Math.max(1, Math.ceil(totalUnits / 7));
+  const averageTasksPerUnit = totalTasks > 0 ? totalTasks / Math.max(1, totalUnits) : 0;
+  const trainingTasks = sectionCounts.training || 0;
+  const nutritionTasks = (sectionCounts.meal || 0) + (sectionCounts.hydration || 0);
+  const recoveryTasks = (sectionCounts.recovery || 0) + (sectionCounts.sleep || 0);
+  const trainingPerWeek = trainingTasks / Math.max(1, durationWeeks);
+  const recoveryShare = totalTasks > 0 ? (recoveryTasks / totalTasks) * 100 : 0;
+  const projectedFinalScore = useMemo(() => {
+    const maxImpact = Math.max(1, ...safeProgressData.map((item) => item.impact));
+    const last = safeProgressData[safeProgressData.length - 1]?.impact || 0;
+    return Math.round((last / maxImpact) * 100);
+  }, [safeProgressData]);
 
   const timelineList = inferredMode === "weekly" ? safeWeeks : safeDays;
 
@@ -324,90 +340,48 @@ export default function ProtocolDashboard({ protocol }: { protocol: Protocol }) 
 
         <div className="bg-dark-card border border-dark-border rounded-xl p-5 mb-6">
           <h3 className="font-heading text-xs uppercase tracking-[0.18em] text-gold-400 mb-4">
-            {locale === "ar" ? "خريطة الأقسام بالأيقونات" : "Section Map with Icons"}
+            {locale === "ar" ? "الأقسام الثابتة للبروتوكول" : "Fixed Protocol Sections"}
           </h3>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
             {SECTION_META.map((section) => {
               const Icon = section.icon;
-              const count = sectionCounts[section.key] || 0;
               return (
-                <div key={section.key} className="rounded-lg border border-dark-border bg-black/35 p-3">
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="w-7 h-7 rounded-full bg-gold-500/10 border border-gold-500/30 flex items-center justify-center text-gold-300">
-                      <Icon className="w-3.5 h-3.5" />
-                    </span>
-                    <span className="text-[11px] text-gold-300 font-bold">{count}</span>
-                  </div>
-                  <p className="text-xs text-gray-300">{locale === "ar" ? section.ar : section.en}</p>
+                <div key={section.key} className={`rounded-lg border px-3 py-2 ${section.color}`}>
+                  <p className="inline-flex items-center gap-1 text-xs font-semibold">
+                    <Icon className="w-3.5 h-3.5" />
+                    {locale === "ar" ? section.ar : section.en}
+                  </p>
                 </div>
               );
             })}
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mb-6">
-          {[
-            {
-              titleAr: "توقع الالتزام",
-              titleEn: "Adherence Forecast",
-              value: `${adherenceForecast}%`,
-              detailAr: "تقدير استمرارية التنفيذ بناءً على كثافة المهام.",
-              detailEn: "Estimated consistency based on task density.",
-            },
-            {
-              titleAr: "تغطية الاستشفاء",
-              titleEn: "Recovery Coverage",
-              value: `${recoveryCoverage}%`,
-              detailAr: "نسبة مهام التعافي والنوم من إجمالي الخطة.",
-              detailEn: "Recovery + sleep tasks ratio within the protocol.",
-            },
-            {
-              titleAr: "الزخم البصري",
-              titleEn: "Visual Momentum",
-              value: `${visualMomentum}`,
-              detailAr: "متوسط نقاط التأثير لكل مهمة.",
-              detailEn: "Average impact points per task.",
-            },
-          ].map((item) => (
-            <div
-              key={item.titleEn}
-              className={`rounded-xl border p-4 ${
-                proEnabled
-                  ? "border-gold-500/25 bg-gold-500/5"
-                  : "border-dark-border bg-black/35 opacity-80"
-              }`}
-            >
-              <div className="flex items-center justify-between mb-2">
-                <p className="text-[11px] uppercase tracking-[0.16em] text-gray-400">
-                  {locale === "ar" ? item.titleAr : item.titleEn}
-                </p>
-                <span className="inline-flex items-center gap-1 text-[10px] px-2 py-0.5 rounded-full border border-gold-500/30 bg-gold-500/10 text-gold-300">
-                  <Crown className="w-3 h-3" />
-                  PRO
-                </span>
-              </div>
-              <p className={`font-heading text-2xl ${proEnabled ? "text-gold-300" : "text-gray-500"}`}>
-                {proEnabled ? item.value : "--"}
-              </p>
-              <p className="text-xs text-gray-500 mt-1">
-                {proEnabled
-                  ? locale === "ar"
-                    ? item.detailAr
-                    : item.detailEn
-                  : locale === "ar"
-                  ? "فعّل PRO من صفحة الاشتراكات لعرض التحليلات المتقدمة."
-                  : "Enable PRO from Plans to unlock this advanced insight."}
-              </p>
-              {!proEnabled ? (
-                <Link
-                  href="/plans"
-                  className="inline-block mt-3 text-[11px] text-gold-300 hover:text-gold-200"
-                >
-                  {locale === "ar" ? "تفعيل PRO" : "Activate PRO"}
-                </Link>
-              ) : null}
-            </div>
-          ))}
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-3 mb-6">
+          <div className="rounded-xl border border-dark-border bg-black/35 p-4">
+            <p className="text-[11px] uppercase tracking-widest text-gray-500 mb-1">
+              {locale === "ar" ? "متوسط المهام لكل وحدة" : "Avg Tasks / Unit"}
+            </p>
+            <p className="font-heading text-2xl text-gold-300">{averageTasksPerUnit.toFixed(1)}</p>
+          </div>
+          <div className="rounded-xl border border-dark-border bg-black/35 p-4">
+            <p className="text-[11px] uppercase tracking-widest text-gray-500 mb-1">
+              {locale === "ar" ? "جلسات تدريب/أسبوع" : "Training / Week"}
+            </p>
+            <p className="font-heading text-2xl text-red-300">{trainingPerWeek.toFixed(1)}</p>
+          </div>
+          <div className="rounded-xl border border-dark-border bg-black/35 p-4">
+            <p className="text-[11px] uppercase tracking-widest text-gray-500 mb-1">
+              {locale === "ar" ? "تغطية التعافي" : "Recovery Coverage"}
+            </p>
+            <p className="font-heading text-2xl text-blue-300">{recoveryShare.toFixed(1)}%</p>
+          </div>
+          <div className="rounded-xl border border-dark-border bg-black/35 p-4">
+            <p className="text-[11px] uppercase tracking-widest text-gray-500 mb-1">
+              {locale === "ar" ? "دقة التوقع النهائي" : "Projected Final Score"}
+            </p>
+            <p className="font-heading text-2xl text-emerald-300">{projectedFinalScore}%</p>
+          </div>
         </div>
 
         <GoldDivider />
@@ -423,11 +397,11 @@ export default function ProtocolDashboard({ protocol }: { protocol: Protocol }) 
           </h2>
           <div className="flex flex-col md:flex-row items-center gap-6 md:gap-10">
             <div className="relative flex-shrink-0">
-              <CircularProgress percentage={100} />
+              <CircularProgress percentage={projectedFinalScore} />
               <div className="absolute inset-0 flex flex-col items-center justify-center">
-                <span className="text-lg font-bold text-gold-400">{totalUnits}</span>
+                <span className="text-lg font-bold text-gold-400">{projectedFinalScore}%</span>
                 <span className="text-[10px] text-gray-500 uppercase tracking-wider">
-                  {inferredMode === "weekly" ? t(locale, "weeksLabel") : t(locale, "daysLabel")}
+                  {locale === "ar" ? "توقع نهائي" : "Final projection"}
                 </span>
               </div>
             </div>
@@ -448,8 +422,8 @@ export default function ProtocolDashboard({ protocol }: { protocol: Protocol }) 
                   <Star className="w-4 h-4 text-gold-400" />
                 </div>
                 <div>
-                  <p className="text-xs text-gray-500">{t(locale, "totalPossiblePoints")}</p>
-                  <p className="text-lg font-bold text-gray-100">{totalPoints}</p>
+                  <p className="text-xs text-gray-500">{locale === "ar" ? "مهام التدريب" : "Training tasks"}</p>
+                  <p className="text-lg font-bold text-gray-100">{trainingTasks}</p>
                 </div>
               </div>
 
@@ -459,9 +433,9 @@ export default function ProtocolDashboard({ protocol }: { protocol: Protocol }) 
                 </div>
                 <div>
                   <p className="text-xs text-gray-500">
-                    {inferredMode === "weekly" ? t(locale, "weeksLabel") : t(locale, "daysLabel")}
+                    {locale === "ar" ? "مهام التغذية والترطيب" : "Nutrition + hydration"}
                   </p>
-                  <p className="text-lg font-bold text-gray-100">{totalUnits}</p>
+                  <p className="text-lg font-bold text-gray-100">{nutritionTasks}</p>
                 </div>
               </div>
             </div>

@@ -1066,19 +1066,38 @@ export default function Home() {
                     <p className="text-sm text-gray-200">
                       {locale === "ar" ? plannerQuestion.questionAr : plannerQuestion.question}
                     </p>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                    <p className="text-xs text-gray-500">
+                      {locale === "ar" ? "اختر إجابة واحدة:" : "Choose one answer:"}
+                    </p>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                       {(plannerQuestion.options || []).map((option) => (
                         <button
                           type="button"
                           key={option.value}
                           onClick={() => setPlannerAnswerValue(option.value)}
-                          className={`text-start px-3 py-2 rounded-lg border text-sm ${
+                          aria-pressed={plannerAnswerValue === option.value}
+                          className={`text-start px-3 py-3 rounded-xl border text-sm transition-all ${
                             plannerAnswerValue === option.value
-                              ? "border-gold-500/60 bg-gold-500/10 text-gold-300"
-                              : "border-dark-border text-gray-300"
+                              ? "border-gold-500/70 bg-gold-500/10 text-gold-200 shadow-[0_0_0_1px_rgba(212,175,55,0.25)]"
+                              : "border-dark-border text-gray-300 hover:border-gold-500/35 hover:bg-black/35"
                           }`}
                         >
-                          {locale === "ar" ? option.labelAr : option.label}
+                          <span className="flex items-center gap-2">
+                            <span
+                              className={`w-4 h-4 rounded-full border flex items-center justify-center ${
+                                plannerAnswerValue === option.value
+                                  ? "border-gold-500 bg-gold-500 text-black"
+                                  : "border-gray-600"
+                              }`}
+                            >
+                              {plannerAnswerValue === option.value ? (
+                                <CheckCircle className="w-3 h-3" />
+                              ) : null}
+                            </span>
+                            <span className="font-medium">
+                              {locale === "ar" ? option.labelAr : option.label}
+                            </span>
+                          </span>
                         </button>
                       ))}
                     </div>

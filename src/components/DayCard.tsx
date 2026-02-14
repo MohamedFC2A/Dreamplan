@@ -9,8 +9,6 @@ import Popover from "@/components/Popover";
 import ExercisePopover from "@/components/ExercisePopover";
 import { Sunrise, UtensilsCrossed, Pill, Dumbbell, Heart, Droplets, Moon, Target, FlaskConical, Lightbulb, Trophy } from "lucide-react";
 
-const pointsMap: Record<string, number> = { high: 15, medium: 10, low: 5 };
-
 const categoryConfig: Record<string, { color: string; icon: React.ReactNode; labelEn: string; labelAr: string }> = {
   wake: { color: "text-purple-400 bg-purple-500/10 border-purple-500/20", icon: <Sunrise className="w-3.5 h-3.5" />, labelEn: "Wake", labelAr: "استيقاظ" },
   meal: { color: "text-orange-400 bg-orange-500/10 border-orange-500/20", icon: <UtensilsCrossed className="w-3.5 h-3.5" />, labelEn: "Meal", labelAr: "وجبة" },
@@ -27,7 +25,6 @@ function ImpactBar({ level, locale }: { level: "low" | "medium" | "high"; locale
   const labels = locale === "ar"
     ? { low: "منخفض", medium: "متوسط", high: "عالي" }
     : { low: "Low", medium: "Med", high: "High" };
-  const pts = pointsMap[level];
   return (
     <div className="flex items-center gap-2">
       <div className="w-16 h-1.5 rounded-full bg-dark-border overflow-hidden">
@@ -35,9 +32,6 @@ function ImpactBar({ level, locale }: { level: "low" | "medium" | "high"; locale
       </div>
       <span className={`text-[9px] uppercase font-bold ${level === "high" ? "text-green-400" : level === "medium" ? "text-yellow-400" : "text-gray-500"}`}>
         {labels[level]}
-      </span>
-      <span className="text-[9px] font-bold text-gold-400">
-        +{pts} {locale === "ar" ? "نقطة" : "pts"}
       </span>
     </div>
   );
@@ -74,11 +68,6 @@ export default function DayCard({
   const completedCount = day.tasks.filter((task) => completedTasks.has(task.id)).length;
   const progressPercent = totalTasks > 0 ? (completedCount / totalTasks) * 100 : 0;
   const isAllComplete = totalTasks > 0 && completedCount === totalTasks;
-
-  const totalPoints = day.tasks.reduce((sum, task) => sum + pointsMap[task.visualImpact], 0);
-  const earnedPoints = day.tasks
-    .filter((task) => completedTasks.has(task.id))
-    .reduce((sum, task) => sum + pointsMap[task.visualImpact], 0);
 
   const dayTitle = locale === "ar" ? day.titleAr : day.title;
   const dayTheme = locale === "ar" ? day.themeAr : day.theme;
@@ -128,12 +117,6 @@ export default function DayCard({
             </span>
             <span className="text-xs text-gray-500">
               {completedCount}/{totalTasks} {t(locale, "tasks")}
-            </span>
-          </div>
-          <div className="mt-1 flex items-center gap-1">
-            <Trophy className="w-3 h-3 text-gold-400" />
-            <span className="text-[10px] font-bold text-gold-400">
-              {earnedPoints}/{totalPoints} {locale === "ar" ? "نقطة" : "pts"}
             </span>
           </div>
         </div>

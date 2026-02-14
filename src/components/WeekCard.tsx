@@ -20,14 +20,49 @@ import {
   Moon,
 } from "lucide-react";
 
-const CATEGORY_LABELS: Record<string, { en: string; ar: string; icon: ReactNode }> = {
-  wake: { en: "Wake", ar: "استيقاظ", icon: <Sunrise className="w-3 h-3" /> },
-  meal: { en: "Meal", ar: "وجبة", icon: <UtensilsCrossed className="w-3 h-3" /> },
-  supplement: { en: "Supplement", ar: "مكملات", icon: <Pill className="w-3 h-3" /> },
-  training: { en: "Training", ar: "تدريب", icon: <Dumbbell className="w-3 h-3" /> },
-  recovery: { en: "Recovery", ar: "تعافي", icon: <Heart className="w-3 h-3" /> },
-  hydration: { en: "Hydration", ar: "ترطيب", icon: <Droplets className="w-3 h-3" /> },
-  sleep: { en: "Sleep", ar: "نوم", icon: <Moon className="w-3 h-3" /> },
+const CATEGORY_LABELS: Record<string, { en: string; ar: string; icon: ReactNode; color: string }> = {
+  wake: {
+    en: "Wake",
+    ar: "استيقاظ",
+    icon: <Sunrise className="w-3 h-3" />,
+    color: "text-purple-300 border-purple-500/30 bg-purple-500/10",
+  },
+  meal: {
+    en: "Meal",
+    ar: "وجبة",
+    icon: <UtensilsCrossed className="w-3 h-3" />,
+    color: "text-orange-300 border-orange-500/30 bg-orange-500/10",
+  },
+  supplement: {
+    en: "Supplement",
+    ar: "مكملات",
+    icon: <Pill className="w-3 h-3" />,
+    color: "text-pink-300 border-pink-500/30 bg-pink-500/10",
+  },
+  training: {
+    en: "Training",
+    ar: "تدريب",
+    icon: <Dumbbell className="w-3 h-3" />,
+    color: "text-red-300 border-red-500/30 bg-red-500/10",
+  },
+  recovery: {
+    en: "Recovery",
+    ar: "تعافي",
+    icon: <Heart className="w-3 h-3" />,
+    color: "text-blue-300 border-blue-500/30 bg-blue-500/10",
+  },
+  hydration: {
+    en: "Hydration",
+    ar: "ترطيب",
+    icon: <Droplets className="w-3 h-3" />,
+    color: "text-cyan-300 border-cyan-500/30 bg-cyan-500/10",
+  },
+  sleep: {
+    en: "Sleep",
+    ar: "نوم",
+    icon: <Moon className="w-3 h-3" />,
+    color: "text-indigo-300 border-indigo-500/30 bg-indigo-500/10",
+  },
 };
 
 export default function WeekCard({ week, weekIndex }: { week: WeekPlan; weekIndex: number }) {
@@ -135,7 +170,7 @@ export default function WeekCard({ week, weekIndex }: { week: WeekPlan; weekInde
 
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center gap-2 flex-wrap mb-1">
-                            <span className="text-[10px] px-2 py-0.5 rounded-full border border-dark-border text-gray-400">
+                            <span className={`text-[10px] px-2 py-0.5 rounded-full border ${category.color}`}>
                               <span className="inline-flex items-center gap-1">
                                 {category.icon}
                                 {locale === "ar" ? category.ar : category.en}

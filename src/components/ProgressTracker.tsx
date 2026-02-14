@@ -1,24 +1,74 @@
 "use client";
 
 import { ProgressPoint } from "@/lib/protocols";
-import { motion } from "framer-motion";
 import { useLanguage } from "@/lib/LanguageContext";
 import { t } from "@/lib/i18n";
-import { Rocket, Sparkles, Target, Trophy } from "lucide-react";
+
+interface RegressionStats {
+  slope: number;
+  intercept: number;
+  r2: number;
+  sigma: number;
+  mae: number;
+}
 
 function clamp(value: number, min: number, max: number): number {
   return Math.max(min, Math.min(max, value));
 }
 
-function toVisualScore(impact: number, maxImpact: number): number {
-  if (maxImpact <= 0) return 0;
-  return Math.round((impact / maxImpact) * 100);
+function getImpactScale(maxImpact: number): number {
+  return maxImpact <= 35 ? 100 / 30 : 1;
 }
 
-function pickPoints(data: ProgressPoint[], maxItems: number): ProgressPoint[] {
-  if (data.length <= maxItems) return data;
-  const stride = Math.ceil(data.length / maxItems);
-  return data.filter((_, index) => index % stride === 0 || index === data.length - 1);
+function toScore(value: number, scale: number): number {
+  return clamp(value * scale, 0, 100);
+}
+
+function computeRegression(values: number[]): RegressionStats {
+  const n = values.length;
+  if (n === 0) return { slope: 0, intercept: 0, r2: 0, sigma: 0, mae: 0 };
+  if (n === 1) return { slope: 0, intercept: values[0], r2: 1, sigma: 0, mae: 0 };
+
+  let sumX = 0;
+  let sumY = 0;
+  let sumXX = 0;
+  let sumXY = 0;
+  for (let i = 0; i < n; i++) {
+    const x = i + 1;
+    const y = values[i];
+    sumX += x;
+    sumY += y;
+    sumXX += x * x;
+    sumXY += x * y;
+  }
+
+  const denominator = n * sumXX - sumX * sumX;
+  const slope = denominator === 0 ? 0 : (n * sumXY - sumX * sumY) / denominator;
+  const intercept = sumY / n - slope * (sumX / n);
+
+  const meanY = sumY / n;
+  let ssRes = 0;
+  let ssTot = 0;
+  let absError = 0;
+  for (let i = 0; i < n; i++) {
+    const x = i + 1;
+    const y = values[i];
+    const yHat = intercept + slope * x;
+    const residual = y - yHat;
+    ssRes += residual * residual;
+    ssTot += (y - meanY) * (y - meanY);
+    absError += Math.abs(residual);
+  }
+
+  const r2 = ssTot > 0 ? clamp(1 - ssRes / ssTot, 0, 1) : 1;
+  const sigma = n > 2 ? Math.sqrt(ssRes / (n - 2)) : 0;
+  const mae = absError / n;
+  return { slope, intercept, r2, sigma, mae };
+}
+
+function findMilestoneIndex(data: ProgressPoint[], ratio: number): number {
+  const target = Math.round((data.length - 1) * ratio);
+  return clamp(target, 0, Math.max(0, data.length - 1));
 }
 
 export default function ProgressTracker({
@@ -35,196 +85,129 @@ export default function ProgressTracker({
 
   if (sorted.length === 0) return null;
 
-  const maxImpact = Math.max(30, ...sorted.map((point) => point.impact));
+  const values = sorted.map((item) => item.impact);
+  const maxImpact = Math.max(1, ...values);
+  const scale = getImpactScale(maxImpact);
   const baseline = sorted[0];
   const current = sorted[sorted.length - 1];
-  const peak = sorted.reduce((best, item) => (item.impact > best.impact ? item : best), sorted[0]);
+  const baselineScore = toScore(baseline.impact, scale);
+  const currentScore = toScore(current.impact, scale);
+  const deltaScore = currentScore - baselineScore;
 
-  const baselineScore = toVisualScore(baseline.impact, maxImpact);
-  const currentScore = toVisualScore(current.impact, maxImpact);
-  const peakScore = toVisualScore(peak.impact, maxImpact);
-  const targetScore = clamp(
-    currentScore >= 100 ? 100 : currentScore + Math.max(10, Math.round((100 - currentScore) * 0.35)),
-    currentScore,
-    100
-  );
+  const regression = computeRegression(values);
+  const perUnitGain = regression.slope * scale;
+  const perWeekGain =
+    labelPrefix === "week"
+      ? perUnitGain
+      : perUnitGain * 7;
 
-  const momentum = currentScore - baselineScore;
-  const confidence = clamp(Math.round(62 + momentum * 0.45 + sorted.length * 0.3), 55, 99);
-  const recoveryShield = clamp(Math.round(58 + currentScore * 0.25), 55, 95);
-  const samplePoints = pickPoints(sorted, 14);
+  const nextX = sorted.length + 1;
+  const nextPredRaw = regression.intercept + regression.slope * nextX;
+  const nextPredScore = clamp(toScore(nextPredRaw, scale), 0, 100);
+  const ciBand = toScore(1.28 * regression.sigma, scale);
+  const nextLow = clamp(nextPredScore - ciBand, 0, 100);
+  const nextHigh = clamp(nextPredScore + ciBand, 0, 100);
 
-  const nextMilestoneScore = currentScore < 35 ? 35 : currentScore < 70 ? 70 : currentScore < 90 ? 90 : 100;
-  const milestonePoint =
-    sorted.find((item) => toVisualScore(item.impact, maxImpact) >= nextMilestoneScore) || current;
-
-  const phaseLabel =
-    currentScore < 35
-      ? locale === "ar"
-        ? "مرحلة التأسيس"
-        : "Foundation Phase"
-      : currentScore < 70
-      ? locale === "ar"
-        ? "مرحلة التسارع"
-        : "Acceleration Phase"
-      : locale === "ar"
-      ? "مرحلة الإتقان"
-      : "Mastery Phase";
-
-  const heroText =
-    momentum >= 45
-      ? locale === "ar"
-        ? "قفزة قوية في الشكل المرئي. استمر بنفس النسق وسترى فرقًا لافتًا جدًا."
-        : "Major visual jump detected. Maintain this pace and your look will shift dramatically."
-      : momentum >= 25
-      ? locale === "ar"
-        ? "تحسن واضح ومستقر. الخطة الآن في منطقة النتائج الحقيقية."
-        : "Stable and visible improvement. Your plan is now in the real-results zone."
-      : locale === "ar"
-      ? "بداية ممتازة. الالتزام في هذه المرحلة هو مفتاح التحول السريع لاحقًا."
-      : "Strong start. Consistency at this stage unlocks faster transformation next.";
+  const q1 = sorted[findMilestoneIndex(sorted, 0.25)];
+  const q2 = sorted[findMilestoneIndex(sorted, 0.5)];
+  const q3 = sorted[findMilestoneIndex(sorted, 0.75)];
+  const milestones = [q1, q2, q3, current];
 
   return (
     <div className="bg-dark-card border border-dark-border rounded-xl p-6 mb-8">
-      <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
-        <h2 className="font-heading text-lg font-bold text-gray-200 tracking-wide uppercase">
-          {t(locale, "projectedImpact")}
-        </h2>
-        <span className="text-[10px] px-2.5 py-1 rounded-full border border-gold-500/30 bg-gold-500/10 text-gold-300 uppercase tracking-wider inline-flex items-center gap-1">
-          <Sparkles className="w-3 h-3" />
-          {phaseLabel}
-        </span>
-      </div>
+      <h2 className="font-heading text-lg font-bold text-gray-200 mb-4 tracking-wide uppercase">
+        {t(locale, "projectedImpact")}
+      </h2>
 
-      <p className="text-sm text-gray-300 mb-5">{heroText}</p>
-
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mb-5">
-        {[
-          {
-            key: "baseline",
-            label: locale === "ar" ? "قبل التنفيذ" : "Before",
-            sub: `${t(locale, labelPrefix === "week" ? "week" : "day")} ${baseline.day}`,
-            value: baselineScore,
-            icon: Target,
-            color: "text-gray-200 border-dark-border bg-black/35",
-          },
-          {
-            key: "current",
-            label: locale === "ar" ? "المسار الحالي" : "Current Trajectory",
-            sub: `${t(locale, labelPrefix === "week" ? "week" : "day")} ${current.day}`,
-            value: currentScore,
-            icon: Rocket,
-            color: "text-gold-300 border-gold-500/30 bg-gold-500/10",
-          },
-          {
-            key: "target",
-            label: locale === "ar" ? "الهدف المتوقع" : "Projected Target",
-            sub:
-              locale === "ar"
-                ? `قابل للتحقيق خلال ${sorted.length} ${labelPrefix === "week" ? "أسبوع" : "يوم"}`
-                : `Reachable across ${sorted.length} ${labelPrefix === "week" ? "weeks" : "days"}`,
-            value: targetScore,
-            icon: Trophy,
-            color: "text-emerald-300 border-emerald-500/30 bg-emerald-500/10",
-          },
-        ].map((card, index) => {
-          const Icon = card.icon;
-          return (
-            <motion.div
-              key={card.key}
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: index * 0.08, duration: 0.35 }}
-              className={`rounded-xl border p-4 ${card.color}`}
-            >
-              <div className="flex items-center justify-between mb-2">
-                <p className="text-[11px] uppercase tracking-widest">{card.label}</p>
-                <Icon className="w-4 h-4" />
-              </div>
-              <p className="font-heading text-3xl leading-none">{card.value}%</p>
-              <p className="text-xs text-gray-400 mt-2">{card.sub}</p>
-            </motion.div>
-          );
-        })}
-      </div>
-
-      <div className="rounded-xl border border-dark-border bg-black/35 p-4 mb-5">
-        <div className="flex items-center justify-between text-[11px] text-gray-500 uppercase tracking-wider mb-2">
-          <span>{locale === "ar" ? "مقارنة التقدم" : "Trajectory Comparison"}</span>
-          <span>{currentScore}%</span>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mb-4">
+        <div className="rounded-xl border border-dark-border bg-black/35 p-4">
+          <p className="text-[11px] uppercase tracking-widest text-gray-500 mb-1">
+            {locale === "ar" ? "خط الأساس" : "Baseline Score"}
+          </p>
+          <p className="font-heading text-3xl text-gray-100">{baselineScore.toFixed(1)}%</p>
+          <p className="text-xs text-gray-500 mt-1">
+            {t(locale, labelPrefix === "week" ? "week" : "day")} {baseline.day}
+          </p>
         </div>
-        <div className="relative h-3 rounded-full bg-[#121212] overflow-hidden border border-dark-border">
-          <motion.div
-            className="absolute inset-y-0 left-0 rounded-full"
-            style={{ background: "linear-gradient(90deg, #6b7280, #d4af37 55%, #10b981)" }}
-            initial={{ width: "0%" }}
-            animate={{ width: `${currentScore}%` }}
-            transition={{ duration: 0.9, ease: "easeOut" }}
-          />
-          <div
-            className="absolute top-1/2 -translate-y-1/2 w-3 h-3 rounded-full border-2 border-gray-300 bg-black"
-            style={{ left: `calc(${baselineScore}% - 6px)` }}
-          />
-          <div
-            className="absolute top-1/2 -translate-y-1/2 w-3 h-3 rounded-full border-2 border-gold-400 bg-black"
-            style={{ left: `calc(${currentScore}% - 6px)` }}
-          />
-          <div
-            className="absolute top-1/2 -translate-y-1/2 w-3 h-3 rounded-full border-2 border-emerald-400 bg-black"
-            style={{ left: `calc(${targetScore}% - 6px)` }}
-          />
+
+        <div className="rounded-xl border border-gold-500/30 bg-gold-500/10 p-4">
+          <p className="text-[11px] uppercase tracking-widest text-gold-300 mb-1">
+            {locale === "ar" ? "المستوى الحالي المتوقع" : "Current Projected Score"}
+          </p>
+          <p className="font-heading text-3xl text-gold-200">{currentScore.toFixed(1)}%</p>
+          <p className="text-xs text-gray-400 mt-1">
+            {t(locale, labelPrefix === "week" ? "week" : "day")} {current.day}
+          </p>
         </div>
-        <div className="mt-2 flex items-center justify-between text-[11px] text-gray-400">
-          <span>{locale === "ar" ? "البداية" : "Start"}</span>
-          <span>{locale === "ar" ? "الحالي" : "Current"}</span>
-          <span>{locale === "ar" ? "المستهدف" : "Target"}</span>
+
+        <div className="rounded-xl border border-emerald-500/30 bg-emerald-500/10 p-4">
+          <p className="text-[11px] uppercase tracking-widest text-emerald-300 mb-1">
+            {locale === "ar" ? "صافي التحسن" : "Net Improvement"}
+          </p>
+          <p className="font-heading text-3xl text-emerald-200">
+            {deltaScore >= 0 ? "+" : ""}
+            {deltaScore.toFixed(1)}%
+          </p>
+          <p className="text-xs text-gray-400 mt-1">
+            {locale === "ar" ? "الحالي - خط الأساس" : "Current - Baseline"}
+          </p>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mb-5">
-        <div className="rounded-xl border border-dark-border bg-black/35 p-4">
-          <p className="text-[11px] uppercase tracking-widest text-gray-500 mb-1">
-            {locale === "ar" ? "زخم التحول" : "Transformation Momentum"}
-          </p>
-          <p className="font-heading text-2xl text-gold-300">{momentum >= 0 ? `+${momentum}` : momentum}%</p>
-        </div>
-        <div className="rounded-xl border border-dark-border bg-black/35 p-4">
-          <p className="text-[11px] uppercase tracking-widest text-gray-500 mb-1">
-            {locale === "ar" ? "ثقة النتيجة" : "Outcome Confidence"}
-          </p>
-          <p className="font-heading text-2xl text-emerald-300">{confidence}%</p>
-        </div>
-        <div className="rounded-xl border border-dark-border bg-black/35 p-4">
-          <p className="text-[11px] uppercase tracking-widest text-gray-500 mb-1">
-            {locale === "ar" ? "حماية الاستمرارية" : "Consistency Shield"}
-          </p>
-          <p className="font-heading text-2xl text-cyan-300">{recoveryShield}%</p>
+      <div className="rounded-xl border border-dark-border bg-black/35 p-4 mb-4">
+        <p className="text-[11px] uppercase tracking-widest text-gray-500 mb-3">
+          {locale === "ar" ? "نموذج التوقع (انحدار خطي)" : "Projection Model (Linear Regression)"}
+        </p>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 text-sm">
+          <div className="rounded-lg border border-dark-border bg-black/50 px-3 py-2">
+            <p className="text-[10px] text-gray-500 uppercase tracking-wider">R²</p>
+            <p className="text-gray-100 font-heading">{(regression.r2 * 100).toFixed(1)}%</p>
+          </div>
+          <div className="rounded-lg border border-dark-border bg-black/50 px-3 py-2">
+            <p className="text-[10px] text-gray-500 uppercase tracking-wider">
+              {locale === "ar" ? "معدل التحسن/أسبوع" : "Gain / Week"}
+            </p>
+            <p className="text-gray-100 font-heading">{perWeekGain.toFixed(2)}%</p>
+          </div>
+          <div className="rounded-lg border border-dark-border bg-black/50 px-3 py-2">
+            <p className="text-[10px] text-gray-500 uppercase tracking-wider">MAE</p>
+            <p className="text-gray-100 font-heading">{toScore(regression.mae, scale).toFixed(2)}%</p>
+          </div>
+          <div className="rounded-lg border border-dark-border bg-black/50 px-3 py-2">
+            <p className="text-[10px] text-gray-500 uppercase tracking-wider">
+              {locale === "ar" ? "النقطة التالية (80% CI)" : "Next Unit (80% CI)"}
+            </p>
+            <p className="text-gray-100 font-heading">{nextPredScore.toFixed(1)}%</p>
+            <p className="text-[10px] text-gray-500">
+              {nextLow.toFixed(1)}% - {nextHigh.toFixed(1)}%
+            </p>
+          </div>
         </div>
       </div>
 
       <div className="rounded-xl border border-dark-border bg-black/30 p-4">
-        <div className="flex items-center justify-between gap-2 mb-3">
-          <p className="text-[11px] uppercase tracking-widest text-gray-500">
-            {locale === "ar" ? "لقطات التقدم" : "Progress Snapshots"}
-          </p>
-          <p className="text-xs text-gold-300">
-            {locale === "ar"
-              ? `أقرب محطة: ${t(locale, labelPrefix === "week" ? "week" : "day")} ${milestonePoint.day}`
-              : `Next milestone: ${t(locale, labelPrefix === "week" ? "week" : "day")} ${milestonePoint.day}`}
-          </p>
-        </div>
-        <div className="grid grid-cols-7 md:grid-cols-14 gap-1.5 items-end h-20">
-          {samplePoints.map((point, index) => {
-            const bar = toVisualScore(point.impact, maxImpact);
+        <p className="text-[11px] uppercase tracking-widest text-gray-500 mb-3">
+          {locale === "ar" ? "محطات التقدم" : "Progress Milestones"}
+        </p>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+          {milestones.map((point, index) => {
+            const score = toScore(point.impact, scale);
             return (
-              <motion.div
-                key={`${point.day}-${index}`}
-                initial={{ height: 4, opacity: 0 }}
-                animate={{ height: `${Math.max(8, bar)}%`, opacity: 1 }}
-                transition={{ delay: index * 0.03, duration: 0.35 }}
-                className={`rounded-sm ${index === samplePoints.length - 1 ? "bg-gold-400" : "bg-gray-600/80"}`}
-                title={`${t(locale, labelPrefix === "week" ? "week" : "day")} ${point.day}: ${bar}%`}
-              />
+              <div key={`${point.day}-${index}`} className="rounded-lg border border-dark-border bg-black/40 px-3 py-2">
+                <p className="text-[10px] text-gray-500 uppercase tracking-wider">
+                  {index < 3
+                    ? locale === "ar"
+                      ? `ربع ${index + 1}`
+                      : `Q${index + 1}`
+                    : locale === "ar"
+                    ? "الحالي"
+                    : "Current"}
+                </p>
+                <p className="text-sm text-gray-100 font-heading">{score.toFixed(1)}%</p>
+                <p className="text-[10px] text-gray-500">
+                  {t(locale, labelPrefix === "week" ? "week" : "day")} {point.day}
+                </p>
+              </div>
             );
           })}
         </div>

@@ -184,6 +184,31 @@ function buildQuestionPack(query: string, locale: Locale, archetype: GoalArchety
           { value: "visual_focus", label: "Visual transformation focus", labelAr: "تركيز بصري" },
         ];
 
+  const motivationOptions =
+    archetype === "fat_loss"
+      ? [
+          { value: "waist_drop", label: "Waist and mirror change", labelAr: "نزول محيط الخصر والشكل" },
+          { value: "scale_trend", label: "Weekly scale trend", labelAr: "اتجاه الوزن أسبوعيًا" },
+          { value: "energy_stability", label: "Stable energy while cutting", labelAr: "طاقة ثابتة أثناء التنشيف" },
+        ]
+      : archetype === "muscle_gain"
+      ? [
+          { value: "strength_jump", label: "Strength jump in main lifts", labelAr: "قفزة قوة في التمارين الأساسية" },
+          { value: "size_gain", label: "Visible size and fullness", labelAr: "زيادة حجم وامتلاء واضح" },
+          { value: "shape_quality", label: "Better shape and symmetry", labelAr: "شكل وتناسق أفضل" },
+        ]
+      : archetype === "quick_visual"
+      ? [
+          { value: "mirror_pop", label: "Fast mirror pop", labelAr: "فرق سريع في المرآة" },
+          { value: "vein_definition", label: "Sharper vascular definition", labelAr: "وضوح أعلى للعروق/التحديد" },
+          { value: "camera_ready", label: "Photo-ready look", labelAr: "شكل جاهز للتصوير" },
+        ]
+      : [
+          { value: "mirror", label: "Visible mirror change", labelAr: "تغير واضح في الشكل" },
+          { value: "numbers", label: "Clear measurable numbers", labelAr: "أرقام أداء واضحة" },
+          { value: "consistency", label: "Smooth consistency", labelAr: "استمرارية سهلة" },
+        ];
+
   return [
     {
       id: "q_commitment",
@@ -215,11 +240,7 @@ function buildQuestionPack(query: string, locale: Locale, archetype: GoalArchety
       questionAr: q3,
       inputType: "single_choice",
       required: true,
-      options: [
-        { value: "mirror", label: "Visible mirror change", labelAr: "تغير واضح في الشكل" },
-        { value: "numbers", label: "Clear measurable numbers", labelAr: "أرقام أداء واضحة" },
-        { value: "consistency", label: "Smooth consistency", labelAr: "استمرارية سهلة" },
-      ],
+      options: motivationOptions,
       reasoningHint: locale === "ar" ? "نستخدمه للحفاظ على حماسك أسبوعًا بعد أسبوع." : "Used to keep motivation high week after week.",
       reasoningHintAr: "نستخدمه للحفاظ على حماسك أسبوعًا بعد أسبوع.",
     },
