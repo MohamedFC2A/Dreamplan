@@ -76,12 +76,12 @@ export default function Navbar() {
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 glass-nav">
-      <div className="max-w-6xl mx-auto px-4 md:px-8 flex items-center justify-between h-16 gap-3">
-        <Link href="/" className="font-heading text-base md:text-lg font-bold text-white tracking-widest whitespace-nowrap">
-          <span className="block">
+      <div className="max-w-6xl mx-auto px-4 md:px-8 flex items-center justify-between h-[70px] gap-3">
+        <Link href="/" className="flex flex-col justify-center whitespace-nowrap leading-none">
+          <span className="font-heading text-[15px] sm:text-[17px] md:text-[18px] font-bold text-white tracking-[0.17em]">
             DREAM<span className="text-gold-500">PLAN</span>
           </span>
-          <span className="block text-[8px] md:text-[9px] text-gray-500 tracking-[0.18em] mt-0.5">
+          <span className="text-[8px] sm:text-[9px] md:text-[10px] text-gold-300/85 tracking-[0.14em] mt-1 uppercase">
             BUILT BY MATANY LABS
           </span>
         </Link>

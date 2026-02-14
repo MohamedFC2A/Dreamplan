@@ -251,28 +251,22 @@ select:focus {
   box-shadow: var(--glass-shadow);
 }
 
-@property --border-angle {
-  syntax: "<angle>";
-  initial-value: 0deg;
-  inherits: false;
+@keyframes border-segment-travel {
+  0% {
+    background-position: -130% 50%;
+  }
+  100% {
+    background-position: 230% 50%;
+  }
 }
 
-@property --worm-size {
-  syntax: "<percentage>";
-  initial-value: 8%;
-  inherits: false;
-}
-
-@keyframes worm-travel {
-  0% { --border-angle: 0deg; }
-  100% { --border-angle: 360deg; }
-}
-
-@keyframes worm-breathe {
-  0%, 100% { --worm-size: 6%; }
-  25% { --worm-size: 12%; }
-  50% { --worm-size: 4%; }
-  75% { --worm-size: 10%; }
+@keyframes border-segment-glow {
+  0%, 100% {
+    opacity: 0.4;
+  }
+  50% {
+    opacity: 0.78;
+  }
 }
 
 .animated-border-wrapper {
@@ -280,50 +274,57 @@ select:focus {
   border-radius: 1rem;
   padding: 2px;
   overflow: hidden;
-  animation: worm-travel 6s linear infinite, worm-breathe 4s ease-in-out infinite;
+  background: linear-gradient(165deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.02));
+  border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .animated-border-wrapper::before {
   content: '';
   position: absolute;
-  top: -50%;
-  left: -50%;
-  width: 200%;
-  height: 200%;
-  background: conic-gradient(
-    from var(--border-angle),
+  inset: 0;
+  border-radius: inherit;
+  padding: 2px;
+  background: linear-gradient(
+    115deg,
     transparent 0%,
-    transparent calc(50% - var(--worm-size)),
-    rgba(212, 175, 55, 0.15) calc(50% - var(--worm-size) * 0.7),
-    rgba(212, 175, 55, 0.5) calc(50% - var(--worm-size) * 0.3),
-    #D4AF37 50%,
-    rgba(212, 175, 55, 0.5) calc(50% + var(--worm-size) * 0.3),
-    rgba(212, 175, 55, 0.15) calc(50% + var(--worm-size) * 0.7),
-    transparent calc(50% + var(--worm-size)),
+    transparent 38%,
+    rgba(212, 175, 55, 0.28) 46%,
+    rgba(212, 175, 55, 0.95) 50%,
+    rgba(212, 175, 55, 0.28) 54%,
+    transparent 62%,
     transparent 100%
   );
-  animation: worm-travel 6s linear infinite;
+  background-size: 260% 100%;
+  background-position: -130% 50%;
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  animation: border-segment-travel 3.9s linear infinite;
 }
 
 .animated-border-wrapper::after {
   content: '';
   position: absolute;
-  top: -50%;
-  left: -50%;
-  width: 200%;
-  height: 200%;
-  background: conic-gradient(
-    from var(--border-angle),
+  inset: -1px;
+  border-radius: inherit;
+  padding: 2px;
+  background: linear-gradient(
+    115deg,
     transparent 0%,
-    transparent 45%,
-    rgba(212, 175, 55, 0.08) 48%,
-    rgba(212, 175, 55, 0.15) 50%,
-    rgba(212, 175, 55, 0.08) 52%,
-    transparent 55%,
+    transparent 42%,
+    rgba(212, 175, 55, 0.2) 49%,
+    rgba(212, 175, 55, 0.6) 50%,
+    rgba(212, 175, 55, 0.2) 51%,
+    transparent 58%,
     transparent 100%
   );
-  animation: worm-travel 6s linear infinite;
-  filter: blur(15px);
+  background-size: 260% 100%;
+  background-position: -130% 50%;
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  filter: blur(8px);
+  animation: border-segment-travel 3.9s linear infinite, border-segment-glow 2.2s ease-in-out infinite;
   z-index: 0;
 }
 

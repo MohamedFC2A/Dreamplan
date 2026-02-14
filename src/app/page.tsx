@@ -893,10 +893,25 @@ export default function Home() {
     setSelectedDuration(clamped);
   };
 
-  const handleBackToGoal = () => {
-    setFlowState("goal_input");
-    setError("");
-  };
+  const durationQuickChoices = useMemo(() => {
+    if (!durationSuggestion) return [];
+    const candidates =
+      durationSuggestion.quickOptions && durationSuggestion.quickOptions.length > 0
+        ? durationSuggestion.quickOptions
+        : [
+            Math.max(durationSuggestion.minDays, Math.round(durationSuggestion.suggestedDays * 0.75)),
+            durationSuggestion.suggestedDays,
+            Math.min(durationSuggestion.maxDays, Math.round(durationSuggestion.suggestedDays * 1.25)),
+          ];
+
+    return Array.from(
+      new Set(
+        candidates
+          .map((days) => Math.round(days))
+          .filter((days) => days >= durationSuggestion.minDays && days <= durationSuggestion.maxDays)
+      )
+    );
+  }, [durationSuggestion]);
 
   const handleTogglePlanMode = () => {
     if (!planModeEnabled && !hasProDemo) {
@@ -1130,7 +1145,7 @@ export default function Home() {
                 ) : null}
               </div>
             ) : flowState === "duration_confirm" && durationSuggestion ? (
-              <div className="max-w-2xl mx-auto">
+              <div className="max-w-2xl mx-auto space-y-4">
                 <div className="flex items-center justify-center gap-3 mb-2">
                   <div className="w-8 h-8 rounded-full bg-gold-500/10 flex items-center justify-center">
                     <SlidersHorizontal className="w-4 h-4 text-gold-400" />
@@ -1139,162 +1154,127 @@ export default function Home() {
                     {t(locale, "durationConfirmTitle")}
                   </h2>
                 </div>
-                <div className="p-4 rounded-xl border border-dark-border bg-black/30 mb-3">
-                    <p className="text-[11px] uppercase tracking-widest text-gray-500 mb-2">
-                      {locale === "ar" ? "سؤال NEXUS AI عن المدة" : "NEXUS AI Duration Question"}
-                    </p>
-                  <p className="text-sm text-gray-200 mb-2">{durationSuggestion.question}</p>
-                  <p className="text-[11px] uppercase tracking-widest text-gray-500 mb-1">
-                    {locale === "ar" ? "سبب الاقتراح" : "Why this suggestion"}
-                  </p>
-                  <p className="text-xs text-gray-400 leading-relaxed">{durationSuggestion.rationale}</p>
-                </div>
-                <div className="mb-3 flex flex-wrap gap-2">
+
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                   <button
                     type="button"
                     onClick={() => {
                       setDurationInputMode("ai");
                       setSelectedDuration(durationSuggestion.suggestedDays);
                     }}
-                    className={`px-3 py-2 rounded-lg border text-xs font-bold uppercase tracking-wide ${
+                    className={`rounded-xl border p-3 text-start transition-all ${
                       durationInputMode === "ai"
-                        ? "border-gold-500/70 text-gold-300 bg-gold-500/10"
-                        : "border-dark-border text-gray-400 hover:text-gray-200"
+                        ? "border-gold-500/70 bg-gold-500/12"
+                        : "border-dark-border bg-black/20 hover:border-gold-500/35"
                     }`}
                   >
-                    {locale === "ar" ? "الاقتراح الذكي (NEXUS AI)" : "Smart NEXUS AI Suggestion"}
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setDurationInputMode("custom")}
-                    className={`px-3 py-2 rounded-lg border text-xs font-bold uppercase tracking-wide ${
-                      durationInputMode === "custom"
-                        ? "border-gold-500/70 text-gold-300 bg-gold-500/10"
-                        : "border-dark-border text-gray-400 hover:text-gray-200"
-                    }`}
-                  >
-                    {locale === "ar" ? "تخصيص المدة يدويًا" : "Custom Duration"}
-                  </button>
-                </div>
-                <div className="mb-2">
-                  <label className="text-xs text-gray-400">{t(locale, "selectedDurationLabel")}</label>
-                  <p className="text-gold-400 font-heading text-base mt-1">
-                    {selectedDuration} {locale === "ar" ? "يوم" : "days"}
-                  </p>
-                </div>
-                {durationInputMode === "custom" ? (
-                  <div className="mb-4 space-y-3">
-                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
-                      {(durationSuggestion.quickOptions && durationSuggestion.quickOptions.length > 0
-                        ? durationSuggestion.quickOptions
-                        : [
-                            Math.max(
-                              durationSuggestion.minDays,
-                              Math.min(durationSuggestion.maxDays, Math.round(durationSuggestion.suggestedDays * 0.8))
-                            ),
-                            durationSuggestion.suggestedDays,
-                            Math.max(
-                              durationSuggestion.minDays,
-                              Math.min(durationSuggestion.maxDays, Math.round(durationSuggestion.suggestedDays * 1.25))
-                            ),
-                          ]
-                      ).map((days, idx) => (
-                        <button
-                          key={`${days}-${idx}`}
-                          type="button"
-                          onClick={() => handleDurationInput(days)}
-                          className={`px-3 py-2 rounded-lg border text-xs font-bold uppercase tracking-wide ${
-                            selectedDuration === days
-                              ? "border-gold-500/70 text-gold-300 bg-gold-500/10"
-                              : "border-dark-border text-gray-300 hover:border-gold-500/40"
-                          }`}
-                        >
-                          {days} {locale === "ar" ? "يوم" : "days"}
-                        </button>
-                      ))}
-                    </div>
-                    <input
-                      type="range"
-                      min={durationSuggestion.minDays}
-                      max={durationSuggestion.maxDays}
-                      value={selectedDuration}
-                      onChange={(event) => handleDurationInput(Number(event.target.value))}
-                      className="w-full accent-gold-500"
-                    />
-                    <p className="text-xs text-gray-500">
-                      {locale === "ar"
-                        ? `النطاق المسموح: ${durationSuggestion.minDays}-${durationSuggestion.maxDays} يوم`
-                        : `Allowed range: ${durationSuggestion.minDays}-${durationSuggestion.maxDays} days`}
+                    <p className="text-[10px] uppercase tracking-widest text-gray-500 mb-1">
+                      {locale === "ar" ? "اقتراح AI" : "AI Suggestion"}
                     </p>
+                    <p className="font-heading text-2xl text-gold-300 leading-none">
+                      {durationSuggestion.suggestedDays}
+                    </p>
+                    <p className="text-xs text-gray-400 mt-1">{locale === "ar" ? "يوم" : "days"}</p>
+                  </button>
+
+                  <div className="md:col-span-2 p-4 rounded-xl border border-dark-border bg-black/25">
+                    <p className="text-sm text-gray-100 mb-2 leading-relaxed">{durationSuggestion.question}</p>
+                    <p className="text-xs text-gray-500 leading-relaxed">{durationSuggestion.rationale}</p>
                   </div>
-                ) : (
-                  <p className="text-xs text-gray-500 mb-4">
-                    {locale === "ar"
-                      ? "يمكنك التخطي الآن والاعتماد على اقتراح NEXUS AI مباشرة."
-                      : "You can skip manual editing and continue with the NEXUS AI suggestion."}
-                  </p>
-                )}
-                {planModeEnabled ? (
-                  <div className="p-4 rounded-xl border border-dark-border bg-black/30 mb-4">
-                    <p className="text-xs uppercase tracking-widest text-gray-400 mb-2 inline-flex items-center gap-2">
-                      {t(locale, "aiQuestionsTitle")}
-                      <span className="px-2 py-0.5 rounded-full border border-gold-500/30 bg-gold-500/10 text-gold-300 text-[10px]">PRO</span>
-                    </p>
-                    <p className="text-sm text-gray-300">
-                      {locale === "ar"
-                        ? "بعد تأكيد المدة، سيبدأ NEXUS AI مرحلة 3 أسئلة ذكية بالاختيارات ثم يبني الخطة النهائية."
-                        : "After confirming duration, NEXUS AI runs exactly 3 smart multiple-choice questions, then builds your final plan."}
-                    </p>
-                    {!hasProDemo ? (
-                      <p className="text-xs text-amber-300 mt-2">
-                        {locale === "ar"
-                          ? "فعّل PRO التجريبي أولًا من صفحة الاشتراكات."
-                          : "Enable PRO demo first from the Plans page."}
+                </div>
+
+                <div className="p-4 rounded-xl border border-gold-500/25 bg-black/25">
+                  <div className="flex items-end justify-between gap-3 mb-3">
+                    <div>
+                      <p className="text-xs text-gray-500">{t(locale, "selectedDurationLabel")}</p>
+                      <p className="font-heading text-3xl text-gold-300 leading-none">
+                        {selectedDuration}
+                        <span className="text-sm text-gold-400 ltr:ml-1 rtl:mr-1">{locale === "ar" ? "يوم" : "days"}</span>
                       </p>
-                    ) : null}
-                    <p className={`text-xs mt-2 ${canStartPlanQuestions ? "text-green-400" : "text-amber-400"}`}>
-                      {canStartPlanQuestions ? t(locale, "profileReady") : t(locale, "profileRequiredBeforePlan")}
-                    </p>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setDurationInputMode("ai");
+                        setSelectedDuration(durationSuggestion.suggestedDays);
+                      }}
+                      className="px-3 py-2 rounded-lg border border-gold-500/45 text-xs font-bold text-gold-300 hover:bg-gold-500/12"
+                    >
+                      {locale === "ar" ? "استخدم اقتراح AI" : "Use AI suggestion"}
+                    </button>
                   </div>
-                ) : null}
+
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 mb-3">
+                    {durationQuickChoices.map((days, idx) => (
+                      <button
+                        key={`${days}-${idx}`}
+                        type="button"
+                        onClick={() => {
+                          setDurationInputMode("custom");
+                          handleDurationInput(days);
+                        }}
+                        className={`px-3 py-2 rounded-lg border text-xs font-bold transition-all ${
+                          selectedDuration === days
+                            ? "border-gold-500/70 text-gold-300 bg-gold-500/10"
+                            : "border-dark-border text-gray-300 hover:border-gold-500/40"
+                        }`}
+                      >
+                        {days} {locale === "ar" ? "يوم" : "days"}
+                      </button>
+                    ))}
+                  </div>
+
+                  <input
+                    type="range"
+                    min={durationSuggestion.minDays}
+                    max={durationSuggestion.maxDays}
+                    value={selectedDuration}
+                    onChange={(event) => {
+                      setDurationInputMode("custom");
+                      handleDurationInput(Number(event.target.value));
+                    }}
+                    className="w-full accent-gold-500"
+                  />
+                  <div className="mt-1 flex items-center justify-between text-[11px] text-gray-500">
+                    <span>{durationSuggestion.minDays} {locale === "ar" ? "يوم" : "d"}</span>
+                    <span>{Math.ceil(selectedDuration / 7)} {locale === "ar" ? "أسابيع تقريبًا" : "weeks approx"}</span>
+                    <span>{durationSuggestion.maxDays} {locale === "ar" ? "يوم" : "d"}</span>
+                  </div>
+                </div>
+
                 <div className="flex flex-wrap gap-3">
                   {planModeEnabled ? (
-                    <>
-                      <button
-                        type="button"
-                        onClick={handleStartPlannerQuestions}
-                        disabled={isLoading || !canStartPlanQuestions || !hasProDemo}
-                        className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-gold-500 hover:bg-gold-600 disabled:opacity-50 disabled:cursor-not-allowed text-black font-heading font-bold tracking-wider px-8 py-4 rounded-xl uppercase text-sm"
-                      >
-                        <ClipboardList className="w-4 h-4" />
-                        {t(locale, "startAiQuestions")}
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => router.push("/profile?returnTo=/")}
-                        className="w-full sm:w-auto inline-flex items-center justify-center gap-2 border border-gold-500/40 text-gold-300 hover:bg-gold-500/10 font-heading font-bold tracking-wider px-6 py-4 rounded-xl uppercase text-xs"
-                      >
-                        {t(locale, "openProfilePage")}
-                      </button>
-                    </>
+                    <button
+                      type="button"
+                      onClick={handleStartPlannerQuestions}
+                      disabled={isLoading || !canStartPlanQuestions || !hasProDemo}
+                      className="w-full inline-flex items-center justify-center gap-2 bg-gold-500 hover:bg-gold-600 disabled:opacity-50 disabled:cursor-not-allowed text-black font-heading font-bold tracking-wider px-8 py-4 rounded-xl uppercase text-sm"
+                    >
+                      <ClipboardList className="w-4 h-4" />
+                      {t(locale, "startAiQuestions")}
+                    </button>
                   ) : (
                     <button
                       type="button"
                       onClick={generateProtocol}
-                      className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-gold-500 hover:bg-gold-600 text-black font-heading font-bold tracking-wider px-8 py-4 rounded-xl uppercase text-sm"
+                      className="w-full inline-flex items-center justify-center gap-2 bg-gold-500 hover:bg-gold-600 text-black font-heading font-bold tracking-wider px-8 py-4 rounded-xl uppercase text-sm"
                     >
                       <Sparkles className="w-4 h-4" />
                       {t(locale, "confirmGenerate")}
                     </button>
                   )}
-                  <button
-                    type="button"
-                    onClick={handleBackToGoal}
-                    className="w-full sm:w-auto inline-flex items-center justify-center gap-2 border border-dark-border text-gray-300 px-6 py-4 rounded-xl text-sm uppercase"
-                  >
-                    {t(locale, "editGoal")}
-                  </button>
                 </div>
+
+                {planModeEnabled && !hasProDemo ? (
+                  <p className="text-xs text-amber-300 text-center">
+                    {locale === "ar" ? "فعّل PRO أولًا من صفحة الاشتراكات." : "Enable PRO first from Plans."}
+                  </p>
+                ) : null}
+                {planModeEnabled && hasProDemo && !canStartPlanQuestions ? (
+                  <p className="text-xs text-amber-300 text-center">
+                    {t(locale, "profileRequiredBeforePlan")}
+                  </p>
+                ) : null}
               </div>
             ) : (
               <>
@@ -1701,22 +1681,14 @@ export default function Home() {
 
       <footer className="py-8 border-t border-dark-border">
         <div className="max-w-5xl mx-auto px-4">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-4 mb-6">
-            <Link href="/" className="font-heading text-sm font-bold text-white tracking-widest">
+          <div className="flex flex-col items-center gap-1 mb-6 text-center">
+            <Link href="/" className="font-heading text-base md:text-lg font-bold text-white tracking-[0.18em]">
               DREAM<span className="text-gold-500">PLAN</span>
             </Link>
-            <p className="text-[10px] text-gray-500 tracking-[0.16em] uppercase">BUILT BY MATANY LABS</p>
-            <div className="flex items-center gap-6">
-              <Link href="/" className="text-sm text-gray-500 hover:text-gold-400 transition-colors">
-                {locale === "ar" ? "الرئيسية" : "Home"}
-              </Link>
-              <Link href="/plans" className="text-sm text-gray-500 hover:text-gold-400 transition-colors">
-                {locale === "ar" ? "الاشتراكات" : "Plans"}
-              </Link>
-            </div>
+            <p className="text-[10px] text-gold-300/80 tracking-[0.16em] uppercase">BUILT BY MATANY LABS</p>
           </div>
-          <div className="flex flex-col md:flex-row items-center justify-between gap-2">
-            <p className="text-gray-600 text-xs flex items-center gap-1">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-3 text-center md:text-start">
+            <p className="text-gray-600 text-xs flex items-center gap-1 justify-center">
               <Zap className="w-3.5 h-3.5 text-gold-400 inline" />
               {locale === "ar"
                 ? "مدعوم بواسطة NEXUS AI — جميع البروتوكولات مبنية على أسس علمية"
